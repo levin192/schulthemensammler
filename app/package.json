@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fluentui/react": "^8.40.0",
+    "@fluentui/web-components": "^2.0.2",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

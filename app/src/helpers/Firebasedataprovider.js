@@ -1,6 +1,9 @@
-import fbConfig from 'firebaseconfig.json'
+import fbConfig from './firebaseconfig.json'
+import firebase from 'firebase/app'
+import '@firebase/auth'
+import '@firebase/firestore'
 
-class Firebasedataprovider {
+class FirebaseDataProvider {
   constructor() {
     this.config = fbConfig;
     if (!firebase.apps.length) {
@@ -9,4 +12,13 @@ class Firebasedataprovider {
       this.firebaseApp = firebase.app();
     }
   }
+
+  register = (data) => {
+    const email = data.email;
+    const password = data.password;
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+  }
 }
+
+
+export default FirebaseDataProvider

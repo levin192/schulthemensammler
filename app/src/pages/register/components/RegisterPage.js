@@ -1,38 +1,64 @@
-import React, {Component} from 'react'
-import {FirebaseDataProvider} from '../../../helpers/Firebasedataprovider'
-import {Stack, IStackTokens} from '@fluentui/react';
-import {DefaultButton, PrimaryButton} from '@fluentui/react/lib/Button';
-import {TextField, MaskedTextField} from '@fluentui/react/lib/TextField';
-
-const stackTokens: IStackTokens = {childrenGap: 40};
+import React from "react";
+import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
+import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
 
 class RegisterPage extends React.Component {
-  componentDidMount = () => {
-    const fb = new FirebaseDataProvider
-    fb.register({
-      email: 'testqs@asdsgad.de',
-      password: 'test123'
-    })
+  constructor(params) {
+    super(params);
+    this.fb = new FirebaseDataProvider();
+    this.state = {
+      email: "",
+      password: "",
+    };
   }
 
+  componentDidMount = () => {};
+
+  registerUser = async () => {
+    const email = this.state.email;
+    const password = this.state.password;
+
+    const data = await this.fb.register({ email, password });
+
+    console.log(data);
+  };
+
+  handleInputChange = (inputEl) => {
+    this.setState((state) => {
+      state[inputEl.target.id] = inputEl.target.value;
+
+      return state;
+    });
+  };
 
   render() {
-    return <>
-      <h1>Schulthemensammler</h1>
-      <TextField label="E-Mail" required/>
-      <TextField
-          label="Passwort"
-          type="password"
-          canRevealPassword
-          revealPasswordAriaLabel="Passwort anzeigen"
-      />
-      <DefaultButton text="Anmelden"/>
-      <PrimaryButton text="Registrieren" onClick={_registerUser}/>
-    </>
+    return (
+      <>
+        <h1>Schulthemensammler</h1>
+        <form onSubmit={this.registerUser}>
+          <TextField
+            label="E-Mail"
+            id="email"
+            type="email"
+            required
+            onChange={this.handleInputChange}
+          />
+          <TextField
+            id="password"
+            required
+            label="Passwort"
+            type="password"
+            canRevealPassword
+            revealPasswordAriaLabel="Passwort anzeigen"
+            onChange={this.handleInputChange}
+          />
+
+          <PrimaryButton text="Registrieren" type="submit" />
+        </form>
+      </>
+    );
   }
 }
 
-function _registerUser(): void {
-  console.log('Moin')
-}
 export default RegisterPage;

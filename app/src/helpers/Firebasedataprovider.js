@@ -1,9 +1,9 @@
-import fbConfig from './firebaseconfig.json'
-import firebase from 'firebase/app'
-import '@firebase/auth'
-import '@firebase/firestore'
+import fbConfig from "./firebaseconfig.json";
+import firebase from "firebase/app";
+import "@firebase/auth";
+import "@firebase/firestore";
 
-export class FirebaseDataProvider {
+class FirebaseDataProvider {
   constructor() {
     this.config = fbConfig;
     if (!firebase.apps.length) {
@@ -11,13 +11,15 @@ export class FirebaseDataProvider {
     } else {
       this.firebaseApp = firebase.app();
     }
-  };
+  }
   big() {
-    console.log('wok')
+    console.log("wok");
   }
   register = (data) => {
     const email = data.email;
     const password = data.password;
-    return firebase.auth().createUserWithEmailAndPassword(email, password)
-  }
+    return firebase.auth().createUserWithEmailAndPassword(email, password);
+  };
 }
+
+export default FirebaseDataProvider;

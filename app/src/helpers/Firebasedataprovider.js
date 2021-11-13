@@ -3,7 +3,7 @@ import firebase from 'firebase/app'
 import '@firebase/auth'
 import '@firebase/firestore'
 
-class FirebaseDataProvider {
+export class FirebaseDataProvider {
   constructor() {
     this.config = fbConfig;
     if (!firebase.apps.length) {
@@ -11,14 +11,13 @@ class FirebaseDataProvider {
     } else {
       this.firebaseApp = firebase.app();
     }
+  };
+  big() {
+    console.log('wok')
   }
-
   register = (data) => {
     const email = data.email;
     const password = data.password;
     return firebase.auth().createUserWithEmailAndPassword(email, password)
   }
 }
-
-
-export default FirebaseDataProvider

@@ -1,3 +1,7 @@
 body {
-	background-color: #E8E6C5;
+	background-color: white;
+	max-width: 1200px;
+	display: flex;
+	justify-content: center;
+	margin-top: 120px;
 }

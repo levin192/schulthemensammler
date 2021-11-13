@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4cdcb173-b741-4bf5-9b79-052e5913cdbb" name="Changes" comment=":wrench: updates">
+    <list default="true" id="4cdcb173-b741-4bf5-9b79-052e5913cdbb" name="Changes" comment=":construction: WIP">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/css/test.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/css/test.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/helpers/Firebasedataprovider.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/helpers/Firebasedataprovider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/pages/register/components/RegisterPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/pages/register/components/RegisterPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +79,8 @@
       <workItem from="1636531616606" duration="405000" />
       <workItem from="1636532043998" duration="95000" />
       <workItem from="1636548685679" duration="263000" />
-      <workItem from="1636722662083" duration="2162000" />
+      <workItem from="1636722662083" duration="2897000" />
+      <workItem from="1636804251012" duration="2726000" />
     </task>
     <task id="LOCAL-00001" summary=":clown_face: add firebase">
       <created>1635925947427</created>
@@ -95,7 +96,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636723000212</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary=":construction: WIP">
+      <created>1636727831521</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1636727831521</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,6 +124,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":clown_face: add firebase" />
     <MESSAGE value=":wrench: updates" />
-    <option name="LAST_COMMIT_MESSAGE" value=":wrench: updates" />
+    <MESSAGE value=":construction: WIP" />
+    <option name="LAST_COMMIT_MESSAGE" value=":construction: WIP" />
   </component>
 </project>

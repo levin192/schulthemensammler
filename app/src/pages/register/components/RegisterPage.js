@@ -1,7 +1,7 @@
 import React from "react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
-import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
+import { PrimaryButton } from "@fluentui/react/lib/Button";
+import { TextField } from "@fluentui/react/lib/TextField";
 
 class RegisterPage extends React.Component {
   constructor(params) {
@@ -40,6 +40,7 @@ class RegisterPage extends React.Component {
           <TextField
             label="E-Mail"
             id="email"
+            autoComplete="new-email"
             type="email"
             required
             onChange={this.handleInputChange}
@@ -47,6 +48,7 @@ class RegisterPage extends React.Component {
           <TextField
             id="password"
             required
+            autoComplete="new-password"
             label="Passwort"
             type="password"
             canRevealPassword

@@ -5,6 +5,7 @@ import LoginPage from "./pages/login/components/LoginPage";
 function App() {
   return (
     <Router>
+      <main className="content-container">
       <Routes>
         <Route
           path="/register"
@@ -51,6 +52,7 @@ function App() {
           }
         ></Route>
       </Routes>
+      </main>
     </Router>
   );
 }

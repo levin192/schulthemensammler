@@ -70,8 +70,8 @@ class RegisterPage extends React.Component {
             onChange={this.handleInputChange}
           />
           <TextField
-            // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-            // minlength="6"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+            minlength="6"
             title="Mindestens eine Zahl, Groß- und Kleinbuchstaben und mindestens 6 Zeichen"
             required
             autoComplete="new-password"

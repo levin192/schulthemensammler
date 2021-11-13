@@ -27,10 +27,12 @@ class RegisterPage extends React.Component {
           revealPasswordAriaLabel="Passwort anzeigen"
       />
       <DefaultButton text="Anmelden"/>
-      <PrimaryButton text="Registrieren"/>
+      <PrimaryButton text="Registrieren" onClick={_registerUser}/>
     </>
   }
 }
 
-
+function _registerUser(): void {
+  console.log('Moin')
+}
 export default RegisterPage;

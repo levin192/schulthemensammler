@@ -1,7 +1,12 @@
 import React from "react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { PrimaryButton } from "@fluentui/react/lib/Button";
-import { TextField } from "@fluentui/react/lib/TextField";
+import {
+  MessageBar,
+  MessageBarType,
+  PrimaryButton,
+  TextField,
+} from "@fluentui/react";
+import { Navigate } from "react-router";
 
 class LoginPage extends React.Component {
   constructor(params) {
@@ -10,6 +15,8 @@ class LoginPage extends React.Component {
     this.state = {
       email: "",
       password: "",
+      wasSuccessfull: true,
+      shouldRedirect: false,
     };
   }
 
@@ -21,11 +28,42 @@ class LoginPage extends React.Component {
     });
   };
 
-  loginUser = () => {
+  loginUser = (event) => {
+    event.preventDefault();
     console.log("ewa");
+
+    const email = this.state.email;
+    const password = this.state.password;
+
+    this.fb.firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed in
+        var user = userCredential.user;
+        console.log(userCredential);
+        console.log("successfully logged in!");
+        this.setState((state) => {
+          state.shouldRedirect = true;
+
+          return state;
+        });
+      })
+      .catch((error) => {
+        this.setState((state) => {
+          state.wasSuccessfull = false;
+          state.errorMessage = error.message;
+
+          return state;
+        });
+      });
   };
 
   render() {
+    if (this.state.shouldRedirect) {
+      return <Navigate to="/"></Navigate>;
+    }
+
     return (
       <>
         <h1>Login</h1>
@@ -51,6 +89,12 @@ class LoginPage extends React.Component {
 
           <PrimaryButton text="Anmelden" type="submit" />
         </form>
+
+        {this.state.wasSuccessfull ? null : (
+          <MessageBar messageBarType={MessageBarType.error}>
+            {this.state.errorMessage}
+          </MessageBar>
+        )}
       </>
     );
   }

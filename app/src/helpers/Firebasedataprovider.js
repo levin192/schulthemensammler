@@ -11,10 +11,10 @@ class FirebaseDataProvider {
     } else {
       this.firebaseApp = firebase.app();
     }
+
+    this.firebase = firebase;
   }
-  big() {
-    console.log("wok");
-  }
+
   register = (data) => {
     const email = data.email;
     const password = data.password;

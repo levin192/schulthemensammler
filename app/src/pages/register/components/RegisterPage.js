@@ -1,25 +1,26 @@
-import React from "react";
-import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { PrimaryButton } from "@fluentui/react/lib/Button";
-import { TextField } from "@fluentui/react/lib/TextField";
+import React from 'react';
+import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
+import {PrimaryButton} from '@fluentui/react/lib/Button';
+import {TextField} from '@fluentui/react/lib/TextField';
 
 class RegisterPage extends React.Component {
   constructor(params) {
     super(params);
     this.fb = new FirebaseDataProvider();
     this.state = {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+  };
 
   registerUser = async () => {
     const email = this.state.email;
     const password = this.state.password;
 
-    const data = await this.fb.register({ email, password });
+    const data = await this.fb.register({email, password});
 
     console.log(data);
   };
@@ -34,31 +35,32 @@ class RegisterPage extends React.Component {
 
   render() {
     return (
-      <>
-        <h1>Schulthemensammler</h1>
-        <form onSubmit={this.registerUser}>
-          <TextField
-            label="E-Mail"
-            id="email"
-            autoComplete="new-email"
-            type="email"
-            required
-            onChange={this.handleInputChange}
-          />
-          <TextField
-            id="password"
-            required
-            autoComplete="new-password"
-            label="Passwort"
-            type="password"
-            canRevealPassword
-            revealPasswordAriaLabel="Passwort anzeigen"
-            onChange={this.handleInputChange}
-          />
-
-          <PrimaryButton text="Registrieren" type="submit" />
-        </form>
-      </>
+        <>
+          <h1>Schulthemensammler</h1>
+          <form onSubmit={this.registerUser}>
+            <TextField
+                label="E-Mail"
+                id="email"
+                autoComplete="new-email"
+                type="email"
+                required
+                onChange={this.handleInputChange}
+            />
+            <TextField
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                minlength="6"
+                title="Mindestens eine Zahl, Groß- und Kleinbuchstaben und mindestens 6 Zeichen"
+                required
+                autoComplete="new-password"
+                label="Passwort"
+                type="password"
+                canRevealPassword
+                revealPasswordAriaLabel="Passwort anzeigen"
+                onChange={this.handleInputChange}
+            />
+            <PrimaryButton text="Registrieren" type="submit"/>
+          </form>
+        </>
     );
   }
 }

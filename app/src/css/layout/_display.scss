@@ -1,0 +1,19 @@
+body {
+ // display: grid;
+  display: block;
+}
+
+.content-container {
+  max-width: 100%;
+  padding-inline-start: 15px;
+  padding-inline-end: 15px;
+  margin: auto;
+  display: flex;
+  @each $breakpoint, $width in $breakpoints {
+    @include breakpoint-up($breakpoint) {
+      width: calc(#{$width} / 2);
+    }
+  }
+}
+
+

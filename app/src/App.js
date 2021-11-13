@@ -1,5 +1,6 @@
-import RegisterPage from "./pages/register/components/RegisterPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import RegisterPage from "./pages/register/components/RegisterPage";
+import LoginPage from "./pages/login/components/LoginPage";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           element={
             <>
               <div>
-                <h1>Placeholder login</h1>
+                <LoginPage></LoginPage>
               </div>
             </>
           }

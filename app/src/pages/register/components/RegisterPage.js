@@ -28,6 +28,7 @@ class RegisterPage extends React.Component {
 
     try {
       const data = await this.fb.register({ email, password });
+      await this.fb.writeToDb({email})
       this.setState((state) => {
         state.shouldRedirect = true;
         return state;
@@ -70,6 +71,7 @@ class RegisterPage extends React.Component {
             onChange={this.handleInputChange}
           />
           <TextField
+            id="password"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
             minlength="6"
             title="Mindestens eine Zahl, Groß- und Kleinbuchstaben und mindestens 6 Zeichen"

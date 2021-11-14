@@ -79,7 +79,7 @@ class LoginPage extends React.Component {
           <TextField
             id="password"
             required
-            autoComplete="new-password"
+            autoComplete="current-password"
             label="Passwort"
             type="password"
             canRevealPassword

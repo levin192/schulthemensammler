@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import RegisterPage from "./pages/register/components/RegisterPage";
 import LoginPage from "./pages/login/components/LoginPage";
+import PageHeader from "./globalComponents/PageHeader";
+import PageFooter from "./globalComponents/PageFooter";
 
 function App() {
   return (
     <Router>
+      <PageHeader></PageHeader>
       <main className="content-container">
       <Routes>
         <Route
@@ -53,6 +56,7 @@ function App() {
         ></Route>
       </Routes>
       </main>
+      <PageFooter></PageFooter>
     </Router>
   );
 }

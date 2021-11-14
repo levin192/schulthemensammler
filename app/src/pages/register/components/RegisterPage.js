@@ -62,7 +62,6 @@ class RegisterPage extends React.Component {
     return (
       <>
         <h1>Schulthemensammler</h1>
-        {(this.context.loggedIn)?'moin':'nein'}
         <form onSubmit={this.registerUser}>
           <TextField
             label="E-Mail"

@@ -1,7 +1,8 @@
-import fbConfig from "./firebaseconfig.json";
-import firebase from "firebase/app";
-import "@firebase/auth";
-import "@firebase/firestore";
+import fbConfig from './firebaseconfig.json';
+import firebase from 'firebase/app';
+import '@firebase/auth';
+import '@firebase/firestore';
+
 
 class FirebaseDataProvider {
   constructor() {
@@ -20,6 +21,19 @@ class FirebaseDataProvider {
     const password = data.password;
     return firebase.auth().createUserWithEmailAndPassword(email, password);
   };
+
+  loggedInStatus = async () => {
+    await this.firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        return true
+      }
+      return false
+    });
+    return false
+  }
 }
 
 export default FirebaseDataProvider;

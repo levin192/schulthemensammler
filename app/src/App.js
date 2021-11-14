@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import RegisterPage from "./pages/register/components/RegisterPage";
 import LoginPage from "./pages/login/components/LoginPage";
@@ -9,7 +10,9 @@ class App extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      loggedIn: true
+    };
   }
 
   render() {

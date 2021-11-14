@@ -7,9 +7,12 @@ import {
   TextField,
 } from "@fluentui/react";
 import { Navigate } from "react-router";
+import { Store } from "../../../helpers/Store"
 
 class RegisterPage extends React.Component {
-  constructor() {
+   static contextType = Store;
+
+   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
@@ -28,7 +31,6 @@ class RegisterPage extends React.Component {
 
     try {
       const data = await this.fb.register({ email, password });
-      await this.fb.writeToDb({ email });
       this.setState((state) => {
         state.shouldRedirect = true;
         return state;
@@ -60,7 +62,7 @@ class RegisterPage extends React.Component {
     return (
       <>
         <h1>Schulthemensammler</h1>
-
+        {(this.context.loggedIn)?'moin':'nein'}
         <form onSubmit={this.registerUser}>
           <TextField
             label="E-Mail"

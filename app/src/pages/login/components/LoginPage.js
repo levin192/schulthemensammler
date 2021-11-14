@@ -9,8 +9,8 @@ import {
 import { Navigate } from "react-router";
 
 class LoginPage extends React.Component {
-  constructor(params) {
-    super(params);
+  constructor() {
+    super();
     this.fb = new FirebaseDataProvider();
     this.state = {
       email: "",

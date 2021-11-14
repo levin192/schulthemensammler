@@ -9,8 +9,8 @@ import {
 import { Navigate } from "react-router";
 
 class RegisterPage extends React.Component {
-  constructor(params) {
-    super(params);
+  constructor() {
+    super();
     this.fb = new FirebaseDataProvider();
     this.state = {
       email: "",
@@ -28,7 +28,7 @@ class RegisterPage extends React.Component {
 
     try {
       const data = await this.fb.register({ email, password });
-      await this.fb.writeToDb({email})
+      await this.fb.writeToDb({ email });
       this.setState((state) => {
         state.shouldRedirect = true;
         return state;

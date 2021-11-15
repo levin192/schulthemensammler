@@ -22,7 +22,6 @@ class App extends React.Component {
       if(user) {
         this.setState((state) => {
           state.loggedIn = true
-          console.log(this.state.loggedIn)
           return state;
         });
       }
@@ -33,6 +32,7 @@ class App extends React.Component {
   render() {
     return (
         <Store.Provider value={this.state}>
+          {console.log(this.state)}
           <Router>
             <PageHeader></PageHeader>
             <main className="content-container">

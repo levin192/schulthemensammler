@@ -6,21 +6,28 @@ import PageHeader from './globalComponents/PageHeader';
 import PageFooter from './globalComponents/PageFooter';
 import {Store} from './helpers/Store';
 import FirebaseDataProvider from './helpers/Firebasedataprovider';
+import {Navigate} from 'react-router';
 
 class App extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      loggedIn: true
+      loggedIn: false
     };
   }
 
   componentDidMount() {
-    this.setState((state) => {
-      state.loggedIn = this.isLoggedIn();
-      return state;
-    });
+    this.fb.firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        this.setState((state) => {
+          state.loggedIn = true
+          console.log(this.state.loggedIn)
+          return state;
+        });
+      }
+    })
+
   }
 
   render() {
@@ -35,9 +42,11 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        <div>
-                          <RegisterPage></RegisterPage>
-                        </div>
+                        {this.state.loggedIn?<Navigate to="/"></Navigate>:(
+                          <div>
+                            <RegisterPage></RegisterPage>
+                          </div>
+                        )}
                       </>
                     }
                 ></Route>
@@ -59,7 +68,6 @@ class App extends React.Component {
                       <>
                         <div>
                           <h1>Placeholder home</h1>
-                          {(this.context.loggedIn) ? 'ja' : 'nein'}
                         </div>
                       </>
                     }

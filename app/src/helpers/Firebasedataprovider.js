@@ -22,18 +22,8 @@ class FirebaseDataProvider {
     return firebase.auth().createUserWithEmailAndPassword(email, password);
   };
 
-  loggedInStatus = async () => {
-    await this.firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        return true
-      }
-      return false
-    });
-    return false
-  }
+  // loggedInStatus = () => {
+  // }
 }
 
 export default FirebaseDataProvider;

@@ -61,6 +61,7 @@ class LoginPage extends React.Component {
   };
   logoutUser = () => {
     this.fb.firebase.auth().signOut().then(() => {
+      this.context.loggedIn = false // Doesnt work? Bruder wie damit auch navbar ausgeloggt anzeigt...
       this.setState((state) => {
         state.shouldRedirect = true;
         return state;

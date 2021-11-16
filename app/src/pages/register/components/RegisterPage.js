@@ -18,7 +18,7 @@ class RegisterPage extends React.Component {
     this.state = {
       email: "",
       password: "",
-      wasSuccessfull: true,
+      wasSuccessful: true,
       errorMessage: "",
       shouldRedirect: false,
     };
@@ -38,7 +38,7 @@ class RegisterPage extends React.Component {
     } catch (error) {
       console.table(error);
       this.setState((state) => {
-        state.wasSuccessfull = false;
+        state.wasSuccessful = false;
         state.errorMessage = error.message;
 
         return state;
@@ -87,7 +87,7 @@ class RegisterPage extends React.Component {
           <PrimaryButton text="Registrieren" type="submit" />
         </form>
 
-        {this.state.wasSuccessfull ? null : (
+        {this.state.wasSuccessful ? null : (
           <MessageBar messageBarType={MessageBarType.error}>
             {this.state.errorMessage}
           </MessageBar>

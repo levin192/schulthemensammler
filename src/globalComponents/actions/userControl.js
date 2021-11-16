@@ -3,18 +3,21 @@ import {useNavigate} from 'react-router-dom';
 import {IContextualMenuProps, IIconProps} from '@fluentui/react';
 import {CommandButton} from '@fluentui/react/lib/Button';
 import {Store} from '../../helpers/Store'
+import FirebaseDataProvider from '../../helpers/Firebasedataprovider';
 
 export const UserActions: React.FunctionComponent<> = props => {
   const navigate = useNavigate();
   const HandleClickEvent = (route) => {
     navigate('/' + route, {replace: true});
   }
-
+  const fb = new FirebaseDataProvider();
   const clickEvent = (event, el) => {
-    console.log(el.key)
-    switch (el.key) {
+    switch (el.key) { // Switch in case other keys need custom code
       case 'logout':
-        // Do something
+        fb.firebase.auth().signOut().then(() => {
+          HandleClickEvent('')
+          location.reload()
+        })
         break;
       default:
         HandleClickEvent(el.key)
@@ -69,7 +72,7 @@ export const UserActions: React.FunctionComponent<> = props => {
   return (<>
         <Store.Consumer>
           {(value => (value.loggedIn) ? (
-              <CommandButton iconProps={userIcon} text="Menu" menuProps={loggedInProps}/>
+              <CommandButton iconProps={userIcon} text={value.userName} menuProps={loggedInProps}/>
           ) : (
               <CommandButton iconProps={userIcon} text="Menu" menuProps={loggedOutProps}/>
           ))}

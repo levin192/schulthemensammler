@@ -16,7 +16,7 @@ class LoginPage extends React.Component {
     this.state = {
       email: '',
       password: '',
-      wasSuccessfull: true,
+      wasSuccessful: true,
       shouldRedirect: false,
     };
   }
@@ -31,8 +31,6 @@ class LoginPage extends React.Component {
 
   loginUser = (event) => {
     event.preventDefault();
-    console.log('ewa');
-
     const email = this.state.email;
     const password = this.state.password;
 
@@ -41,7 +39,7 @@ class LoginPage extends React.Component {
         .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
-          var user = userCredential.user;
+          const user = userCredential.user;
           console.log(userCredential);
           console.log('successfully logged in!');
           this.setState((state) => {
@@ -52,7 +50,7 @@ class LoginPage extends React.Component {
         })
         .catch((error) => {
           this.setState((state) => {
-            state.wasSuccessfull = false;
+            state.wasSuccessful = false;
             state.errorMessage = error.message;
 
             return state;
@@ -100,7 +98,7 @@ class LoginPage extends React.Component {
               <PrimaryButton text="Anmelden" type="submit"/>
             </form>
 
-            {this.state.wasSuccessfull ? null : (
+            {this.state.wasSuccessful ? null : (
                 <MessageBar messageBarType={MessageBarType.error}>
                   {this.state.errorMessage}
                 </MessageBar>

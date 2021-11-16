@@ -13,7 +13,8 @@ class App extends React.Component {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      userName: null
     };
   }
 
@@ -22,6 +23,7 @@ class App extends React.Component {
       if(user) {
         this.setState((state) => {
           state.loggedIn = true
+          state.userName = user.email
           return state;
         });
       }

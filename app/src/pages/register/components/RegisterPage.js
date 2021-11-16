@@ -61,7 +61,7 @@ class RegisterPage extends React.Component {
 
     return (
       <>
-        <h1>Schulthemensammler</h1>
+        <h1>Registrieren</h1>
         <form onSubmit={this.registerUser}>
           <TextField
             label="E-Mail"

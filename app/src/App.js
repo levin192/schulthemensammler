@@ -32,7 +32,6 @@ class App extends React.Component {
   render() {
     return (
         <Store.Provider value={this.state}>
-          {console.log(this.state)}
           <Router>
             <PageHeader></PageHeader>
             <main className="content-container">

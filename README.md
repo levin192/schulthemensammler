@@ -1,6 +1,5 @@
 # Schulthemensammler
 
 - React
-- Vue
-
-- Deine Mu
+- SCSS
+- Firebase

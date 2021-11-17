@@ -16,7 +16,7 @@ export const UserActions: React.FunctionComponent<> = props => {
       case 'logout':
         fb.firebase.auth().signOut().then(() => {
           HandleClickEvent('')
-          location.reload()
+          window.location.reload()
         })
         break;
       default:

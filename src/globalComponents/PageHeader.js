@@ -16,7 +16,7 @@ class PageHeader extends React.Component {
         <>
           <header style={{boxShadow: this.theme.effects.elevation8}} className="content-container">
             <div style={{width: 100 + '%', paddingTop: 15 + 'px', paddingBottom: 15 + 'px'}} className="header-container">
-              <div className="header-title"><b>SchulthemenSammler</b></div>
+              <div className="header-title">SchulthemenSammler</div>
               <div className="header-actions">
                 <UserActions/>
               </div>

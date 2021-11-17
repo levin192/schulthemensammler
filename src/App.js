@@ -7,6 +7,7 @@ import PageFooter from './globalComponents/PageFooter';
 import {Store} from './helpers/Store';
 import FirebaseDataProvider from './helpers/Firebasedataprovider';
 import {Navigate} from 'react-router';
+import CalendarPage from './pages/calendar/components/CalendarPage';
 
 class App extends React.Component {
   constructor() {
@@ -74,12 +75,12 @@ class App extends React.Component {
                     }
                 ></Route>
                 <Route
-                    path="/kalender"
+                    path="/calendar"
                     exact
                     element={
                       <>
                         <div>
-                          <h1>Placeholder kalender</h1>
+                        <CalendarPage />
                         </div>
                       </>
                     }

@@ -5,4 +5,12 @@
 @import 'layout/header';
 @import 'layout/typography';
 
-
+.calendar {
+  height: auto;
+  width: 100%;
+  transform: scale(1);
+  transition: transform ease-in-out .6s;
+  &.ani {
+    transform: scale(5);
+  }
+}

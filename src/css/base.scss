@@ -10,6 +10,7 @@
   width: 100%;
   transform: scale(1);
   transition: transform ease-in-out .6s;
+  border: black 1px solid;
   &.ani {
     transform: scale(5);
   }

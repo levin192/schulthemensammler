@@ -8,6 +8,7 @@ import {Store} from './helpers/Store';
 import FirebaseDataProvider from './helpers/Firebasedataprovider';
 import {Navigate} from 'react-router';
 import CalendarPage from './pages/calendar/components/CalendarPage';
+import SettingsPage from "./pages/settings/components/SettingsPage";
 
 class App extends React.Component {
   constructor() {
@@ -29,7 +30,6 @@ class App extends React.Component {
         });
       }
     })
-
   }
 
   render() {
@@ -81,6 +81,17 @@ class App extends React.Component {
                       <>
                         <div>
                         <CalendarPage />
+                        </div>
+                      </>
+                    }
+                ></Route>
+                <Route
+                    path="/settings"
+                    exact
+                    element={
+                      <>
+                        <div>
+                            <SettingsPage />
                         </div>
                       </>
                     }

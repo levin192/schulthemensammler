@@ -7,13 +7,15 @@ import PageFooter from './globalComponents/PageFooter';
 import {Store} from './helpers/Store';
 import FirebaseDataProvider from './helpers/Firebasedataprovider';
 import {Navigate} from 'react-router';
+import CalendarPage from './pages/calendar/components/CalendarPage';
 
 class App extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      userName: null
     };
   }
 
@@ -22,6 +24,7 @@ class App extends React.Component {
       if(user) {
         this.setState((state) => {
           state.loggedIn = true
+          state.userName = user.email
           return state;
         });
       }
@@ -72,12 +75,12 @@ class App extends React.Component {
                     }
                 ></Route>
                 <Route
-                    path="/kalender"
+                    path="/calendar"
                     exact
                     element={
                       <>
                         <div>
-                          <h1>Placeholder kalender</h1>
+                        <CalendarPage />
                         </div>
                       </>
                     }

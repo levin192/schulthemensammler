@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Store} from "../../../helpers/Store";
-import {PrimaryButton} from "@fluentui/react";
+import {PrimaryButton, TextField} from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import {Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles} from "@fluentui/react/lib/Dropdown";
+import SettingsController from "./SettingsController";
 
 const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: {width: 300},
@@ -20,15 +21,13 @@ const options: IDropdownOption[] = [
     {key: '0', text: 'Sonntag'},
 ];
 
-export default class SettingsPage extends React.Component {
+class SettingsPage extends React.Component {
     constructor() {
         super();
         this.fb = new FirebaseDataProvider();
-        this.state = {};
     }
 
     handleChange(e, selectedOption) {
-        // this.setState({ key: selectedOption.key });
         console.log(selectedOption.key);
     }
 
@@ -45,6 +44,17 @@ export default class SettingsPage extends React.Component {
                         styles={dropdownStyles}
                         onChange={this.handleChange}
                     />
+
+                    <TextField
+                        label="E-Mail"
+                        id="name"
+                        autoComplete="new-email"
+                        type="text"
+                    />
+
+                    <SettingsController/>
+
+                    <h1>Hallo</h1>
                     <PrimaryButton text="Speichern" type="submit"/>
                 </>
             );
@@ -58,4 +68,5 @@ export default class SettingsPage extends React.Component {
 
     static contextType = Store;
 }
+export default SettingsPage;
 

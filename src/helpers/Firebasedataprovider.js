@@ -1,7 +1,7 @@
 import fbConfig from './firebaseconfig.json';
 import firebase from 'firebase/app';
 import '@firebase/auth';
-import '@firebase/firestore';
+import 'firebase/firestore';
 
 class FirebaseDataProvider {
   constructor() {
@@ -11,7 +11,6 @@ class FirebaseDataProvider {
     } else {
       this.firebaseApp = firebase.app();
     }
-
     this.firebase = firebase;
   }
 

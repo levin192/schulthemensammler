@@ -1,7 +1,8 @@
 import React from 'react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import {Store} from '../../../helpers/Store'
-import {CalendarInlineCustomDayCellRefExample} from './CalendarComponent'
+import {CalendarComponent} from './CalendarComponent'
+import {TextField} from "@fluentui/react";
 
 class CalendarPage extends React.Component {
   constructor() {
@@ -21,7 +22,7 @@ class CalendarPage extends React.Component {
             <h1>Kalender</h1>
             <div id="borris" className=" calendar">
                 <h1>Schultage auswählen</h1>
-                <CalendarInlineCustomDayCellRefExample/>
+                <CalendarComponent/>
             </div>
           </>
       );
@@ -35,5 +36,4 @@ class CalendarPage extends React.Component {
 
   static contextType = Store;
 }
-
 export default CalendarPage;

@@ -9,7 +9,7 @@ class PageFooter extends React.Component {
         <>
           <footer>
             <div className="content-container">
-              <div style={{textAlign: 'center', width: '100%'}}>
+              <div style={{textAlign: 'center', width: '100%', paddingTop: '20px'}}>
                 <i>gemacht {new Date().getFullYear()}</i>
               </div>
             </div>

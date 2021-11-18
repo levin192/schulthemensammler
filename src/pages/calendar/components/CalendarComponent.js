@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {Calendar, ICalendarDayProps, defaultCalendarStrings} from '@fluentui/react';
 
-export const CalendarInlineCustomDayCellRefExample: React.FunctionComponent = () => {
-
+export const CalendarComponent: React.FunctionComponent = () => {
   return (
       <div style={{height: 'auto'}}>
         <Calendar

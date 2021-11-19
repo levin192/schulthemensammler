@@ -8,31 +8,56 @@ import {Store} from './helpers/Store';
 import FirebaseDataProvider from './helpers/Firebasedataprovider';
 import {Navigate} from 'react-router';
 import CalendarPage from './pages/calendar/components/CalendarPage';
-import SettingsPage from "./pages/settings/components/SettingsPage";
+import SettingsPage from './pages/settings/components/SettingsPage';
+
+import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 
 class App extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      loggedIn: false,
-      userName: null
+      authChecked: false,
+      userName: null,
+      userDoc: null,
+      userDocChecked: false
     };
   }
-
-  componentDidMount() {
+  componentDidMount = () => {
+    this.checkUserAuth()
+  }
+  checkUserDoc = () => {
+    this.fb.firebase.firestore().collection('Users').doc(this.fb.firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
+      const userDoc = querySnapshot.data()
+      this.setState(state => {
+        state.userDocChecked = true
+        return state;
+      })
+    })
+  }
+  checkUserAuth = () => {
     this.fb.firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
+      if (user) {
         this.setState((state) => {
-          state.loggedIn = true
+          state.authChecked = true
           state.userName = user.email
           return state;
         });
+        this.checkUserDoc()
+      } else {
+        this.setState(state => {
+          state.authChecked = true;
+          state.userDocChecked = true;
+          return state;
+        })
       }
     })
   }
-
   render() {
+    console.log(!(this.state.userDocChecked && this.state.authChecked))
+    if (!(this.state.userDocChecked && this.state.authChecked)) {
+      return <ProgressIndicator />
+    }
     return (
         <Store.Provider value={this.state}>
           <Router>
@@ -44,10 +69,10 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        {this.state.loggedIn?<Navigate to="/"></Navigate>:(
-                          <div>
-                            <RegisterPage></RegisterPage>
-                          </div>
+                        {this.state.loggedIn ? <Navigate to="/"></Navigate> : (
+                            <div>
+                              <RegisterPage></RegisterPage>
+                            </div>
                         )}
                       </>
                     }
@@ -80,7 +105,7 @@ class App extends React.Component {
                     element={
                       <>
                         <div>
-                        <CalendarPage />
+                          <CalendarPage/>
                         </div>
                       </>
                     }
@@ -91,7 +116,7 @@ class App extends React.Component {
                     element={
                       <>
                         <div>
-                            <SettingsPage />
+                          <SettingsPage/>
                         </div>
                       </>
                     }

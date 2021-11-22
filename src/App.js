@@ -17,10 +17,10 @@ class App extends React.Component {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      authChecked: false,
+      loggedIn: false,
       userName: null,
       userDoc: null,
-      userDocChecked: false
+      userDocChecked: false,
     };
   }
   componentDidMount = () => {
@@ -29,6 +29,7 @@ class App extends React.Component {
   checkUserDoc = () => {
     this.fb.firebase.firestore().collection('Users').doc(this.fb.firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
       const userDoc = querySnapshot.data()
+      console.log(userDoc);
       this.setState(state => {
         state.userDocChecked = true
         return state;
@@ -39,14 +40,14 @@ class App extends React.Component {
     this.fb.firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState((state) => {
-          state.authChecked = true
+          state.loggedIn = true
           state.userName = user.email
           return state;
         });
         this.checkUserDoc()
       } else {
         this.setState(state => {
-          state.authChecked = true;
+          state.loggedIn = true;
           state.userDocChecked = true;
           return state;
         })
@@ -54,8 +55,8 @@ class App extends React.Component {
     })
   }
   render() {
-    console.log(!(this.state.userDocChecked && this.state.authChecked))
-    if (!(this.state.userDocChecked && this.state.authChecked)) {
+    console.log(!(this.state.userDocChecked && this.state.loggedIn))
+    if (!(this.state.userDocChecked && this.state.loggedIn)) {
       return <ProgressIndicator />
     }
     return (

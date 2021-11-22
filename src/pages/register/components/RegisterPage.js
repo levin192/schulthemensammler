@@ -59,7 +59,7 @@ class RegisterPage extends React.Component {
       isAdmin: false,
       firstname: '',
       lastname: '',
-
+      email: this.state.email,
 
     }).then(() => {
       console.log('Successfully created register doc')

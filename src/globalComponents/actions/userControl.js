@@ -69,7 +69,8 @@ export const UserActions: React.FunctionComponent<> = props => {
   const userIcon: IIconProps = {iconName: 'Contact'};
 
 
-  return (<>
+  return (
+      <>
         <Store.Consumer>
           {(value => (value.loggedIn) ? (
               <CommandButton iconProps={userIcon} text={value.userName} menuProps={loggedInProps}/>
@@ -77,7 +78,6 @@ export const UserActions: React.FunctionComponent<> = props => {
               <CommandButton iconProps={userIcon} text="Menu" menuProps={loggedOutProps}/>
           ))}
         </Store.Consumer>
-
       </>
   );
 };

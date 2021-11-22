@@ -24,7 +24,6 @@ class LoginPage extends React.Component {
   handleInputChange = (inputEl) => {
     this.setState((state) => {
       state[inputEl.target.id] = inputEl.target.value;
-
       return state;
     });
   };
@@ -40,7 +39,7 @@ class LoginPage extends React.Component {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(userCredential);
+          console.log(user);
           console.log('successfully logged in!');
           this.setState((state) => {
             state.shouldRedirect = true;

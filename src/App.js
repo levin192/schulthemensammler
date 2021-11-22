@@ -27,9 +27,11 @@ class App extends React.Component {
     this.checkUserAuth()
   }
   checkUserDoc = () => {
-    this.fb.firebase.firestore().collection('Users').doc(this.fb.firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
-      const userDoc = querySnapshot.data()
-      console.log(userDoc);
+    const userId = this.fb.firebase.auth().currentUser.uid
+
+    this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot((querySnapshot) => {
+      // const userDoc = querySnapshot.data()
+      // console.log(userDoc)
       this.setState(state => {
         state.userDocChecked = true
         return state;
@@ -55,12 +57,13 @@ class App extends React.Component {
     })
   }
   render() {
-    console.log(!(this.state.userDocChecked && this.state.loggedIn))
+    // console.log(!(this.state.userDocChecked && this.state.loggedIn))
     if (!(this.state.userDocChecked && this.state.loggedIn)) {
       return <ProgressIndicator />
     }
     return (
         <Store.Provider value={this.state}>
+          {console.log(this.state)}
           <Router>
             <PageHeader></PageHeader>
             <main className="content-container">

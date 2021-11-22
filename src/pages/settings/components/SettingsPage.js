@@ -2,60 +2,71 @@ import React, {useEffect, useState} from 'react';
 import {Store} from '../../../helpers/Store';
 import {PrimaryButton, TextField} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
-import {Dropdown, DropdownMenuItemType, IDropdownOption, IDropdownStyles} from '@fluentui/react/lib/Dropdown';
-import SettingsController from './SettingsController';
-
-const dropdownStyles: Partial<IDropdownStyles> = {
-  dropdown: {width: 300},
-};
-
-const options: IDropdownOption[] = [
-  {key: 'dayHeader', text: 'Tage', itemType: DropdownMenuItemType.Header},
-  {key: '1', text: 'Montag'},
-  {key: '2', text: 'Dienstag'},
-  {key: '3', text: 'Mittwoch'},
-  {key: '4', text: 'Donnerstag'},
-  {key: '6', text: 'Freitag'},
-  {key: '-', text: '-', itemType: DropdownMenuItemType.Divider},
-  {key: '7', text: 'Samstag'},
-  {key: '0', text: 'Sonntag'},
-];
+import SchoolDayPicker from "./SchoolDayPickerComponent";
 
 class SettingsPage extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
+      username: '',
       firstname: '',
       lastname: '',
+      email: '',
     }
-
   }
 
-  handleChange(e, selectedOption) {
-    console.log(selectedOption.key);
+  componentDidMount = () => {
+    this.getUser()
   }
 
+  getUser = () => {
+    const userId = this.fb.firebase.auth().currentUser.uid
+    const userEmail = this.fb.firebase.auth().currentUser.email
+
+    this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot((querySnapshot) => {
+      const userDoc = querySnapshot.data()
+
+      this.setState(state => {
+        state.username = userDoc.username
+        state.firstname = userDoc.firstname
+        state.lastname = userDoc.lastname
+        state.email = userEmail
+        return state;
+      })
+    })
+  }
 
   handleInputChange = (inputEl) => {
     this.setState((state) => {
       state[inputEl.target.id] = inputEl.target.value;
-
       return state;
     });
   };
 
-  saveSettings = () => {
-    const firstname = this.state.firstname;
-    const lastname = this.state.lastname;
+  saveSettings = (event) => {
+    event.preventDefault();
+    const userId = this.fb.firebase.auth().currentUser.uid
+    const username = this.state.username
+    const firstname = this.state.firstname
+    const lastname = this.state.lastname
+    const email = this.state.email
 
-    this.fb.firebase.firestore().collection('Users').doc(this.fb.firebase.auth().currentUser.uid).update({
+    this.fb.firebase.firestore().collection('Users').doc(userId).update({
+      username,
       firstname,
-      lastname
-
-
+      lastname,
+      email,
+    }).then(() => {
+      this.setState((state) => {
+        state.username = username
+        state.firstname = firstname
+        state.lastname = lastname
+        state.email = email
+        return state;
+      });
+      alert('Successfully updated data')
     })
-
 
   }
 
@@ -64,39 +75,53 @@ class SettingsPage extends React.Component {
     if (this.context.loggedIn) {
       return (
           <>
-            <h1>Settings</h1>
-            <TextField
-                id="firstname"
-                label={'Firstname'}
-                onChange={this.handleInputChange}
-                placeholder={'firstname'}
-            /><TextField
-              id="lastname"
-              label={'Lastname'}
-              placeholder={'lastname'}
-              onChange={this.handleInputChange}
-          />
+            <h1>Benutzer Settings</h1>
+            <form onSubmit={this.saveSettings}>
+              <TextField
+                  id="username"
+                  label={'Username'}
+                  value={this.state.username}
+                  onChange={this.handleInputChange}
+                  placeholder={'username'}
+              />
+              <TextField
+                  id="firstname"
+                  label={'Vorname'}
+                  value={this.state.firstname}
+                  onChange={this.handleInputChange}
+                  placeholder={'firstname'}
+              />
+              <TextField
+                  id="lastname"
+                  label={'Nachname'}
+                  value={this.state.lastname}
+                  placeholder={'lastname'}
+                  onChange={this.handleInputChange}
+              />
+              <TextField
+                  id="email"
+                  label={'E-Mail'}
+                  value={this.state.email}
+                  placeholder={'E-Mail'}
+                  onChange={this.handleInputChange}
+              />
 
-            <Dropdown
-                placeholder="Select options"
-                label="Schultage auswählen"
-                multiSelect
-                options={options}
-                styles={dropdownStyles}
-                onChange={this.handleChange}
-            />
+              {/*<TextField*/}
+              {/*    label="E-Mail"*/}
+              {/*    id="name"*/}
+              {/*    autoComplete="new-email"*/}
+              {/*    type="text"*/}
+              {/*/>*/}
 
-            <TextField
-                label="E-Mail"
-                id="name"
-                autoComplete="new-email"
-                type="text"
-            />
+              <br/>
+              <h1>Kalender Einstellungen</h1>
 
-            <SettingsController/>
+              <SchoolDayPicker/>
 
-            <h1>Hallo</h1>
-            <PrimaryButton text="Speichern" type="submit"/>
+              <br/>
+              <PrimaryButton text="Speichern" type="submit"/>
+
+            </form>
           </>
       );
     }

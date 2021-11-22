@@ -63,7 +63,6 @@ class App extends React.Component {
     }
     return (
         <Store.Provider value={this.state}>
-          {console.log(this.state)}
           <Router>
             <PageHeader></PageHeader>
             <main className="content-container">

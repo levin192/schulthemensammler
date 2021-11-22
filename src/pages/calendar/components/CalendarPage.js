@@ -1,8 +1,7 @@
 import React from 'react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import {Store} from '../../../helpers/Store'
-import {CalendarComponent} from './CalendarComponent'
-import {TextField} from "@fluentui/react";
+import CalendarComponent from "./CalendarComponent";
 
 class CalendarPage extends React.Component {
   constructor() {
@@ -21,8 +20,7 @@ class CalendarPage extends React.Component {
           <>
             <h1>Kalender</h1>
             <div id="borris" className=" calendar">
-                <h1>Schultage auswählen</h1>
-                <CalendarComponent/>
+                <CalendarComponent />
             </div>
           </>
       );

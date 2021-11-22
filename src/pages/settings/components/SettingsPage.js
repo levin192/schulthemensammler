@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Store} from '../../../helpers/Store';
 import {PrimaryButton, TextField} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
@@ -105,13 +105,6 @@ class SettingsPage extends React.Component {
                   placeholder={'E-Mail'}
                   onChange={this.handleInputChange}
               />
-
-              {/*<TextField*/}
-              {/*    label="E-Mail"*/}
-              {/*    id="name"*/}
-              {/*    autoComplete="new-email"*/}
-              {/*    type="text"*/}
-              {/*/>*/}
 
               <br/>
               <h1>Kalender Einstellungen</h1>

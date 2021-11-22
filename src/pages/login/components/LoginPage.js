@@ -43,7 +43,6 @@ class LoginPage extends React.Component {
           console.log('successfully logged in!');
           this.setState((state) => {
             state.shouldRedirect = true;
-
             return state;
           });
         })

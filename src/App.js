@@ -9,8 +9,7 @@ import FirebaseDataProvider from './helpers/Firebasedataprovider';
 import {Navigate} from 'react-router';
 import CalendarPage from './pages/calendar/components/CalendarPage';
 import SettingsPage from './pages/settings/components/SettingsPage';
-
-import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
+import {ProgressIndicator} from '@fluentui/react/lib/ProgressIndicator';
 
 class App extends React.Component {
   constructor() {
@@ -29,10 +28,8 @@ class App extends React.Component {
   }
   checkUserDoc = () => {
     const userId = this.fb.firebase.auth().currentUser.uid
-
     this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot((querySnapshot) => {
-      // const userDoc = querySnapshot.data()
-      // console.log(userDoc)
+      console.log({querySnapshot})
       this.setState(state => {
         state.userDocChecked = true
         return state;
@@ -62,12 +59,12 @@ class App extends React.Component {
   render() {
     // console.log(!(this.state.userDocChecked && this.state.loggedIn))
     if (!(this.state.userDocChecked && this.state.loggedIn)) {
-      return <ProgressIndicator />
+      return <ProgressIndicator/>
     }
     return (
         <Store.Provider value={this.state}>
           <Router>
-            <PageHeader></PageHeader>
+            <PageHeader/>
             <main className="content-container">
               <Routes>
                 <Route
@@ -75,25 +72,25 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        {this.state.isRegisteredUser ? <Navigate to="/"></Navigate> : (
+                        {this.state.isRegisteredUser ? <Navigate to="/"/> : (
                             <div>
-                              <RegisterPage></RegisterPage>
+                              <RegisterPage/>
                             </div>
                         )}
                       </>
                     }
-                ></Route>
+                />
                 <Route
                     path="/login"
                     exact
                     element={
                       <>
                         <div>
-                          <LoginPage></LoginPage>
+                          <LoginPage/>
                         </div>
                       </>
                     }
-                ></Route>
+                />
                 <Route
                     path="/"
                     exact
@@ -104,7 +101,7 @@ class App extends React.Component {
                         </div>
                       </>
                     }
-                ></Route>
+                />
                 <Route
                     path="/calendar"
                     exact
@@ -115,7 +112,7 @@ class App extends React.Component {
                         </div>
                       </>
                     }
-                ></Route>
+                />
                 <Route
                     path="/settings"
                     exact
@@ -126,10 +123,10 @@ class App extends React.Component {
                         </div>
                       </>
                     }
-                ></Route>
+                />
               </Routes>
             </main>
-            <PageFooter></PageFooter>
+            <PageFooter/>
           </Router>
         </Store.Provider>
     );

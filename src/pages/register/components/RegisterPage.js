@@ -1,4 +1,5 @@
 import React from 'react';
+import {ReactComponent as SideSVG} from '../../../svg/auth.svg';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import {
   MessageBar,
@@ -86,6 +87,7 @@ class RegisterPage extends React.Component {
 
     return (
         <>
+          <div>
           <h1>Registrieren</h1>
           <form onSubmit={this.registerUser}>
             <TextField
@@ -117,6 +119,10 @@ class RegisterPage extends React.Component {
                 {this.state.errorMessage}
               </MessageBar>
           )}
+          </div>
+          <div>
+            <SideSVG/>
+          </div>
         </>
     );
   }

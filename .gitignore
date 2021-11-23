@@ -74,3 +74,4 @@ fabric.properties
 .idea
 
 /node_modules
+/build

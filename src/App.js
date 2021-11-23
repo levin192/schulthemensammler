@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import RegisterPage from './pages/register/components/RegisterPage';
 import LoginPage from './pages/login/components/LoginPage';
 import PageHeader from './globalComponents/PageHeader';
@@ -94,6 +94,8 @@ class App extends React.Component {
                       <>
                         <div>
                           <h1>Placeholder home</h1>
+                          <button><Link to="/login">login</Link></button>
+                          <button><Link to="/register">register</Link></button>
                         </div>
                       </>
                     }
@@ -103,9 +105,9 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        <div>
-                          <CalendarPage/>
-                        </div>
+                        {!this.state.isRegisteredUser ? <Navigate to="/"/> : (
+                            <CalendarPage/>
+                        )}
                       </>
                     }
                 />
@@ -114,9 +116,9 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        <div>
-                          <SettingsPage/>
-                        </div>
+                        {!this.state.isRegisteredUser ? <Navigate to="/"/> : (
+                            <SettingsPage/>
+                        )}
                       </>
                     }
                 />

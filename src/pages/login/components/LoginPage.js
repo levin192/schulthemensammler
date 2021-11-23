@@ -65,52 +65,45 @@ class LoginPage extends React.Component {
     if (this.state.shouldRedirect) {
       return <Navigate to="/"/>;
     }
-    if (!this.context.isRegisteredUser) {
-      return (
-          <>
-            <div>
-              <h1>Login</h1>
-              <form onSubmit={this.loginUser}>
-                <TextField
-                    label="E-Mail"
-                    id="email"
-                    autoComplete="new-email"
-                    type="email"
-                    required
-                    onChange={this.handleInputChange}
-                />
-                <TextField
-                    id="password"
-                    required
-                    autoComplete="current-password"
-                    label="Passwort"
-                    type="password"
-                    canRevealPassword
-                    revealPasswordAriaLabel="Passwort anzeigen"
-                    onChange={this.handleInputChange}
-                />
-
-                <PrimaryButton text="Anmelden" type="submit"/>
-              </form>
-
-              {this.state.wasSuccessful ? null : (
-                  <MessageBar messageBarType={MessageBarType.error}>
-                    {this.state.errorMessage}
-                  </MessageBar>
-              )}
-            </div>
-            <div>
-              <SideSVG/>
-            </div>
-          </>
-      );
-    }
     return (
         <>
-          <h1>Login</h1>
-          <PrimaryButton text="Abmelden" type="button" onClick={this.logoutUser}/>
+          <div>
+            <h1>Login</h1>
+            {(!this.context.isRegisteredUser) ? (
+                <form onSubmit={this.loginUser}>
+                  <TextField
+                      label="E-Mail"
+                      id="email"
+                      autoComplete="new-email"
+                      type="email"
+                      required
+                      onChange={this.handleInputChange}
+                  />
+                  <TextField
+                      id="password"
+                      required
+                      autoComplete="current-password"
+                      label="Passwort"
+                      type="password"
+                      canRevealPassword
+                      revealPasswordAriaLabel="Passwort anzeigen"
+                      onChange={this.handleInputChange}
+                  />
+
+                  <PrimaryButton text="Anmelden" type="submit"/>
+                </form>
+            ) : (<PrimaryButton text="Abmelden" type="button" onClick={this.logoutUser}/>)}
+            {this.state.wasSuccessful ? null : (
+                <MessageBar messageBarType={MessageBarType.error}>
+                  {this.state.errorMessage}
+                </MessageBar>
+            )}
+          </div>
+          <div>
+            <SideSVG/>
+          </div>
         </>
-    )
+    );
   }
   static contextType = Store;
 }

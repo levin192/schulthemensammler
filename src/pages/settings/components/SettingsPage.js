@@ -62,6 +62,7 @@ class SettingsPage extends React.Component {
     const allUsernames = this.allUsernames
     this.getAllUsernames()
     console.log(allUsernames)
+
     if (allUsernames.find(item => item === username)) {
       alert('Username bereits vergeben')
     } else {
@@ -71,14 +72,7 @@ class SettingsPage extends React.Component {
         lastname,
         email,
       }).then(() => {
-        this.setState((state) => {
-          state.username = username
-          state.firstname = firstname
-          state.lastname = lastname
-          state.email = email
-          state.dataUpdated = true
-          return state;
-        });
+        alert('gespeichert')
       }, error => {
         this.setState((state) => {
           state.dataUpdated = 'Error'
@@ -92,7 +86,6 @@ class SettingsPage extends React.Component {
     if (this.context.loggedIn) {
       return (
           <>
-
             <Pivot aria-label="Settings Pivot">
               <PivotItem headerText="Daten" itemIcon="PlayerSettings">
                 <h1>Benutzer Settings</h1>
@@ -125,6 +118,7 @@ class SettingsPage extends React.Component {
                       placeholder={'E-Mail'}
                       onChange={this.handleInputChange}
                   />
+                  <br/>
                   <PrimaryButton text="Speichern" type="submit"/>
 
                 </form>

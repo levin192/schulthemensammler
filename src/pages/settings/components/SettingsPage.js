@@ -21,7 +21,7 @@ class SettingsPage extends React.Component {
 
   componentDidMount = () => {
     this.getUser()
-    // this.getAllUsernames()
+    this.getAllUsernames()
   }
 
   getUser = () => {

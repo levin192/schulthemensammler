@@ -1,6 +1,6 @@
 import React from 'react';
 import {Store} from '../../../helpers/Store';
-import {PrimaryButton, TextField, Pivot, PivotItem } from '@fluentui/react';
+import {PrimaryButton, TextField, Pivot, PivotItem, Spinner} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from "./SchoolDayPickerComponent";
 
@@ -13,11 +13,15 @@ class SettingsPage extends React.Component {
       firstname: '',
       lastname: '',
       email: '',
+      usernameUsed: false,
     }
+    this.allUsernames = []
+    console.log(this.allUsernames)
   }
 
   componentDidMount = () => {
     this.getUser()
+    // this.getAllUsernames()
   }
 
   getUser = () => {
@@ -44,6 +48,15 @@ class SettingsPage extends React.Component {
     });
   };
 
+  getAllUsernames = () => {
+    this.fb.firebase.firestore().collection('Users').get().then((snapshot) => {
+      snapshot.forEach((userDoc) => {
+        const username = userDoc.data().username
+        this.allUsernames.push(username)
+      })
+    })
+  }
+
   saveSettings = (event) => {
     event.preventDefault();
     const userId = this.fb.firebase.auth().currentUser.uid
@@ -51,23 +64,24 @@ class SettingsPage extends React.Component {
     const firstname = this.state.firstname
     const lastname = this.state.lastname
     const email = this.state.email
+    const allUsernames = this.allUsernames
 
-    this.fb.firebase.firestore().collection('Users').doc(userId).update({
-      username,
-      firstname,
-      lastname,
-      email,
-    }).then(() => {
-      this.setState((state) => {
-        state.username = username
-        state.firstname = firstname
-        state.lastname = lastname
-        state.email = email
-        return state;
-      });
-      alert('Successfully updated data')
+    this.getAllUsernames()
+
+    console.log(allUsernames)
+
+    allUsernames.forEach((usernames) => {
+      if (usernames === username) {
+        alert('Username bereits vergeben')
+      } else {
+        this.fb.firebase.firestore().collection('Users').doc(userId).update({
+          username,
+          firstname,
+          lastname,
+          email,
+        }).then(() => {})
+      }
     })
-
   }
 
 
@@ -84,20 +98,20 @@ class SettingsPage extends React.Component {
                       label={'Username'}
                       value={this.state.username}
                       onChange={this.handleInputChange}
-                      placeholder={'username'}
+                      placeholder={'Username'}
                   />
                   <TextField
                       id="firstname"
                       label={'Vorname'}
                       value={this.state.firstname}
                       onChange={this.handleInputChange}
-                      placeholder={'firstname'}
+                      placeholder={'Vorname'}
                   />
                   <TextField
                       id="lastname"
                       label={'Nachname'}
                       value={this.state.lastname}
-                      placeholder={'lastname'}
+                      placeholder={'Nachname'}
                       onChange={this.handleInputChange}
                   />
                   <TextField
@@ -107,16 +121,17 @@ class SettingsPage extends React.Component {
                       placeholder={'E-Mail'}
                       onChange={this.handleInputChange}
                   />
+
+                  <br/>
                   <PrimaryButton text="Speichern" type="submit"/>
 
                 </form>
               </PivotItem>
-              <PivotItem  headerText="Administration" itemIcon="CalendarSettings">
+              <PivotItem headerText="Administration" itemIcon="CalendarSettings">
                 <h1>Kalender Einstellungen</h1>
                 <SchoolDayPicker/>
               </PivotItem>
             </Pivot>
-
 
           </>
       );

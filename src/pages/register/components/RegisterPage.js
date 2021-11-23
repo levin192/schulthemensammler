@@ -26,11 +26,11 @@ class RegisterPage extends React.Component {
 
   registerUser = async (event) => {
     event.preventDefault();
-    //const email = this.state.email;
-    //const password = this.state.password;
+    const email = this.state.email;
+    const password = this.state.password;
 
     try {
-     // const data = await this.fb.register({email, password});
+      await this.fb.register({email, password});
 
       await this.createUserDoc()
 
@@ -109,6 +109,9 @@ class RegisterPage extends React.Component {
                 revealPasswordAriaLabel="Passwort anzeigen"
                 onChange={this.handleInputChange}
             />
+
+            <br/>
+
             <PrimaryButton text="Registrieren" type="submit"/>
           </form>
 

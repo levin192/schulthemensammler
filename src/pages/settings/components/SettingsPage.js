@@ -20,6 +20,7 @@ class SettingsPage extends React.Component {
     }
   }
   componentDidMount = () => {
+    document.title = '📅 | Einstellungen ✏️'
     this.getUser()
     this.getAllUsernames()
   }

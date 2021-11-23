@@ -10,8 +10,8 @@ class CalendarPage extends React.Component {
     this.state = {};
   }
 
-  componentDidMount = () => {
-    // document.getElementById('borris').classList.remove('ani')
+  componentDidMount() {
+    document.title = '📅 | Kalender 📆'
   }
 
   render() {

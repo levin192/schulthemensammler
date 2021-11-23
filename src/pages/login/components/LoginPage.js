@@ -21,6 +21,9 @@ class LoginPage extends React.Component {
       shouldRedirect: false,
     };
   }
+  componentDidMount() {
+    document.title = '📅 | Anmelden 🪵'
+  }
   handleInputChange = (inputEl) => {
     this.setState((state) => {
       state[inputEl.target.id] = inputEl.target.value;

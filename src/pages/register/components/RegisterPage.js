@@ -25,6 +25,10 @@ class RegisterPage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    document.title = '📅 | Registrieren 📝'
+  }
+
   registerUser = async (event) => {
     event.preventDefault();
     const email = this.state.email;

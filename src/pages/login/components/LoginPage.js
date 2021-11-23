@@ -1,4 +1,5 @@
 import React from 'react';
+import {ReactComponent as SideSVG} from '../../../svg/relax.svg';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import {
   MessageBar,
@@ -20,19 +21,16 @@ class LoginPage extends React.Component {
       shouldRedirect: false,
     };
   }
-
   handleInputChange = (inputEl) => {
     this.setState((state) => {
       state[inputEl.target.id] = inputEl.target.value;
       return state;
     });
   };
-
   loginUser = (event) => {
     event.preventDefault();
     const email = this.state.email;
     const password = this.state.password;
-
     this.fb.firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -50,7 +48,6 @@ class LoginPage extends React.Component {
           this.setState((state) => {
             state.wasSuccessful = false;
             state.errorMessage = error.message;
-
             return state;
           });
         });
@@ -64,43 +61,47 @@ class LoginPage extends React.Component {
       });
     })
   }
-
   render() {
     if (this.state.shouldRedirect) {
-      return <Navigate to="/"></Navigate>;
+      return <Navigate to="/"/>;
     }
     if (!this.context.isRegisteredUser) {
       return (
           <>
-            <h1>Login</h1>
-            <form onSubmit={this.loginUser}>
-              <TextField
-                  label="E-Mail"
-                  id="email"
-                  autoComplete="new-email"
-                  type="email"
-                  required
-                  onChange={this.handleInputChange}
-              />
-              <TextField
-                  id="password"
-                  required
-                  autoComplete="current-password"
-                  label="Passwort"
-                  type="password"
-                  canRevealPassword
-                  revealPasswordAriaLabel="Passwort anzeigen"
-                  onChange={this.handleInputChange}
-              />
+            <div>
+              <h1>Login</h1>
+              <form onSubmit={this.loginUser}>
+                <TextField
+                    label="E-Mail"
+                    id="email"
+                    autoComplete="new-email"
+                    type="email"
+                    required
+                    onChange={this.handleInputChange}
+                />
+                <TextField
+                    id="password"
+                    required
+                    autoComplete="current-password"
+                    label="Passwort"
+                    type="password"
+                    canRevealPassword
+                    revealPasswordAriaLabel="Passwort anzeigen"
+                    onChange={this.handleInputChange}
+                />
 
-              <PrimaryButton text="Anmelden" type="submit"/>
-            </form>
+                <PrimaryButton text="Anmelden" type="submit"/>
+              </form>
 
-            {this.state.wasSuccessful ? null : (
-                <MessageBar messageBarType={MessageBarType.error}>
-                  {this.state.errorMessage}
-                </MessageBar>
-            )}
+              {this.state.wasSuccessful ? null : (
+                  <MessageBar messageBarType={MessageBarType.error}>
+                    {this.state.errorMessage}
+                  </MessageBar>
+              )}
+            </div>
+            <div>
+              <SideSVG/>
+            </div>
           </>
       );
     }
@@ -111,7 +112,6 @@ class LoginPage extends React.Component {
         </>
     )
   }
-
   static contextType = Store;
 }
 

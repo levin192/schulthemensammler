@@ -73,9 +73,7 @@ class App extends React.Component {
                     element={
                       <>
                         {this.state.isRegisteredUser ? <Navigate to="/"/> : (
-                            <div>
-                              <RegisterPage/>
-                            </div>
+                            <RegisterPage/>
                         )}
                       </>
                     }
@@ -85,9 +83,7 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        <div>
-                          <LoginPage/>
-                        </div>
+                        <LoginPage/>
                       </>
                     }
                 />

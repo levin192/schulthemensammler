@@ -15,12 +15,39 @@ body {
   &.main-container {
     padding-top: 50px;
     padding-bottom: 50px;
+    display: flex;
+    @include breakpoint-up(sm) {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      grid-template-rows: 1fr;
+      gap: 0 0;
+      grid-template-areas: "content-left content-right";
+    }
+    > div {
+      max-width: 100%;
+      &:nth-child(1) {
+        grid-area: content-left;
+        padding-right: 15px;
+      }
+      &:nth-child(2) {
+        padding-left: 15px;
+        grid-area: content-right;
+        display: none;
+        @include breakpoint-up(sm) {
+          display: block;
+        }
+      }
+    }
   }
   @each $breakpoint, $width in $breakpoints {
     @include breakpoint-up($breakpoint) {
-      width: calc(#{$width} / 2);
+      width: calc(#{$width} / 1.05);
     }
   }
+}
+
+.main-container {
+
 }
 
 

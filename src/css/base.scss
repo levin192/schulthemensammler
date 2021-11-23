@@ -6,6 +6,13 @@
 @import 'layout/footer';
 @import 'layout/typography';
 
+* {
+  box-sizing: border-box;
+  &:before, &:after {
+    box-sizing: border-box;
+  }
+}
+
 .calendar {
   height: auto;
   width: 100%;

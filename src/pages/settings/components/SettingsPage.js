@@ -3,12 +3,12 @@ import {Store} from '../../../helpers/Store';
 import {PrimaryButton, TextField, Pivot, PivotItem, MessageBar, MessageBarType} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from './SchoolDayPickerComponent';
+import {UserAdministration} from './UserAdministration';
 
 class SettingsPage extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
-    this.allUsernames = []
     this.state = {
       username: '',
       firstname: '',
@@ -16,7 +16,9 @@ class SettingsPage extends React.Component {
       email: '',
       isAdmin: false,
       dataUpdated: false,
+      messageBarText: '',
       usernameUsed: false,
+      allUsernames: []
     }
   }
   componentDidMount = () => {
@@ -33,7 +35,7 @@ class SettingsPage extends React.Component {
         state.username = userDoc.username
         state.firstname = userDoc.firstname
         state.lastname = userDoc.lastname
-        this.isAdmin = userDoc.isAdmin
+        state.isAdmin = userDoc.isAdmin
         state.email = userEmail
         return state;
       })
@@ -49,7 +51,7 @@ class SettingsPage extends React.Component {
     this.fb.firebase.firestore().collection('Users').get().then((snapshot) => {
       snapshot.forEach((userDoc) => {
         const username = userDoc.data().username
-        this.allUsernames.push(username)
+        this.state.allUsernames.push(username)
       })
     })
   }
@@ -60,12 +62,14 @@ class SettingsPage extends React.Component {
     const firstname = this.state.firstname
     const lastname = this.state.lastname
     const email = this.state.email
-    const allUsernames = this.allUsernames
+    const allUsernames = this.state.allUsernames
     this.getAllUsernames()
-    console.log(allUsernames)
-
-    if (allUsernames.find(item => item === username)) {
-      alert('Username bereits vergeben')
+    if (allUsernames.includes(username)) {
+      this.setState((state) => {
+        state.dataUpdated = 'Error'
+        state.messageBarText = 'Username bereits vergeben!'
+        return state;
+      });
     } else {
       this.fb.firebase.firestore().collection('Users').doc(userId).update({
         username,
@@ -73,10 +77,15 @@ class SettingsPage extends React.Component {
         lastname,
         email,
       }).then(() => {
-        alert('gespeichert')
+        this.setState((state) => {
+          state.dataUpdated = true
+          state.messageBarText = 'Daten erfolgreich gespeichert!'
+          return state;
+        });
       }, error => {
         this.setState((state) => {
           state.dataUpdated = 'Error'
+          state.messageBarText = error.message
           console.error(error.message)
           return state;
         });
@@ -123,16 +132,22 @@ class SettingsPage extends React.Component {
                   <PrimaryButton text="Speichern" type="submit"/>
 
                 </form>
-                {this.state.dataUpdated ? (
-                    <MessageBar messageBarType={MessageBarType.success}>
-                      Daten erfolgreich gespeichert!
+
+                {this.state.dataUpdated === 'Error' ? (
+                    <MessageBar messageBarType={MessageBarType.error}>
+                      {this.state.messageBarText}
                     </MessageBar>
-                ) : (this.state.dataUpdated === 'Error' ? alert('Fehler beim speichern der Daten') : null)}
+                ) : (this.state.dataUpdated ? (
+                    <MessageBar messageBarType={MessageBarType.success}>
+                      {this.state.messageBarText}
+                    </MessageBar>
+                ) : null)}
               </PivotItem>
-              {this.isAdmin ? (
+              {this.state.isAdmin ? (
                   <PivotItem headerText="Administration" itemIcon="CalendarSettings">
                     <h1>Kalender Einstellungen</h1>
                     <SchoolDayPicker/>
+                    <UserAdministration userList={this.state.allUsernames}/>
                   </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">

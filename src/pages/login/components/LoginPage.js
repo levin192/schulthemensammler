@@ -69,7 +69,7 @@ class LoginPage extends React.Component {
     if (this.state.shouldRedirect) {
       return <Navigate to="/"></Navigate>;
     }
-    if (!this.context.loggedIn) {
+    if (!this.context.isRegisteredUser) {
       return (
           <>
             <h1>Login</h1>

@@ -18,6 +18,7 @@ class App extends React.Component {
     this.fb = new FirebaseDataProvider();
     this.state = {
       loggedIn: false,
+      isRegisteredUser: false,
       userName: null,
       userDoc: null,
       userDocChecked: false,
@@ -44,11 +45,13 @@ class App extends React.Component {
         this.setState((state) => {
           state.loggedIn = true
           state.userName = user.email
+          state.isRegisteredUser = true
           return state;
         });
         this.checkUserDoc()
       } else {
         this.setState(state => {
+          state.isRegisteredUser = false
           state.loggedIn = true;
           state.userDocChecked = true;
           return state;
@@ -72,7 +75,7 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        {this.state.loggedIn ? <Navigate to="/"></Navigate> : (
+                        {this.state.isRegisteredUser ? <Navigate to="/"></Navigate> : (
                             <div>
                               <RegisterPage></RegisterPage>
                             </div>

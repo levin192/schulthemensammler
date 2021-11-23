@@ -14,6 +14,7 @@ export const UserActions: React.FunctionComponent<> = props => {
   const clickEvent = (event, el) => {
     switch (el.key) { // Switch in case other keys need custom code
       case 'logout':
+        console.log('Logout?')
         fb.firebase.auth().signOut().then(() => {
           HandleClickEvent('')
           window.location.reload()
@@ -72,7 +73,7 @@ export const UserActions: React.FunctionComponent<> = props => {
   return (
       <>
         <Store.Consumer>
-          {(value => (value.loggedIn) ? (
+          {(value => (value.isRegisteredUser) ? (
               <CommandButton iconProps={userIcon} text={value.userName} menuProps={loggedInProps}/>
           ) : (
               <CommandButton iconProps={userIcon} text="Menu" menuProps={loggedOutProps}/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Store} from '../../../helpers/Store';
-import {PrimaryButton, TextField, Pivot, PivotItem, Spinner, MessageBar, MessageBarType} from '@fluentui/react';
+import {PrimaryButton, TextField, Pivot, PivotItem, MessageBar, MessageBarType} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from './SchoolDayPickerComponent';
 
@@ -8,6 +8,7 @@ class SettingsPage extends React.Component {
   constructor() {
     super();
     this.fb = new FirebaseDataProvider();
+    this.allUsernames = []
     this.state = {
       username: '',
       firstname: '',
@@ -17,8 +18,6 @@ class SettingsPage extends React.Component {
       dataUpdated: false,
       usernameUsed: false,
     }
-    this.allUsernames = []
-    console.log(this.allUsernames)
   }
   componentDidMount = () => {
     this.getUser()
@@ -45,7 +44,6 @@ class SettingsPage extends React.Component {
       return state;
     });
   };
-
   getAllUsernames = () => {
     this.fb.firebase.firestore().collection('Users').get().then((snapshot) => {
       snapshot.forEach((userDoc) => {
@@ -54,7 +52,6 @@ class SettingsPage extends React.Component {
       })
     })
   }
-
   saveSettings = (event) => {
     event.preventDefault();
     const userId = this.fb.firebase.auth().currentUser.uid
@@ -65,33 +62,32 @@ class SettingsPage extends React.Component {
     const allUsernames = this.allUsernames
     this.getAllUsernames()
     console.log(allUsernames)
-    allUsernames.forEach((usernames) => {
-      if (usernames === username) {
-        alert('Username bereits vergeben')
-      } else {
-        this.fb.firebase.firestore().collection('Users').doc(userId).update({
-          username,
-          firstname,
-          lastname,
-          email,
-        }).then(() => {
-          this.setState((state) => {
-            state.username = username
-            state.firstname = firstname
-            state.lastname = lastname
-            state.email = email
-            state.dataUpdated = true
-            return state;
-          });
-        }, error => {
-          this.setState((state) => {
-            state.dataUpdated = 'Error'
-            console.error(error.message)
-            return state;
-          });
-        })
-      }
-  })
+    if (allUsernames.find(item => item === username)) {
+      alert('Username bereits vergeben')
+    } else {
+      this.fb.firebase.firestore().collection('Users').doc(userId).update({
+        username,
+        firstname,
+        lastname,
+        email,
+      }).then(() => {
+        this.setState((state) => {
+          state.username = username
+          state.firstname = firstname
+          state.lastname = lastname
+          state.email = email
+          state.dataUpdated = true
+          return state;
+        });
+      }, error => {
+        this.setState((state) => {
+          state.dataUpdated = 'Error'
+          console.error(error.message)
+          return state;
+        });
+      })
+    }
+  }
   render() {
     if (this.context.loggedIn) {
       return (

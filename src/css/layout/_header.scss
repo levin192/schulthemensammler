@@ -12,7 +12,10 @@
     }
   }
   &-title {
-
+    a {
+      text-decoration: none;
+      color: black;
+    }
   }
   &-actions {
     margin-left: auto;

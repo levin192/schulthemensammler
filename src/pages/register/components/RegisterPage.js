@@ -26,11 +26,11 @@ class RegisterPage extends React.Component {
 
   registerUser = async (event) => {
     event.preventDefault();
-    const email = this.state.email;
-    const password = this.state.password;
+    //const email = this.state.email;
+    //const password = this.state.password;
 
     try {
-      const data = await this.fb.register({email, password});
+     // const data = await this.fb.register({email, password});
 
       await this.createUserDoc()
 
@@ -81,7 +81,7 @@ class RegisterPage extends React.Component {
 
   render() {
     if (this.state.shouldRedirect) {
-      return <Navigate to="/"></Navigate>;
+      return <Navigate to="/"/>;
     }
 
     return (

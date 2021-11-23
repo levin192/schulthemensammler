@@ -1,14 +1,21 @@
 body {
- // display: grid;
+  min-height: 100%;
+  background-color: #F1F1F1;
   display: block;
 }
 
 .content-container {
+  box-shadow: rgba(0, 0, 0, 0.133) 0 3.2px 7.2px 0, rgba(0, 0, 0, 0.11) 0 0.6px 1.8px 0;
   max-width: 100%;
   padding-inline-start: 15px;
   padding-inline-end: 15px;
   margin: auto;
   display: flex;
+  background-color: white;
+  &.main-container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
   @each $breakpoint, $width in $breakpoints {
     @include breakpoint-up($breakpoint) {
       width: calc(#{$width} / 2);

@@ -1,22 +1,14 @@
 import React from 'react';
-import {getTheme} from '@fluentui/react';
 import {UserActions} from './actions/UserActions';
 
 
 class PageHeader extends React.Component {
-  constructor() {
-    super();
-    this.theme = getTheme();
-  }
-
-
-
   render() {
     return (
         <>
-          <header style={{boxShadow: this.theme.effects.elevation8}} className="content-container">
+          <header className="content-container">
             <div style={{width: 100 + '%', paddingTop: 15 + 'px', paddingBottom: 15 + 'px'}} className="header-container">
-              <div className="header-title">SchulthemenSammler</div>
+              <div className="header-title"><a href="/">SchulthemenSammler</a></div>
               <div className="header-actions">
                 <UserActions/>
               </div>

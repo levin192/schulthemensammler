@@ -1,6 +1,6 @@
 import React from 'react';
 import {Store} from '../../../helpers/Store';
-import {PrimaryButton, TextField} from '@fluentui/react';
+import {PrimaryButton, TextField, Icon, IStyleSet, Label, ILabelStyles, Pivot, IPivotItemProps, PivotItem } from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from "./SchoolDayPickerComponent";
 
@@ -75,46 +75,49 @@ class SettingsPage extends React.Component {
     if (this.context.loggedIn) {
       return (
           <>
-            <h1>Benutzer Settings</h1>
-            <form onSubmit={this.saveSettings}>
-              <TextField
-                  id="username"
-                  label={'Username'}
-                  value={this.state.username}
-                  onChange={this.handleInputChange}
-                  placeholder={'username'}
-              />
-              <TextField
-                  id="firstname"
-                  label={'Vorname'}
-                  value={this.state.firstname}
-                  onChange={this.handleInputChange}
-                  placeholder={'firstname'}
-              />
-              <TextField
-                  id="lastname"
-                  label={'Nachname'}
-                  value={this.state.lastname}
-                  placeholder={'lastname'}
-                  onChange={this.handleInputChange}
-              />
-              <TextField
-                  id="email"
-                  label={'E-Mail'}
-                  value={this.state.email}
-                  placeholder={'E-Mail'}
-                  onChange={this.handleInputChange}
-              />
+            <Pivot aria-label="Count and Icon Pivot Example">
+              <PivotItem headerText="Daten" itemIcon="PlayerSettings">
+                <h1>Benutzer Settings</h1>
+                <form onSubmit={this.saveSettings}>
+                  <TextField
+                      id="username"
+                      label={'Username'}
+                      value={this.state.username}
+                      onChange={this.handleInputChange}
+                      placeholder={'username'}
+                  />
+                  <TextField
+                      id="firstname"
+                      label={'Vorname'}
+                      value={this.state.firstname}
+                      onChange={this.handleInputChange}
+                      placeholder={'firstname'}
+                  />
+                  <TextField
+                      id="lastname"
+                      label={'Nachname'}
+                      value={this.state.lastname}
+                      placeholder={'lastname'}
+                      onChange={this.handleInputChange}
+                  />
+                  <TextField
+                      id="email"
+                      label={'E-Mail'}
+                      value={this.state.email}
+                      placeholder={'E-Mail'}
+                      onChange={this.handleInputChange}
+                  />
+                  <PrimaryButton text="Speichern" type="submit"/>
 
-              <br/>
-              <h1>Kalender Einstellungen</h1>
+                </form>
+              </PivotItem>
+              <PivotItem  headerText="Administration" itemIcon="CalendarSettings">
+                <h1>Kalender Einstellungen</h1>
+                <SchoolDayPicker/>
+              </PivotItem>
+            </Pivot>
 
-              <SchoolDayPicker/>
 
-              <br/>
-              <PrimaryButton text="Speichern" type="submit"/>
-
-            </form>
           </>
       );
     }

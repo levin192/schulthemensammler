@@ -65,7 +65,7 @@ class App extends React.Component {
         <Store.Provider value={this.state}>
           <Router>
             <PageHeader/>
-            <main className="content-container">
+            <main className="content-container main-container">
               <Routes>
                 <Route
                     path="/register"

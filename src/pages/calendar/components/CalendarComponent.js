@@ -28,9 +28,7 @@ function getTextField() {
 const stackStyles: Partial<IStackStyles> = { root: { width: '100%' } };
 
 export default class CalendarComponent extends React.Component {
-    constructor() {
-        super();
-    }
+
     render() {
         return (
             <StackItem horizontal styles={stackStyles}>

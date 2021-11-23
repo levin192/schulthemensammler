@@ -3,6 +3,7 @@
 
 @import 'layout/display';
 @import 'layout/header';
+@import 'layout/footer';
 @import 'layout/typography';
 
 .calendar {
@@ -13,5 +14,13 @@
   //border: black 1px solid;
   &.ani {
     transform: scale(5);
+  }
+}
+
+button {
+  &.ms-Button {
+    &:not(&--icon) {
+      margin: 15px 0;
+    }
   }
 }

@@ -60,7 +60,6 @@ export default class SchoolDayPicker extends React.Component {
     }
 
     render () {
-        console.log('options ')
         return (
             <Dropdown
                 placeholder="Select options"

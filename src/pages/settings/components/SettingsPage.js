@@ -1,6 +1,6 @@
 import React from 'react';
 import {Store} from '../../../helpers/Store';
-import {PrimaryButton, TextField, Icon, IStyleSet, Label, ILabelStyles, Pivot, IPivotItemProps, PivotItem } from '@fluentui/react';
+import {PrimaryButton, TextField, Pivot, PivotItem } from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from "./SchoolDayPickerComponent";
 

@@ -1,10 +1,7 @@
 import React from 'react';
-import {Dropdown, DropdownMenuItemType, IDropdownStyles, IDropdownOption} from '@fluentui/react/lib/Dropdown';
+import {Dropdown, DropdownMenuItemType, IDropdownOption} from '@fluentui/react/lib/Dropdown';
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 
-const dropdownStyles: Partial<IDropdownStyles> = {
-    dropdown: {width: 300},
-};
 
 const options: IDropdownOption[] = [
     {key: 'dayHeader', text: 'Tage', itemType: DropdownMenuItemType.Header},
@@ -42,7 +39,7 @@ export default class SchoolDayPicker extends React.Component {
     // }
 
     getSchooldays = () => {
-        const userId = this.fb.firebase.auth().currentUser.uid
+       // const userId = this.fb.firebase.auth().currentUser.uid
 
         this.fb.firebase.firestore().collection('settings').doc('schultage').onSnapshot((querySnapshot) => {
             const schooldays = querySnapshot.data()

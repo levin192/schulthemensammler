@@ -1,6 +1,6 @@
 import React from 'react';
 import {Store} from '../../../helpers/Store';
-import {PrimaryButton, TextField, Pivot, PivotItem, MessageBar, MessageBarType} from '@fluentui/react';
+import {MessageBar, MessageBarType, Pivot, PivotItem, PrimaryButton, TextField} from '@fluentui/react';
 import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
 import SchoolDayPicker from './SchoolDayPickerComponent';
 import {UserAdministration} from './UserAdministration';
@@ -11,6 +11,7 @@ class SettingsPage extends React.Component {
     this.fb = new FirebaseDataProvider();
     this.state = {
       username: '',
+      oldUsername: '',
       firstname: '',
       lastname: '',
       email: '',
@@ -23,23 +24,39 @@ class SettingsPage extends React.Component {
   }
   componentDidMount = () => {
     document.title = '📅 | Einstellungen ✏️'
-    this.getUser()
-    this.getAllUsernames()
-  }
-  getUser = () => {
-    const userId = this.fb.firebase.auth().currentUser.uid
-    const userEmail = this.fb.firebase.auth().currentUser.email
-    this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot((querySnapshot) => {
-      const userDoc = querySnapshot.data()
-      this.setState(state => {
-        state.username = userDoc.username
-        state.firstname = userDoc.firstname
-        state.lastname = userDoc.lastname
-        state.isAdmin = userDoc.isAdmin
-        state.email = userEmail
+    this.asyncUser().then(r => this.getAllUsernames(), error => {
+      this.setState((state) => {
+        state.dataUpdated = 'Error'
+        state.messageBarText = error.message
+        console.error(error.message)
         return state;
-      })
+      });
     })
+  }
+  asyncUser = async () => {
+    return await this.getUser()
+  }
+  getUser() {
+    return new Promise(resolve => {
+      const userId = this.fb.firebase.auth().currentUser.uid
+      const userEmail = this.fb.firebase.auth().currentUser.email
+      const docRef = this.fb.firebase.firestore().collection('Users').doc(userId)
+      docRef.get().then((thisDoc) => {
+        if (thisDoc.exists) {
+          const userDoc = thisDoc.data()
+          this.setState(state => {
+            state.username = userDoc.username
+            state.oldUsername = userDoc.username
+            state.firstname = userDoc.firstname
+            state.lastname = userDoc.lastname
+            state.isAdmin = userDoc.isAdmin
+            state.email = userEmail
+            return state;
+          })
+          resolve(true)
+        }
+      })
+    });
   }
   handleInputChange = (inputEl) => {
     this.setState((state) => {
@@ -48,12 +65,14 @@ class SettingsPage extends React.Component {
     });
   };
   getAllUsernames = () => {
-    this.fb.firebase.firestore().collection('Users').get().then((snapshot) => {
-      snapshot.forEach((userDoc) => {
-        const username = userDoc.data().username
-        this.state.allUsernames.push(username)
+    if (!this.state.allUsernames.includes(this.state.username)) {
+      this.fb.firebase.firestore().collection('Users').get().then((snapshot) => {
+        snapshot.forEach((userDoc) => {
+          const username = userDoc.data().username
+          this.state.allUsernames.push(username)
+        })
       })
-    })
+    }
   }
   saveSettings = (event) => {
     event.preventDefault();
@@ -63,8 +82,7 @@ class SettingsPage extends React.Component {
     const lastname = this.state.lastname
     const email = this.state.email
     const allUsernames = this.state.allUsernames
-    this.getAllUsernames()
-    if (allUsernames.includes(username)) {
+    if (allUsernames.includes(username) || this.state.oldUsername === username) {
       this.setState((state) => {
         state.dataUpdated = 'Error'
         state.messageBarText = 'Username bereits vergeben!'
@@ -77,6 +95,8 @@ class SettingsPage extends React.Component {
         lastname,
         email,
       }).then(() => {
+        //this.state.allUsernames.filter(()=>{})
+        this.state.allUsernames.push(username)
         this.setState((state) => {
           state.dataUpdated = true
           state.messageBarText = 'Daten erfolgreich gespeichert!'

@@ -28,8 +28,7 @@ class App extends React.Component {
   }
   checkUserDoc = () => {
     const userId = this.fb.firebase.auth().currentUser.uid
-    this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot((querySnapshot) => {
-      console.log({querySnapshot})
+    this.fb.firebase.firestore().collection('Users').doc(userId).onSnapshot(() => {
       this.setState(state => {
         state.userDocChecked = true
         return state;

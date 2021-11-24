@@ -72,9 +72,7 @@ class App extends React.Component {
                     exact
                     element={
                       <>
-                        {this.state.isRegisteredUser ? <Navigate to="/"/> : (
-                            <RegisterPage/>
-                        )}
+                        <RegisterPage/>
                       </>
                     }
                 />

@@ -24,7 +24,9 @@ export const UserAdministration: React.FunctionComponent = (props) => {
       className: null
     }
   })
+  // eslint-disable-next-line
   const [items, setItems] = useState(populateList)
+  // eslint-disable-next-line
   const [searchText, setSearchText] = useState('')
   console.log(items)
   const columns = [
@@ -33,6 +35,7 @@ export const UserAdministration: React.FunctionComponent = (props) => {
     {key: 'adminCol', name: 'Admin', fieldName: 'admin', minWidth: 50, maxWidth: 200, isResizable: true},
     {key: 'classCol', name: 'Klasse', fieldName: 'classSelect', minWidth: 150, maxWidth: 200, isResizable: true},
   ]
+  // eslint-disable-next-line
   const originalItems = items
   const onFilterChanged = (element) => {
     setSearchText(element.target.value)
@@ -54,6 +57,8 @@ export const UserAdministration: React.FunctionComponent = (props) => {
           { key: 'C', text: 'Option C' },
           { key: 'D', text: 'Option D' },
         ]}/>)
+      default:
+        return null
     }
   }
   return (

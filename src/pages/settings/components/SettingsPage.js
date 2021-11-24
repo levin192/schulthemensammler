@@ -95,7 +95,7 @@ class SettingsPage extends React.Component {
         lastname,
         email,
       }).then(() => {
-        this.state.allUsernames.filter(()=>{})
+        //this.state.allUsernames.filter(()=>{})
         this.state.allUsernames.push(username)
         this.setState((state) => {
           state.dataUpdated = true

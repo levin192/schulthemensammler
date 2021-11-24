@@ -86,7 +86,7 @@ class RegisterPage extends React.Component {
 
   render() {
     if (this.state.shouldRedirect) {
-      return <Navigate to="/"/>;
+      return <Navigate to="/settings"/>;
     }
 
     return (

@@ -27,26 +27,35 @@ class App extends React.Component {
   componentDidMount = () => {
     this.checkUserAuth();
   };
+
   checkUserDoc = () => {
     const userId = this.fb.firebase.auth().currentUser.uid;
     this.fb.firebase
       .firestore()
       .collection("Users")
       .doc(userId)
-      .onSnapshot(() => {
+      .onSnapshot((doc) => {
         this.setState((state) => {
+          state.userDoc = { ...state.userDoc, ...doc.data() };
           state.userDocChecked = true;
           return state;
         });
       });
   };
+
   checkUserAuth = () => {
     this.fb.firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        console.log(user);
         this.setState((state) => {
           state.loggedIn = true;
           state.userName = user.email;
           state.isRegisteredUser = true;
+          state.userDoc = {
+            uid: user.uid,
+            email: user.email,
+            emailVerified: user.emailVerified,
+          };
           return state;
         });
         this.checkUserDoc();
@@ -60,8 +69,8 @@ class App extends React.Component {
       }
     });
   };
+
   render() {
-    // console.log(!(this.state.userDocChecked && this.state.loggedIn))
     if (!(this.state.userDocChecked && this.state.loggedIn)) {
       return <ProgressIndicator />;
     }

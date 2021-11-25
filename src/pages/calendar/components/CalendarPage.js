@@ -70,16 +70,18 @@ class CalendarPage extends React.Component {
     if (this.context.loggedIn) {
       return (
         <>
-          <h1>Kalender</h1>
 
-          <div id="calendar" className="calendar">
-            <CalendarComponent onCalenderClick={this.onCalenderClick} />
-            <TextField
-              id={"eintragen"}
-              label="Neuer Eintrag"
-              multiline
-              autoAdjustHeight
-            />
+          <div>
+            <h1>Kalender</h1>
+            <div id="calendar" className="calendar">
+              <CalendarComponent onCalenderClick={this.onCalenderClick} />
+              <TextField
+                id={"eintragen"}
+                label="Neuer Eintrag"
+                multiline
+                autoAdjustHeight
+              />
+            </div>
           </div>
           <div>
             <div>Ausgewählter Tag: {this.state.currentSelectedDayString}</div>

@@ -6,51 +6,61 @@ import {ComboBox} from '@fluentui/react/lib/ComboBox';
 import {useState} from 'react';
 
 export const UserAdministration: React.FunctionComponent = (props) => {
-  const populateList = () => props.userList.map((name, index) => {
-    if (name.length > 0) {
+  console.log(props.userList)
+  const populateList = () => props.userList.map((userObj, index) => {
+    console.log(userObj)
+    if (userObj) {
       return {
         key: index,
-        name: name,
-        email: 'mail@example.com',
-        admin: false,
+        userName: userObj.username,
+        firstName: userObj.firstName,
+        lastName: userObj.lastName,
+        email: userObj.email,
+        admin: userObj.isAdmin,
         className: null
       }
     }
     return {
       key: index,
-      name: null,
-      email: 'mail@example.com',
+      userName: null,
+      firstName: null,
+      lastName: null,
+      email: null,
       admin: false,
       className: null
     }
   })
   // eslint-disable-next-line
-  const [items, setItems] = useState(populateList)
+  const [userItems, setUserItems] = useState(populateList)
   // eslint-disable-next-line
   const [searchText, setSearchText] = useState('')
-  console.log(items)
+  console.log(userItems)
   const columns = [
-    {key: 'nameCol', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true},
+    {key: 'userNameCol', name: 'Username', fieldName: 'userName', minWidth: 100, maxWidth: 200, isResizable: true},
+    {key: 'fullNameCol', name: 'Vor-/Nachname', fieldName: 'fullName', minWidth: 100, maxWidth: 200, isResizable: true},
     {key: 'emailCol', name: 'E-Mail', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true},
     {key: 'adminCol', name: 'Admin', fieldName: 'admin', minWidth: 50, maxWidth: 200, isResizable: true},
     {key: 'classCol', name: 'Klasse', fieldName: 'classSelect', minWidth: 150, maxWidth: 200, isResizable: true},
   ]
   // eslint-disable-next-line
-  const originalItems = items
+  const originalItems = userItems
   const onFilterChanged = (element) => {
     setSearchText(element.target.value)
     //setItems(searchText ? originalItems.filter(i => i.name.toLowerCase().indexOf(searchText) > -1) : items,)
   };
-  const renderItemColumn = (item, index, column) => {
-    console.log(item)
-    console.log(index)
+  const emptyEntry = () => {
+    return (<span style={{color: 'lightgray'}}>nicht gesetzt</span>)
+  }
+  const renderItemColumn = (user, index, column) => {
     switch (column.key) {
-      case 'nameCol':
-        return (!item.name)?(<span style={{color: 'red'}}>NAME NICHT GESETZT</span>):(<span>{item.name}</span>)
+      case 'userNameCol':
+        return (user.userName)?(<span>{user.userName}</span>):(emptyEntry())
+      case 'fullNameCol':
+        return (user.firstName || user.lastName)?(<span>{user.firstName}&nbsp;{user.lastName}</span>):(emptyEntry())
       case 'emailCol':
-        return (<a href={'mailto:' + item.email}>{item.email}</a>)
+        return (user.email)?(<a href={'mailto:' + user.email}>{user.email}</a>):(emptyEntry())
       case 'adminCol':
-        return (<Checkbox/>)
+        return (<Checkbox checked={user.admin}/>)
       case 'classCol':
         return (<ComboBox options={[  { key: 'A', text: 'Option A' },
           { key: 'B', text: 'Option B' },
@@ -69,7 +79,7 @@ export const UserAdministration: React.FunctionComponent = (props) => {
             onChange={onFilterChanged}
         />
         <DetailsList
-            items={items}
+            items={userItems}
             compact={false}
             columns={columns}
             selectionMode={SelectionMode.none}

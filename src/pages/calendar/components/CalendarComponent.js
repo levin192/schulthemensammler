@@ -1,34 +1,20 @@
-import React, { useState } from "react";
-import { Calendar, defaultCalendarStrings, TextField } from "@fluentui/react";
+import React from "react";
+import { Calendar, defaultCalendarStrings } from "@fluentui/react";
 
-const GetTextField = () => {
-  const [selectedDate, setSelectedDate] = useState();
-
+const GetTextField = (props) => {
   const onSelectDate = (dateObj) => {
-    window.alert(dateObj);
-    const dateString =
-      "" + dateObj.getDate() + dateObj.getMonth() + dateObj.getFullYear();
-    setSelectedDate(dateString);
+    const dateId =
+      ("0" + dateObj.getDate()).slice(-2) +
+      ("0" + dateObj.getMonth()).slice(-2) +
+      dateObj.getFullYear();
 
-    console.log(selectedDate);
+    const rawDate = dateObj;
+    props.onCalenderClick(rawDate, dateId);
   };
 
   return (
     <>
       <h1>Themen Eintragen</h1>
-
-      <TextField
-        id={"eintragen"}
-        label="ITN (Nee)"
-        multiline
-        autoAdjustHeight
-      />
-      <TextField
-        id={"eintragen"}
-        label="AWE (Schwandt)"
-        multiline
-        autoAdjustHeight
-      />
 
       <Calendar
         highlightSelectedMonth

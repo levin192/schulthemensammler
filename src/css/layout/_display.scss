@@ -40,6 +40,10 @@ body {
       }
     }
   }
+  @include breakpoint-up(md) {
+    padding-inline-start: 35px;
+    padding-inline-end: 35px;
+  }
   @each $breakpoint, $width in $breakpoints {
     @include breakpoint-up($breakpoint) {
       width: calc(#{$width} / 1.05);

@@ -1,7 +1,7 @@
-import fbConfig from './firebaseconfig.json';
-import firebase from 'firebase/app';
-import '@firebase/auth';
-import 'firebase/firestore';
+import fbConfig from "./firebaseconfig.json";
+import firebase from "firebase/app";
+import "@firebase/auth";
+import "firebase/firestore";
 
 class FirebaseDataProvider {
   constructor() {

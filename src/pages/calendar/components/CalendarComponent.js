@@ -9,6 +9,8 @@ const GetTextField = () => {
     const dateString =
       "" + dateObj.getDate() + dateObj.getMonth() + dateObj.getFullYear();
     setSelectedDate(dateString);
+
+    console.log(selectedDate);
   };
 
   return (

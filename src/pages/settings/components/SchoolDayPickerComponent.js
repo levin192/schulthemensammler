@@ -8,13 +8,16 @@ export default class SchoolDayPicker extends React.Component {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-      sunday: false
+      selectedClass: null,
+      days: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false
+      }
     };
 
     this.options = [
@@ -55,13 +58,31 @@ export default class SchoolDayPicker extends React.Component {
     //   });
   };
 
+  getCalss = async (className) => {
+    const response = await this.fb.firebase
+      .firestore()
+      .collection("Classes")
+      .where("name", "==", className)
+      .get();
+
+    if (response.docs.length !== 0) {
+      return response.docs[0];
+    }
+  };
+
   render() {
     return (
       <>
         <TextField
           id="class"
-          label={"Klasse"}
+          label={
+            "Klasse: " +
+            (this.state.selectedClass === null
+              ? "Keine Klasse Ausgewählt"
+              : this.state.selectedClass)
+          }
           placeholder={"Klasse"}
+          onChange={console.log}
           required
         />
         <Dropdown

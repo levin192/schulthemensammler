@@ -9,28 +9,22 @@ export default class SchoolDayPicker extends React.Component {
     this.fb = new FirebaseDataProvider();
     this.state = {
       selectedClass: null,
-      days: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false
-      }
+      days: [
+        {
+          key: "dayHeader",
+          text: "Tage",
+          itemType: DropdownMenuItemType.Header
+        },
+        { key: "0", text: "Montag" },
+        { key: "1", text: "Dienstag" },
+        { key: "2", text: "Mittwoch" },
+        { key: "3", text: "Donnerstag" },
+        { key: "4", text: "Freitag" },
+        { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
+        { key: "5", text: "Samstag" },
+        { key: "6", text: "Sonntag" }
+      ]
     };
-
-    this.options = [
-      { key: "dayHeader", text: "Tage", itemType: DropdownMenuItemType.Header },
-      { key: "keyMonday", text: "Montag" },
-      { key: "2", text: "Dienstag" },
-      { key: "3", text: "Mittwoch" },
-      { key: "4", text: "Donnerstag" },
-      { key: "6", text: "Freitag" },
-      { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
-      { key: "7", text: "Samstag" },
-      { key: "0", text: "Sonntag" }
-    ];
   }
 
   componentDidMount = () => {
@@ -58,7 +52,7 @@ export default class SchoolDayPicker extends React.Component {
     //   });
   };
 
-  getCalss = async (className) => {
+  getSchoolClass = async (className) => {
     const response = await this.fb.firebase
       .firestore()
       .collection("Classes")
@@ -66,7 +60,67 @@ export default class SchoolDayPicker extends React.Component {
       .get();
 
     if (response.docs.length !== 0) {
-      return response.docs[0];
+      return response.docs[0].data();
+    } else {
+      return undefined;
+    }
+  };
+
+  loadSchoolClass = async (inputEl) => {
+    const schoolClassName = inputEl.target.value;
+    const schoolClassData = await this.getSchoolClass(schoolClassName);
+
+    if (schoolClassData === undefined) {
+      this.setState((state) => {
+        state.selectedClass = null;
+        return state;
+      });
+      alert("Klasse existiert nicht!");
+    } else {
+      console.log({ schoolClassData });
+
+      const updatedDays = [
+        {
+          key: "dayHeader",
+          text: "Tage",
+          itemType: DropdownMenuItemType.Header
+        },
+        { key: "0", text: "Montag", selected: true },
+        {
+          key: "1",
+          text: "Dienstag",
+          selected: schoolClassData.schoolDays[1]
+        },
+        {
+          key: "2",
+          text: "Mittwoch",
+          selected: schoolClassData.schoolDays[2]
+        },
+        {
+          key: "3",
+          text: "Donnerstag",
+          selected: schoolClassData.schoolDays[3]
+        },
+        {
+          key: "4",
+          text: "Freitag",
+          selected: schoolClassData.schoolDays[4]
+        },
+        { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
+        {
+          key: "5",
+          text: "Samstag",
+          selected: schoolClassData.schoolDays[5]
+        },
+        { key: "6", text: "Sonntag", selected: schoolClassData.schoolDays[6] }
+      ];
+
+      this.setState((state) => {
+        state.selectedClass = schoolClassData;
+        // TODO: React re-rendert nicht wenn man arrays neu im state überschreibt. => Lösung finden.
+        state.days = updatedDays;
+        return state;
+      });
     }
   };
 
@@ -78,18 +132,18 @@ export default class SchoolDayPicker extends React.Component {
           label={
             "Klasse: " +
             (this.state.selectedClass === null
-              ? "Keine Klasse Ausgewählt"
-              : this.state.selectedClass)
+              ? "(Keine Klasse Ausgewählt)"
+              : this.state.selectedClass.name)
           }
           placeholder={"Klasse"}
-          onChange={console.log}
+          onBlur={this.loadSchoolClass}
           required
         />
         <Dropdown
           placeholder="Select options"
           label="Schultage auswählen"
           multiSelect
-          options={this.options}
+          options={this.state.days}
           // styles={dropdownStyles}
           onChange={this.handleChange}
         />

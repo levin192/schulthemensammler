@@ -136,7 +136,7 @@ class SettingsPage extends React.Component {
       return (
         <div className="full-width">
           <div>
-            <Pivot aria-label="Settings Pivot">
+            <Pivot aria-label="Settings Pivot" className="settings-pivot">
               <PivotItem headerText="Daten" itemIcon="PlayerSettings">
                 <h1>Benutzer Settings</h1>
                 <form onSubmit={this.saveSettings}>

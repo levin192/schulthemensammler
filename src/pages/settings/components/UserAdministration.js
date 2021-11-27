@@ -4,6 +4,8 @@ import {TextField} from '@fluentui/react/lib/TextField';
 import {Checkbox} from '@fluentui/react/lib/Checkbox';
 import {ComboBox} from '@fluentui/react/lib/ComboBox';
 import {PrimaryButton} from '@fluentui/react/lib/Button';
+import {Spinner} from '@fluentui/react/lib/Spinner';
+import {Label} from '@fluentui/react/lib/Label';
 import {useState} from 'react';
 
 export const UserAdministration: React.FunctionComponent = (props) => {
@@ -20,11 +22,12 @@ export const UserAdministration: React.FunctionComponent = (props) => {
           lastName: userObj.lastname,
           email: userObj.email,
           admin: userObj.isAdmin,
-          className: null
         }
       })
+  // const allSchoolClasses = ['1B','3A','7B','ITFO3','ExampleClass']
   // eslint-disable-next-line
   const [userItems, setUserItems] = useState(userList)
+  const [isSaving, setIsSaving] = useState(false)
   // eslint-disable-next-line
   const [searchText, setSearchText] = useState('')
   const columns = [
@@ -83,40 +86,51 @@ export const UserAdministration: React.FunctionComponent = (props) => {
   };
   const onSave = async (e) => {
     e.preventDefault();
-
-    changesList.forEach(item => {
-      const isAdmin = item.isAdmin
-      fb.firebase.firestore().collection('Users').where('username', '==', item.userName).get().then(r => {
-        fb.firebase
-            .firestore()
-            .collection("Users")
-            .doc(r.docs[0].id)
-            .update({
-              isAdmin
-            }).then(
-            console.log('kjungle is massive')
-        )
+    if (changesList.length > 0) {
+      setIsSaving(true)
+      changesList.forEach(item => {
+        const isAdmin = item.isAdmin
+        fb.firebase.firestore().collection('Users').where('username', '==', item.userName).get().then(r => {
+          fb.firebase
+              .firestore()
+              .collection('Users')
+              .doc(r.docs[0].id)
+              .update({
+                isAdmin
+              }).then(
+              // Timeout so the user has some feedback
+              setTimeout(() => {
+                setIsSaving(false)
+              }, 2500)
+          )
+        })
       })
-    })
+    }
   }
   return (
       <>
-        {console.log('rendered item')}
         <TextField
             label={'Filter by name'}
             // eslint-disable-next-line react/jsx-no-bind
             onChange={onFilterChanged}
         />
-        <DetailsList
-            items={userItems}
-            compact={false}
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            onRenderItemColumn={renderItemColumn}
-            layoutMode={DetailsListLayoutMode.justified}
-            isHeaderVisible={true}
-        />
-        <PrimaryButton onClick={onSave}>Änderungen speichern</PrimaryButton>
+        <div className="user-admin-list-wrap">
+          <div className="user-admin-list-content">
+            <DetailsList
+                items={userItems}
+                compact={false}
+                columns={columns}
+                selectionMode={SelectionMode.none}
+                onRenderItemColumn={renderItemColumn}
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+            />
+          </div>
+          <div className={(isSaving) ? 'user-admin-list-spinner visible' : 'user-admin-list-spinner'}>
+            <Spinner label="Speichern..."/>
+          </div>
+        </div>
+        <PrimaryButton onClick={onSave} disabled={isSaving}>Änderungen speichern</PrimaryButton>
       </>
   )
 }

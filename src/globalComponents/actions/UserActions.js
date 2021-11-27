@@ -74,7 +74,7 @@ export const UserActions: React.FunctionComponent<> = props => {
       <>
         <Store.Consumer>
           {(value => (value.isRegisteredUser) ? (
-              <CommandButton iconProps={userIcon} text={value.userName} menuProps={loggedInProps}/>
+              <CommandButton iconProps={userIcon} text={value.userName} className="logged-in-menu" menuProps={loggedInProps}/>
           ) : (
               <CommandButton iconProps={userIcon} text="Menu" menuProps={loggedOutProps}/>
           ))}

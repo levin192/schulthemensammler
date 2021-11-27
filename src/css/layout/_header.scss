@@ -7,9 +7,6 @@
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
-    @include breakpoint-down(lg) {
-      flex-direction: column;
-    }
   }
   &-title {
     a {
@@ -19,5 +16,13 @@
   }
   &-actions {
     margin-left: auto;
+    .logged-in-menu {
+      .ms-Button-textContainer {
+        @include breakpoint-down(sm) {
+          display: none;
+        }
+      }
+    }
   }
+
 }

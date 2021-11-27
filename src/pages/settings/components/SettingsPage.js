@@ -48,7 +48,6 @@ class SettingsPage extends React.Component {
     this.getAllUserDocs().then((docs) =>
       this.setState((state) => {
         state.allUserDocs = docs;
-        console.log(this.state.allUserDocs);
         return state;
       })
     );
@@ -135,75 +134,83 @@ class SettingsPage extends React.Component {
   render() {
     if (this.context.loggedIn) {
       return (
-        <>
-          <Pivot aria-label="Settings Pivot">
-            <PivotItem headerText="Daten" itemIcon="PlayerSettings">
-              <h1>Benutzer Settings</h1>
-              <form onSubmit={this.saveSettings}>
-                <TextField
-                  id="username"
-                  label={"Username"}
-                  value={this.state.username}
-                  onChange={this.handleInputChange}
-                  placeholder={"Username"}
-                  required
-                />
-                <TextField
-                  id="firstname"
-                  label={"Vorname"}
-                  value={this.state.firstname}
-                  onChange={this.handleInputChange}
-                  placeholder={"Vorname"}
-                  required
-                />
-                <TextField
-                  id="lastname"
-                  label={"Nachname"}
-                  value={this.state.lastname}
-                  placeholder={"Nachname"}
-                  onChange={this.handleInputChange}
-                  required
-                />
-                <TextField
-                  id="email"
-                  label={"E-Mail"}
-                  value={this.state.email}
-                  placeholder={"E-Mail"}
-                  onChange={this.handleInputChange}
-                />
-                <br />
-                <PrimaryButton
-                  text="Speichern"
-                  type="submit"
-                  disabled={!this.state.isFormChanged}
-                />
-              </form>
+        <div className="full-width">
+          <div>
+            <Pivot aria-label="Settings Pivot">
+              <PivotItem headerText="Daten" itemIcon="PlayerSettings">
+                <h1>Benutzer Settings</h1>
+                <form onSubmit={this.saveSettings}>
+                  <TextField
+                    id="username"
+                    label={"Username"}
+                    value={this.state.username}
+                    onChange={this.handleInputChange}
+                    placeholder={"Username"}
+                    required
+                  />
+                  <TextField
+                    id="firstname"
+                    label={"Vorname"}
+                    value={this.state.firstname}
+                    onChange={this.handleInputChange}
+                    placeholder={"Vorname"}
+                    required
+                  />
+                  <TextField
+                    id="lastname"
+                    label={"Nachname"}
+                    value={this.state.lastname}
+                    placeholder={"Nachname"}
+                    onChange={this.handleInputChange}
+                    required
+                  />
+                  <TextField
+                    id="email"
+                    label={"E-Mail"}
+                    value={this.state.email}
+                    placeholder={"E-Mail"}
+                    onChange={this.handleInputChange}
+                  />
+                  <br />
+                  <PrimaryButton
+                    text="Speichern"
+                    type="submit"
+                    disabled={!this.state.isFormChanged}
+                  />
+                </form>
 
-              {this.state.showMessageBar === "Error" ? (
-                <MessageBar messageBarType={MessageBarType.error}>
-                  {this.state.messageBarText}
-                </MessageBar>
-              ) : this.state.showMessageBar ? (
-                <MessageBar messageBarType={MessageBarType.success}>
-                  {this.state.messageBarText}
-                </MessageBar>
-              ) : null}
-            </PivotItem>
-            {this.state.isAdmin ? (
-              <PivotItem
-                headerText="Administration"
-                itemIcon="CalendarSettings"
-              >
-                <h1>Kalender Einstellungen</h1>
-                <SchoolDayPicker />
-                <UserAdministration userList={this.state.allUserDocs} />
+                {this.state.showMessageBar === "Error" ? (
+                  <MessageBar messageBarType={MessageBarType.error}>
+                    {this.state.messageBarText}
+                  </MessageBar>
+                ) : this.state.showMessageBar ? (
+                  <MessageBar messageBarType={MessageBarType.success}>
+                    {this.state.messageBarText}
+                  </MessageBar>
+                ) : null}
               </PivotItem>
-            ) : null}
-            <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
-              <h1>Statistiken</h1>
-            </PivotItem>
-          </Pivot>
-        </>
+              {this.state.isAdmin ? (
+                  <PivotItem
+                    headerText="Kalender Einstellungen"
+                    itemIcon="CalendarSettings">
+                    <h1>Kalender Einstellungen</h1>
+                    <SchoolDayPicker />
+                  </PivotItem>
+              ) : null}
+              {this.state.isAdmin ? (
+                <PivotItem
+                    headerText="Nutzer Verwaltung"
+                    itemIcon="People">
+                  <UserAdministration currentUserName={this.context.userDoc.username} fireBase={this.fb} userList={this.state.allUserDocs} />
+                </PivotItem>
+              ) : null}
+              <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
+                <h1>Statistiken</h1>
+                Nutzer Gesamt: {(this.state.allUserDocs)?(this.state.allUserDocs.length):null}
+              </PivotItem>
+            </Pivot>
+          </div>
+        </div>
       );
     }
     return (

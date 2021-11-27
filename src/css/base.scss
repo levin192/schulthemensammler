@@ -5,6 +5,7 @@
 @import 'layout/header';
 @import 'layout/footer';
 @import 'layout/typography';
+@import 'components/user-administration';
 
 * {
   box-sizing: border-box;
@@ -36,6 +37,7 @@ svg {
   max-width: 100%;
   height: auto;
 }
+
 
 .ms-TextField-fieldGroup {
   max-width: 300px;

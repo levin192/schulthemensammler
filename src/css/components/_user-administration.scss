@@ -1,0 +1,34 @@
+.user-admin-list {
+  &-wrap {
+    position: relative;
+    display: grid;
+    overflow: auto;
+  }
+  &-content, &-spinner {
+    grid-area: 1/-1
+  }
+  &-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    background-color: transparentize(white, .15);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity ease-in-out .4s;
+    pointer-events: none;
+    &.visible {
+      pointer-events: all;
+      opacity: 1;
+    }
+  }
+}
+
+.settings-pivot {
+  .ms-Pivot {
+    overflow-x: auto;
+  }
+}

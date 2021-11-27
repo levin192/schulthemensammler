@@ -1,12 +1,12 @@
 body {
   min-height: 100%;
-  background-color: #f1f1f1;
+  background-color: #F1F1F1;
   display: block;
 }
 
 .content-container {
   box-shadow: rgba(0, 0, 0, 0.133) 0 3.2px 7.2px 0,
-    rgba(0, 0, 0, 0.11) 0 0.6px 1.8px 0;
+  rgba(0, 0, 0, 0.11) 0 0.6px 1.8px 0;
   max-width: 100%;
   padding-inline-start: 15px;
   padding-inline-end: 15px;
@@ -26,17 +26,25 @@ body {
     }
     > div {
       max-width: 100%;
-      &:nth-child(1) {
-        grid-area: content-left;
-        padding-right: 15px;
-      }
-      &:nth-child(2) {
-        padding-left: 15px;
-        grid-area: content-right;
-        display: none;
-        @include breakpoint-up(sm) {
-          display: block;
+      &:not(.full-width) {
+        &:nth-child(1) {
+          grid-area: content-left;
+          padding-right: 15px;
         }
+        &:nth-child(2) {
+          padding-left: 15px;
+          grid-area: content-right;
+          display: none;
+          @include breakpoint-up(sm) {
+            display: block;
+          }
+        }
+      }
+      &.full-width {
+        grid-row-start: content-left;
+        grid-row-end: content-right;
+        grid-column-start: content-left;
+        grid-column-end: content-right;
       }
     }
   }

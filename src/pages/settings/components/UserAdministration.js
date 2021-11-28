@@ -24,11 +24,11 @@ export const UserAdministration: React.FunctionComponent = (props) => {
         }
       })
   // const allSchoolClasses = ['1B','3A','7B','ITFO3','ExampleClass']
-  // eslint-disable-next-line
+
   const [userItems, setUserItems] = useState(userList)
+  const [originalItems] = useState(userItems)
+  const [filteredItems] = useState(userItems)
   const [isSaving, setIsSaving] = useState(false)
-  // eslint-disable-next-line
-  const [searchText, setSearchText] = useState('')
   const columns = [
     {key: 'userNameCol', name: 'Username', fieldName: 'userName', minWidth: 100, maxWidth: 200, isResizable: true},
     {key: 'fullNameCol', name: 'Vor-/Nachname', fieldName: 'fullName', minWidth: 100, maxWidth: 300, isResizable: true},
@@ -36,11 +36,13 @@ export const UserAdministration: React.FunctionComponent = (props) => {
     {key: 'adminCol', name: 'Admin', fieldName: 'admin', minWidth: 50, maxWidth: 50, isResizable: true},
     {key: 'classCol', name: 'Klasse', fieldName: 'classSelect', minWidth: 150, maxWidth: 150, isResizable: true},
   ]
-  // eslint-disable-next-line
-  const originalItems = userItems
   const onFilterChanged = (element) => {
-    setSearchText(element.target.value)
-    //setItems(searchText ? originalItems.filter(i => i.name.toLowerCase().indexOf(searchText) > -1) : items,)
+    const searchText = element.target.value.toLowerCase()
+    setUserItems(searchText ? filteredItems.filter(i => (
+        (i.userName.toLowerCase().indexOf(searchText) > -1) ||
+        (i.firstName.toLowerCase().indexOf(searchText) > -1) ||
+        (i.lastName.toLowerCase().indexOf(searchText) > -1))
+    ) : originalItems)
   };
   const emptyEntry = () => {
     return (<span style={{color: 'lightgray'}}>nicht gesetzt</span>)

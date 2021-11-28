@@ -5,7 +5,6 @@ import {Checkbox} from '@fluentui/react/lib/Checkbox';
 import {ComboBox} from '@fluentui/react/lib/ComboBox';
 import {PrimaryButton} from '@fluentui/react/lib/Button';
 import {Spinner} from '@fluentui/react/lib/Spinner';
-import {Label} from '@fluentui/react/lib/Label';
 import {useState} from 'react';
 
 export const UserAdministration: React.FunctionComponent = (props) => {

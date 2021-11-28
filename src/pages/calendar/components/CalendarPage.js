@@ -29,7 +29,7 @@ class CalendarPage extends React.Component {
           },
         ],
 
-        items: [
+        posts: [
           { key: "a", subject: "a", post: "red" },
           { key: "b", subject: "b", post: "red" },
           { key: "c", subject: "c", post: "blue" },
@@ -86,7 +86,7 @@ class CalendarPage extends React.Component {
           <div>
             <div>Ausgewählter Tag: {this.state.currentSelectedDayString}</div>
             <DetailsList
-              items={this.state.listConfig.items}
+              items={this.state.listConfig.posts}
               groups={this.state.listConfig.groups}
               columns={this.state.listConfig.columns}
             />

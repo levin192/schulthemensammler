@@ -6,7 +6,7 @@ import {
   Pivot,
   PivotItem,
   PrimaryButton,
-  TextField
+  TextField,
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import SchoolDayPicker from "./SchoolDayPickerComponent";
@@ -27,7 +27,8 @@ class SettingsPage extends React.Component {
       messageBarText: "",
       usernameUsed: false,
       allUserDocs: undefined,
-      isFormChanged: false
+      isFormChanged: false,
+      messageBarType: null,
     };
   }
   componentDidMount = () => {
@@ -67,7 +68,6 @@ class SettingsPage extends React.Component {
       state.firstname = this.context.userDoc.firstname;
       state.lastname = this.context.userDoc.lastname;
       state.email = this.context.userDoc.email;
-      state.isAdmin = this.context.userDoc.isAdmin;
       return state;
     });
   };
@@ -77,12 +77,13 @@ class SettingsPage extends React.Component {
       return false;
     }
 
-    const x = await this.fb.firebase
+    const response = await this.fb.firebase
       .firestore()
       .collection("Users")
       .where("username", "==", username)
       .get();
-    return x.docs.length !== 0;
+
+    return response.docs.length !== 0;
   };
 
   saveSettings = async (event) => {
@@ -96,7 +97,8 @@ class SettingsPage extends React.Component {
 
     if (isUsernameAlreadyTaken) {
       this.setState((state) => {
-        state.showMessageBar = "Error";
+        state.showMessageBar = true;
+        state.messageBarType = "error";
         state.messageBarText = "Username bereits vergeben!";
         return state;
       });
@@ -109,21 +111,22 @@ class SettingsPage extends React.Component {
           username,
           firstname,
           lastname,
-          email
+          email,
         })
         .then(
           () => {
             this.setState((state) => {
               state.showMessageBar = true;
+              state.messageBarType = "success";
               state.messageBarText = "Daten erfolgreich gespeichert!";
               return state;
             });
           },
           (error) => {
             this.setState((state) => {
-              state.showMessageBar = "Error";
+              state.showMessageBar = true;
+              state.messageBarType = "error";
               state.messageBarText = error.message;
-              console.error(error.message);
               return state;
             });
           }
@@ -179,34 +182,40 @@ class SettingsPage extends React.Component {
                   />
                 </form>
 
-                {this.state.showMessageBar === "Error" ? (
-                  <MessageBar messageBarType={MessageBarType.error}>
-                    {this.state.messageBarText}
-                  </MessageBar>
-                ) : this.state.showMessageBar ? (
-                  <MessageBar messageBarType={MessageBarType.success}>
+                {this.state.showMessageBar ? (
+                  <MessageBar
+                    messageBarType={
+                      this.state.messageBarType === "error"
+                        ? MessageBarType.error
+                        : MessageBarType.success
+                    }
+                  >
                     {this.state.messageBarText}
                   </MessageBar>
                 ) : null}
               </PivotItem>
-              {this.state.isAdmin ? (
-                  <PivotItem
-                    headerText="Kalender Einstellungen"
-                    itemIcon="CalendarSettings">
-                    <h1>Kalender Einstellungen</h1>
-                    <SchoolDayPicker />
-                  </PivotItem>
-              ) : null}
-              {this.state.isAdmin ? (
+              {this.context.userDoc.isAdmin ? (
                 <PivotItem
-                    headerText="Nutzer Verwaltung"
-                    itemIcon="People">
-                  <UserAdministration currentUserName={this.context.userDoc.username} fireBase={this.fb} userList={this.state.allUserDocs} />
+                  headerText="Kalender Einstellungen"
+                  itemIcon="CalendarSettings"
+                >
+                  <h1>Kalender Einstellungen</h1>
+                  <SchoolDayPicker />
+                </PivotItem>
+              ) : null}
+              {this.context.userDoc.isAdmin ? (
+                <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
+                  <UserAdministration
+                    currentUserName={this.context.userDoc.username}
+                    fireBase={this.fb}
+                    userList={this.state.allUserDocs}
+                  />
                 </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
                 <h1>Statistiken</h1>
-                Nutzer Gesamt: {(this.state.allUserDocs)?(this.state.allUserDocs.length):null}
+                Nutzer Gesamt:{" "}
+                {this.state.allUserDocs ? this.state.allUserDocs.length : null}
               </PivotItem>
             </Pivot>
           </div>

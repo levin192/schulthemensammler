@@ -13,11 +13,10 @@ import { useState } from "react";
 
 export const UserAdministration = (props) => {
   const fb = props.fireBase;
-  const changesList = [];
   const userList = () => props.userList
       .filter(userObj => userObj.username) // filter out users who have not set username
       .filter(userObj => userObj.username !== props.currentUserName) // filter out self
-      .map((userObj, index) => { // For readability
+      .map((userObj, index) => { // For readability and add key
         return {
           key: index,
           userName: userObj.username,
@@ -27,7 +26,14 @@ export const UserAdministration = (props) => {
           admin: userObj.isAdmin,
         };
       });
-  // const allSchoolClasses = ['1B','3A','7B','ITFO3','ExampleClass']
+  const allSchoolClasses = props.schoolClassList
+      .filter(schoolClass => schoolClass.length > 0) // filter empty
+      .map(schoolClass=>{
+        return {
+          key: schoolClass,
+          text: schoolClass
+        }
+      })
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
@@ -66,14 +72,16 @@ export const UserAdministration = (props) => {
       isResizable: true,
     },
     {
-      key: "classCol",
-      name: "Klasse",
-      fieldName: "classSelect",
+      key: "schoolClassCol",
+      name: "Klasse/n",
+      fieldName: "SchoolClassSelect",
       minWidth: 150,
       maxWidth: 150,
       isResizable: true,
     },
   ];
+
+  const changesList = [];
   const onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
     setUserItems(
@@ -118,15 +126,14 @@ export const UserAdministration = (props) => {
         ) : (
             <Checkbox id={user.userName} onChange={onAdminChange}/>
         );
-      case "classCol":
+      case "schoolClassCol":
         return (
             <ComboBox
-                options={[
-                  {key: "A", text: "Option A"},
-                  {key: "B", text: "Option B"},
-                  {key: "C", text: "Option C"},
-                  {key: "D", text: "Option D"},
-                ]}
+                bf={user.userName}
+                multiSelect
+                autoComplete="on"
+                options={allSchoolClasses}
+                onChange={console.log}
             />
         );
       default:
@@ -145,6 +152,10 @@ export const UserAdministration = (props) => {
         isAdmin: isAdmin,
       });
     }
+  };
+
+  const onSchoolClassesChange = (el) => {
+    console.log(el);
   };
   const onSave = async (e) => {
     e.preventDefault();

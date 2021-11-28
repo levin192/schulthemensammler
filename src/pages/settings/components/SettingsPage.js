@@ -27,6 +27,7 @@ class SettingsPage extends React.Component {
       messageBarText: "",
       usernameUsed: false,
       allUserDocs: undefined,
+      allSchoolClassesNames: undefined,
       isFormChanged: false,
       messageBarType: null,
     };
@@ -35,6 +36,7 @@ class SettingsPage extends React.Component {
     document.title = "📅 | Einstellungen ✏️";
     this.setLocaleUserDocStates();
     this.setAllUserDocs();
+    this.setAllSchoolClassesNames();
   };
 
   getAllUserDocs = async () => {
@@ -52,6 +54,24 @@ class SettingsPage extends React.Component {
         return state;
       })
     );
+  };
+
+  getAllSchoolClassesNames = async () => {
+    const snapshot = await this.fb.firebase
+        .firestore()
+        .collection("SchoolClasses")
+        .get();
+    return snapshot.docs.map((doc) => doc.data().name);
+  };
+
+  setAllSchoolClassesNames = () => {
+    this.getAllSchoolClassesNames().then((docs) =>
+        this.setState((state) => {
+          state.allSchoolClassesNames = docs;
+          return state;
+        })
+    );
+
   };
 
   handleInputChange = (inputEl) => {
@@ -206,9 +226,10 @@ class SettingsPage extends React.Component {
               {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
                   <UserAdministration
-                    currentUserName={this.context.userDoc.username}
                     fireBase={this.fb}
                     userList={this.state.allUserDocs}
+                    schoolClassList={this.state.allSchoolClassesNames}
+                    currentUserName={this.context.userDoc.username}
                   />
                 </PivotItem>
               ) : null}

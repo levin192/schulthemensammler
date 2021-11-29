@@ -19,9 +19,6 @@ class FirebaseDataProvider {
     const password = data.password;
     return firebase.auth().createUserWithEmailAndPassword(email, password);
   };
-
-  // loggedInStatus = () => {
-  // }
 }
 
 export default FirebaseDataProvider;

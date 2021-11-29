@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, defaultCalendarStrings } from "@fluentui/react";
+import { Calendar, defaultCalendarStrings, DayOfWeek } from "@fluentui/react";
 
 const GetTextField = (props) => {
   const onSelectDate = (dateObj) => {
@@ -17,6 +17,7 @@ const GetTextField = (props) => {
       <h1>Themen Eintragen</h1>
 
       <Calendar
+        firstDayOfWeek={DayOfWeek.Monday}
         highlightSelectedMonth
         showGoToToday
         // calendarDayProps={calendarDayProps}

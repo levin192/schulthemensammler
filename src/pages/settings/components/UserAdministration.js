@@ -13,10 +13,12 @@ import { useState } from "react";
 
 export const UserAdministration = (props) => {
   const fb = props.fireBase;
-  const userList = () => props.userList
-      .filter(userObj => userObj.username) // filter out users who have not set username
-      .filter(userObj => userObj.username !== props.currentUserName) // filter out self
-      .map((userObj, index) => { // For readability and add key
+  const userList = () =>
+    props.userList
+      .filter((userObj) => userObj.username) // filter out users who have not set username
+      .filter((userObj) => userObj.username !== props.currentUserName) // filter out self
+      .map((userObj, index) => {
+        // For readability and add key
         return {
           key: index,
           userName: userObj.username,
@@ -27,13 +29,13 @@ export const UserAdministration = (props) => {
         };
       });
   const allSchoolClasses = props.schoolClassList
-      .filter(schoolClass => schoolClass.length > 0) // filter empty
-      .map(schoolClass=>{
-        return {
-          key: schoolClass,
-          text: schoolClass
-        }
-      })
+    .filter((schoolClass) => schoolClass.length > 0) // filter empty
+    .map((schoolClass) => {
+      return {
+        key: schoolClass,
+        text: schoolClass,
+      };
+    });
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
@@ -85,18 +87,18 @@ export const UserAdministration = (props) => {
   const onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
     setUserItems(
-        searchText
-            ? filteredItems.filter(
+      searchText
+        ? filteredItems.filter(
             (i) =>
-                i.userName.toLowerCase().indexOf(searchText) > -1 ||
-                i.firstName.toLowerCase().indexOf(searchText) > -1 ||
-                i.lastName.toLowerCase().indexOf(searchText) > -1,
-            )
-            : originalItems,
+              i.userName.toLowerCase().indexOf(searchText) > -1 ||
+              i.firstName.toLowerCase().indexOf(searchText) > -1 ||
+              i.lastName.toLowerCase().indexOf(searchText) > -1
+          )
+        : originalItems
     );
   };
   const emptyEntry = () => {
-    return <span style={{color: "lightgray"}}>nicht gesetzt</span>;
+    return <span style={{ color: "lightgray" }}>nicht gesetzt</span>;
   };
   const renderItemColumn = (user, index, column) => {
     switch (column.key) {
@@ -104,37 +106,37 @@ export const UserAdministration = (props) => {
         return user.userName ? <span>{user.userName}</span> : emptyEntry();
       case "fullNameCol":
         return user.firstName || user.lastName ? (
-            <span>
+          <span>
             {user.firstName}&nbsp;{user.lastName}
           </span>
         ) : (
-            emptyEntry()
+          emptyEntry()
         );
       case "emailCol":
         return user.email ? (
-            <a href={"mailto:" + user.email}>{user.email}</a>
+          <a href={"mailto:" + user.email}>{user.email}</a>
         ) : (
-            emptyEntry()
+          emptyEntry()
         );
       case "adminCol":
         return user.admin ? (
-            <Checkbox
-                id={user.userName}
-                defaultChecked
-                onChange={onAdminChange}
-            />
+          <Checkbox
+            id={user.userName}
+            defaultChecked
+            onChange={onAdminChange}
+          />
         ) : (
-            <Checkbox id={user.userName} onChange={onAdminChange}/>
+          <Checkbox id={user.userName} onChange={onAdminChange} />
         );
       case "schoolClassCol":
         return (
-            <ComboBox
-                bf={user.userName}
-                multiSelect
-                autoComplete="on"
-                options={allSchoolClasses}
-                onChange={console.log}
-            />
+          <ComboBox
+            bf={user.userName}
+            multiSelect
+            autoComplete="on"
+            options={allSchoolClasses}
+            onChange={console.log}
+          />
         );
       default:
         return null;
@@ -154,9 +156,10 @@ export const UserAdministration = (props) => {
     }
   };
 
-  const onSchoolClassesChange = (el) => {
-    console.log(el);
-  };
+  // const onSchoolClassesChange = (el) => {
+  //   console.log(el);
+  // };
+
   const onSave = async (e) => {
     e.preventDefault();
     if (changesList.length > 0) {
@@ -164,60 +167,60 @@ export const UserAdministration = (props) => {
       changesList.forEach((item) => {
         const isAdmin = item.isAdmin;
         fb.firebase
-            .firestore()
-            .collection("Users")
-            .where("username", "==", item.userName)
-            .get()
-            .then((r) => {
-              fb.firebase
-                  .firestore()
-                  .collection("Users")
-                  .doc(r.docs[0].id)
-                  .update({
-                    isAdmin,
-                  })
-                  .then(
-                      // Timeout so the user has some feedback
-                      setTimeout(() => {
-                        setIsSaving(false);
-                      }, 2500),
-                  );
-            });
+          .firestore()
+          .collection("Users")
+          .where("username", "==", item.userName)
+          .get()
+          .then((r) => {
+            fb.firebase
+              .firestore()
+              .collection("Users")
+              .doc(r.docs[0].id)
+              .update({
+                isAdmin,
+              })
+              .then(
+                // Timeout so the user has some feedback
+                setTimeout(() => {
+                  setIsSaving(false);
+                }, 2500)
+              );
+          });
       });
     }
   };
   return (
-      <>
-        <TextField
-            label={"Filter by name"}
-            // eslint-disable-next-line react/jsx-no-bind
-            onChange={onFilterChanged}
-        />
-        <div className="user-admin-list-wrap">
-          <div className="user-admin-list-content">
-            <DetailsList
-                items={userItems}
-                compact={false}
-                columns={columns}
-                selectionMode={SelectionMode.none}
-                onRenderItemColumn={renderItemColumn}
-                layoutMode={DetailsListLayoutMode.justified}
-                isHeaderVisible={true}
-            />
-          </div>
-          <div
-              className={
-                isSaving
-                    ? "user-admin-list-spinner visible"
-                    : "user-admin-list-spinner"
-              }
-          >
-            <Spinner label="Speichern..."/>
-          </div>
+    <>
+      <TextField
+        label={"Filter by name"}
+        // eslint-disable-next-line react/jsx-no-bind
+        onChange={onFilterChanged}
+      />
+      <div className="user-admin-list-wrap">
+        <div className="user-admin-list-content">
+          <DetailsList
+            items={userItems}
+            compact={false}
+            columns={columns}
+            selectionMode={SelectionMode.none}
+            onRenderItemColumn={renderItemColumn}
+            layoutMode={DetailsListLayoutMode.justified}
+            isHeaderVisible={true}
+          />
         </div>
-        <PrimaryButton onClick={onSave} disabled={isSaving}>
-          Änderungen speichern
-        </PrimaryButton>
-      </>
+        <div
+          className={
+            isSaving
+              ? "user-admin-list-spinner visible"
+              : "user-admin-list-spinner"
+          }
+        >
+          <Spinner label="Speichern..." />
+        </div>
+      </div>
+      <PrimaryButton onClick={onSave} disabled={isSaving}>
+        Änderungen speichern
+      </PrimaryButton>
+    </>
   );
 };

@@ -88,6 +88,8 @@ class CalendarPage extends React.Component {
       state.currentSelectedDayId = dayId;
       return state;
     });
+
+    this.loadPosts(dayId);
   };
 
   setDetailsListSubjectGroups = () => {
@@ -223,6 +225,8 @@ class CalendarPage extends React.Component {
         createdAt: "placeholder",
       });
     });
+
+    console.log(array);
 
     this.setState((state) => {
       state.listConfig.posts = array;

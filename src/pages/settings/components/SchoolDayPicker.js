@@ -59,6 +59,8 @@ export default class SchoolDayPicker extends React.Component {
   };
 
   loadSchoolClass = async (inputEl) => {
+    if (inputEl.target.value === "") return null;
+
     const schoolClassName = inputEl.target.value;
     const schoolClassDataRaw = await this.getSchoolClass(schoolClassName);
 

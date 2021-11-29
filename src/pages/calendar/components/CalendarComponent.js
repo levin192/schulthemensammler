@@ -15,11 +15,10 @@ const GetTextField = (props) => {
   return (
     <>
       <h1>Themen Eintragen</h1>
-
       <Calendar
         firstDayOfWeek={DayOfWeek.Monday}
         highlightSelectedMonth
-        showGoToToday
+        showGoToToday={true}
         // calendarDayProps={calendarDayProps}
         onSelectDate={onSelectDate}
         // Calendar uses English strings by default. For localized apps, you must override this prop.

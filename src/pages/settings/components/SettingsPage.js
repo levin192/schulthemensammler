@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import SchoolDayPicker from "./SchoolDayPickerComponent";
+import SchoolDayPicker from "./SchoolDayPicker";
 import { UserAdministration } from "./UserAdministration";
 
 class SettingsPage extends React.Component {

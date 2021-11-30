@@ -26,7 +26,7 @@ export const UserAdministration = (props) => {
               lastName: userObj.lastname,
               email: userObj.email,
               admin: userObj.isAdmin,
-              schoolClasses: userObj.schoolClasses
+              schoolClasses: userObj.schoolClasses,
             };
           });
   const allSchoolClasses = props.schoolClassList
@@ -134,10 +134,10 @@ export const UserAdministration = (props) => {
             <div className="combo-wrapper" data-user-ref={user.userName}>
               <ComboBox
                   multiSelect
-                  autoComplete="on"
+                  //autoComplete="on"
                   options={allSchoolClasses}
                   onChange={() => onSchoolClassesChange(user.userName)}
-                  selectedKey={user.schoolClasses}
+                  defaultSelectedKey={user.schoolClasses}
                   onMenuDismiss={onSchoolClassesChangeFinished}
               />
             </div>
@@ -163,21 +163,23 @@ export const UserAdministration = (props) => {
     setCurrentUserComboBox(userRef);
   };
   const onSchoolClassesChangeFinished = () => {
-    const schoolClasses = window.document
-        .querySelector("[data-user-ref=\"" + currentUserComboBox + "\"]")
-        .querySelector("input")
-        .value
-        .replace(/\s+/g, "")
-        .split(",");
-    const unsavedChange = changesList.find((x) => x.userName === currentUserComboBox); // If is in Array already
-    if (unsavedChange) {
-      unsavedChange.schoolClasses = schoolClasses;
-    } else {
-      changesList.push({
-            userName: currentUserComboBox,
-            schoolClasses: schoolClasses,
-          },
-      );
+    if (window.document) {
+      const schoolClasses = window.document
+          .querySelector("[data-user-ref=\"" + currentUserComboBox + "\"]")
+          .querySelector("input")
+          .value
+          .replace(/\s+/g, "")
+          .split(",");
+      const unsavedChange = changesList.find((x) => x.userName === currentUserComboBox); // If is in Array already
+      if (unsavedChange) {
+        unsavedChange.schoolClasses = schoolClasses;
+      } else {
+        changesList.push({
+              userName: currentUserComboBox,
+              schoolClasses: schoolClasses,
+            },
+        );
+      }
     }
   };
   const hideSavingSpinner = () => {

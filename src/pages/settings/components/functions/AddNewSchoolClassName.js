@@ -29,11 +29,14 @@ export const AddNewSchoolClassName = (props) => {
       if (newClassName.match(regExPattern)) {
         const classExists = await getSchoolClass(newClassName);
         if (!classExists) {
-          fb.firebase.firestore().collection("SchoolClasses").add(newClassConstructor(newClassName)).then(() => {
-                setMessageBarType("success");
-                setMessageBarText("Klasse erfolgreich gespeichert!");
-              },
-          );
+          fb.firebase.firestore()
+              .collection("SchoolClasses")
+              .add(newClassConstructor(newClassName))
+              .then(() => {
+                    setMessageBarType("success");
+                    setMessageBarText("Klasse erfolgreich gespeichert!");
+                  },
+              );
         } else {
           setMessageBarType("error");
           setMessageBarText("Klasse existiert bereits!");

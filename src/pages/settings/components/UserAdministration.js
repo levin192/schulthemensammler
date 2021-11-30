@@ -14,32 +14,34 @@ import { useState } from "react";
 export const UserAdministration = (props) => {
   const fb = props.fireBase;
   const userList = () =>
-    props.userList
-      .filter((userObj) => userObj.username) // filter out users who have not set username
-      .filter((userObj) => userObj.username !== props.currentUserName) // filter out self
-      .map((userObj, index) => {
-        // For readability and add key
+      props.userList
+          .filter((userObj) => userObj.username) // filter out users who have not set username
+          .filter((userObj) => userObj.username !== props.currentUserName) // filter out self
+          .map((userObj, index) => {
+            // For readability and add key
+            return {
+              key: index,
+              userName: userObj.username,
+              firstName: userObj.firstname,
+              lastName: userObj.lastname,
+              email: userObj.email,
+              admin: userObj.isAdmin,
+              schoolClasses: userObj.schoolClasses
+            };
+          });
+  const allSchoolClasses = props.schoolClassList
+      .filter((schoolClass) => schoolClass.length > 0) // filter empty
+      .map((schoolClass) => {
         return {
-          key: index,
-          userName: userObj.username,
-          firstName: userObj.firstname,
-          lastName: userObj.lastname,
-          email: userObj.email,
-          admin: userObj.isAdmin,
+          key: schoolClass,
+          text: schoolClass,
         };
       });
-  const allSchoolClasses = props.schoolClassList
-    .filter((schoolClass) => schoolClass.length > 0) // filter empty
-    .map((schoolClass) => {
-      return {
-        key: schoolClass,
-        text: schoolClass,
-      };
-    });
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
   const columns = [
     {
       key: "userNameCol",
@@ -82,23 +84,22 @@ export const UserAdministration = (props) => {
       isResizable: true,
     },
   ];
-
   const changesList = [];
   const onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
     setUserItems(
-      searchText
-        ? filteredItems.filter(
+        searchText
+            ? filteredItems.filter(
             (i) =>
-              i.userName.toLowerCase().indexOf(searchText) > -1 ||
-              i.firstName.toLowerCase().indexOf(searchText) > -1 ||
-              i.lastName.toLowerCase().indexOf(searchText) > -1
-          )
-        : originalItems
+                i.userName.toLowerCase().indexOf(searchText) > -1 ||
+                i.firstName.toLowerCase().indexOf(searchText) > -1 ||
+                i.lastName.toLowerCase().indexOf(searchText) > -1,
+            )
+            : originalItems,
     );
   };
   const emptyEntry = () => {
-    return <span style={{ color: "lightgray" }}>nicht gesetzt</span>;
+    return <span style={{color: "lightgray"}}>nicht gesetzt</span>;
   };
   const renderItemColumn = (user, index, column) => {
     switch (column.key) {
@@ -106,37 +107,40 @@ export const UserAdministration = (props) => {
         return user.userName ? <span>{user.userName}</span> : emptyEntry();
       case "fullNameCol":
         return user.firstName || user.lastName ? (
-          <span>
+            <span>
             {user.firstName}&nbsp;{user.lastName}
           </span>
         ) : (
-          emptyEntry()
+            emptyEntry()
         );
       case "emailCol":
         return user.email ? (
-          <a href={"mailto:" + user.email}>{user.email}</a>
+            <a href={"mailto:" + user.email}>{user.email}</a>
         ) : (
-          emptyEntry()
+            emptyEntry()
         );
       case "adminCol":
         return user.admin ? (
-          <Checkbox
-            id={user.userName}
-            defaultChecked
-            onChange={onAdminChange}
-          />
+            <Checkbox
+                id={user.userName}
+                defaultChecked
+                onChange={onAdminChange}
+            />
         ) : (
-          <Checkbox id={user.userName} onChange={onAdminChange} />
+            <Checkbox id={user.userName} onChange={onAdminChange}/>
         );
       case "schoolClassCol":
         return (
-          <ComboBox
-            bf={user.userName}
-            multiSelect
-            autoComplete="on"
-            options={allSchoolClasses}
-            onChange={console.log}
-          />
+            <div className="combo-wrapper" data-user-ref={user.userName}>
+              <ComboBox
+                  multiSelect
+                  autoComplete="on"
+                  options={allSchoolClasses}
+                  onChange={() => onSchoolClassesChange(user.userName)}
+                  selectedKey={user.schoolClasses}
+                  onMenuDismiss={onSchoolClassesChangeFinished}
+              />
+            </div>
         );
       default:
         return null;
@@ -155,72 +159,101 @@ export const UserAdministration = (props) => {
       });
     }
   };
-
-  // const onSchoolClassesChange = (el) => {
-  //   console.log(el);
-  // };
-
+  const onSchoolClassesChange = (userRef) => {
+    setCurrentUserComboBox(userRef);
+  };
+  const onSchoolClassesChangeFinished = () => {
+    const schoolClasses = window.document
+        .querySelector("[data-user-ref=\"" + currentUserComboBox + "\"]")
+        .querySelector("input")
+        .value
+        .replace(/\s+/g, "")
+        .split(",");
+    const unsavedChange = changesList.find((x) => x.userName === currentUserComboBox); // If is in Array already
+    if (unsavedChange) {
+      unsavedChange.schoolClasses = schoolClasses;
+    } else {
+      changesList.push({
+            userName: currentUserComboBox,
+            schoolClasses: schoolClasses,
+          },
+      );
+    }
+    console.log(changesList);
+  };
+  const hideSavingSpinner = () => {
+    // Timeout so the user has some feedback
+    setTimeout(() => {
+      setIsSaving(false);
+    }, 2500);
+  };
   const onSave = async (e) => {
     e.preventDefault();
     if (changesList.length > 0) {
       setIsSaving(true);
       changesList.forEach((item) => {
         const isAdmin = item.isAdmin;
+        const schoolClasses = item.schoolClasses;
         fb.firebase
-          .firestore()
-          .collection("Users")
-          .where("username", "==", item.userName)
-          .get()
-          .then((r) => {
-            fb.firebase
-              .firestore()
-              .collection("Users")
-              .doc(r.docs[0].id)
-              .update({
-                isAdmin,
-              })
-              .then(
-                // Timeout so the user has some feedback
-                setTimeout(() => {
-                  setIsSaving(false);
-                }, 2500)
-              );
-          });
+            .firestore()
+            .collection("Users")
+            .where("username", "==", item.userName)
+            .get()
+            .then((r) => {
+              const x = fb.firebase.firestore().collection("Users").doc(r.docs[0].id);
+              if (item.hasOwnProperty("isAdmin") && item.hasOwnProperty("schoolClasses")) {
+                x.update({
+                  isAdmin,
+                  schoolClasses: schoolClasses,
+                }).then(hideSavingSpinner);
+              } else {
+                if (item.hasOwnProperty("isAdmin")) {
+                  x.update({
+                    isAdmin,
+                  }).then(hideSavingSpinner);
+                }
+                if (item.hasOwnProperty("schoolClasses")) {
+                  x.update({
+                    schoolClasses: schoolClasses,
+                  }).then(hideSavingSpinner);
+                }
+              }
+            });
       });
     }
   };
   return (
-    <>
-      <TextField
-        label={"Filter by name"}
-        // eslint-disable-next-line react/jsx-no-bind
-        onChange={onFilterChanged}
-      />
-      <div className="user-admin-list-wrap">
-        <div className="user-admin-list-content">
-          <DetailsList
-            items={userItems}
-            compact={false}
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            onRenderItemColumn={renderItemColumn}
-            layoutMode={DetailsListLayoutMode.justified}
-            isHeaderVisible={true}
-          />
+      <>
+        <TextField
+            label={"Filter by name"}
+            // eslint-disable-next-line react/jsx-no-bind
+            onChange={onFilterChanged}
+        />
+        <div className="user-admin-list-wrap">
+          <div className="user-admin-list-content">
+            <DetailsList
+                items={userItems}
+                compact={false}
+                columns={columns}
+                selectionMode={SelectionMode.none}
+                onRenderItemColumn={renderItemColumn}
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+            />
+          </div>
+          <div
+              className={
+                isSaving
+                    ? "user-admin-list-spinner visible"
+                    : "user-admin-list-spinner"
+              }
+          >
+            <Spinner label="Speichern..."/>
+          </div>
         </div>
-        <div
-          className={
-            isSaving
-              ? "user-admin-list-spinner visible"
-              : "user-admin-list-spinner"
-          }
-        >
-          <Spinner label="Speichern..." />
-        </div>
-      </div>
-      <PrimaryButton onClick={onSave} disabled={isSaving}>
-        Änderungen speichern
-      </PrimaryButton>
-    </>
+        <PrimaryButton onClick={onSave} disabled={isSaving}>
+          Änderungen speichern
+        </PrimaryButton>
+      </>
   );
 };

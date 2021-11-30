@@ -26,6 +26,7 @@ export const UserAdministration = (props) => {
               lastName: userObj.lastname,
               email: userObj.email,
               admin: userObj.isAdmin,
+              schoolClasses: userObj.schoolClasses
             };
           });
   const allSchoolClasses = props.schoolClassList
@@ -136,7 +137,7 @@ export const UserAdministration = (props) => {
                   autoComplete="on"
                   options={allSchoolClasses}
                   onChange={() => onSchoolClassesChange(user.userName)}
-
+                  selectedKey={user.schoolClasses}
                   onMenuDismiss={onSchoolClassesChangeFinished}
               />
             </div>

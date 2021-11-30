@@ -179,7 +179,6 @@ export const UserAdministration = (props) => {
           },
       );
     }
-    console.log(changesList);
   };
   const hideSavingSpinner = () => {
     // Timeout so the user has some feedback
@@ -225,8 +224,7 @@ export const UserAdministration = (props) => {
   return (
       <>
         <TextField
-            label={"Filter by name"}
-            // eslint-disable-next-line react/jsx-no-bind
+            label={"Liste filtern:"}
             onChange={onFilterChanged}
         />
         <div className="user-admin-list-wrap">

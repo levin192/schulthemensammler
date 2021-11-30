@@ -24,17 +24,23 @@ export const AddNewSchoolClassName = (props) => {
     };
   };
   const saveNewClassName = async () => {
+    const regExPattern = /^[A-Za-z0-9_-]*$/;
     if (newClassName.length > 0) {
-      const classExists = await getSchoolClass(newClassName);
-      if (!classExists) {
-        fb.firebase.firestore().collection("SchoolClasses").add(newClassConstructor(newClassName)).then(() => {
-              setMessageBarType("success");
-              setMessageBarText("Klasse erfolgreich gespeichert!");
-            },
-        );
+      if (newClassName.match(regExPattern)) {
+        const classExists = await getSchoolClass(newClassName);
+        if (!classExists) {
+          fb.firebase.firestore().collection("SchoolClasses").add(newClassConstructor(newClassName)).then(() => {
+                setMessageBarType("success");
+                setMessageBarText("Klasse erfolgreich gespeichert!");
+              },
+          );
+        } else {
+          setMessageBarType("error");
+          setMessageBarText("Klasse existiert bereits!");
+        }
       } else {
         setMessageBarType("error");
-        setMessageBarText("Klasse existiert bereits!");
+        setMessageBarText("Nur Buchstaben und Zahlen verwenden!");
       }
       setShowMessageBar(true);
     }

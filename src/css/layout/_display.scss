@@ -16,6 +16,8 @@ body {
   &.main-container {
     padding-top: 50px;
     padding-bottom: 50px;
+  }
+  &.main-container, .calendar-settings-container {
     display: flex;
     @include breakpoint-up(sm) {
       display: grid;

@@ -1,7 +1,7 @@
 import React from "react";
-import { Dropdown, DropdownMenuItemType } from "@fluentui/react/lib/Dropdown";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { MessageBar, MessageBarType, TextField } from "@fluentui/react";
+import { MessageBar, MessageBarType, TextField, Dropdown, DropdownMenuItemType } from "@fluentui/react";
+import {AddNewSchoolClassName} from "./functions/AddNewSchoolClassName"
 
 export default class SchoolDayPicker extends React.Component {
   constructor() {
@@ -171,39 +171,49 @@ export default class SchoolDayPicker extends React.Component {
   render() {
     return (
       <>
-        <TextField
-          id="class"
-          label={
-            "Klasse: " +
-            (this.state.selectedClass === null
-              ? "(Keine Klasse Ausgewählt)"
-              : this.state.selectedClass.name)
-          }
-          placeholder={"Klasse"}
-          onBlur={this.loadSchoolClass}
-          required
-        />
-        <Dropdown
-          placeholder="Select options"
-          label="Schultage auswählen"
-          multiSelect
-          disabled={this.state.dropdownDisabled}
-          defaultSelectedKeys={this.state.availableSchoolDays}
-          options={this.state.days}
-          // styles={dropdownStyles}
-          onChange={this.handleChangeDropdownChange}
-        />
-        {this.state.showMessageBar ? (
-          <MessageBar
-            messageBarType={
-              this.state.messageBarType === "error"
-                ? MessageBarType.error
-                : MessageBarType.success
-            }
-          >
-            {this.state.messageBarText}
-          </MessageBar>
-        ) : null}
+        <div className="calendar-settings-container">
+          <div>
+            <p>Schultage anpassen</p>
+            <TextField
+              id="class"
+              label={
+                "Klasse: " +
+                (this.state.selectedClass === null
+                  ? "(Keine Klasse Ausgewählt)"
+                  : this.state.selectedClass.name)
+              }
+              placeholder={"Klasse"}
+              onBlur={this.loadSchoolClass}
+              required
+            />
+            <Dropdown
+              placeholder="Select options"
+              label="Schultage auswählen"
+              multiSelect
+              disabled={this.state.dropdownDisabled}
+              defaultSelectedKeys={this.state.availableSchoolDays}
+              options={this.state.days}
+              // styles={dropdownStyles}
+              onChange={this.handleChangeDropdownChange}
+              style={{marginBottom:'15px'}}
+            />
+            {this.state.showMessageBar ? (
+              <MessageBar
+                messageBarType={
+                  this.state.messageBarType === "error"
+                    ? MessageBarType.error
+                    : MessageBarType.success
+                }
+              >
+                {this.state.messageBarText}
+              </MessageBar>
+            ) : null}
+          </div>
+          <div>
+            <p>Neue Klasse hinzufügen</p>
+            <AddNewSchoolClassName getSchoolClass={this.getSchoolClass} fireBase={this.fb}/>
+          </div>
+        </div>
       </>
     );
   }

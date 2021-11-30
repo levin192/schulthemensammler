@@ -10,7 +10,7 @@ import {
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import SchoolDayPicker from "./SchoolDayPicker";
-import { UserAdministration } from "./UserAdministration";
+import { UserAdministration } from "./functions/UserAdministration";
 
 class SettingsPage extends React.Component {
   constructor() {

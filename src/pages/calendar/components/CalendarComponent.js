@@ -14,7 +14,7 @@ const GetTextField = (props) => {
 
   return (
     <>
-      <h1>Themen Eintragen</h1>
+      <p>Schultag auswählen</p>
       <Calendar
         firstDayOfWeek={DayOfWeek.Monday}
         highlightSelectedMonth

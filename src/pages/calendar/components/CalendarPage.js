@@ -242,6 +242,12 @@ class CalendarPage extends React.Component {
             <h1>Kalender</h1>
             <div id="calendar" className="calendar">
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
+              <Dropdown
+                  options={this.state.schoolClassSubjects}
+                  onChange={this.handleChangeDropdownChange}
+                  label="Fach auswählen"
+                  style={{maxWidth: '300px'}}
+              />
               <TextField
                 disabled={this.state.selectedSubject === null}
                 id={"postText"}
@@ -250,10 +256,7 @@ class CalendarPage extends React.Component {
                 multiline
                 autoAdjustHeight
               />
-              <Dropdown
-                options={this.state.schoolClassSubjects}
-                onChange={this.handleChangeDropdownChange}
-              />
+
               <PrimaryButton
                 text="Neuen Eintrag hinzufügen"
                 onClick={this.addNewPost}
@@ -272,6 +275,7 @@ class CalendarPage extends React.Component {
             </div>
           </div>
           <div>
+            <h1>Themen</h1>
             <DetailsList
               selectionMode={SelectionMode.none}
               ariaLabel="Einträge"

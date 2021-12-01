@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {IContextualMenuProps, IIconProps} from '@fluentui/react';
 import {CommandButton} from '@fluentui/react/lib/Button';
 import {Store} from '../../helpers/Store'
 import FirebaseDataProvider from '../../helpers/Firebasedataprovider';
 
-export const UserActions: React.FunctionComponent<> = props => {
+export const UserActions = (props) => {
   const navigate = useNavigate();
   const HandleClickEvent = (route) => {
     navigate('/' + route, {replace: true});
@@ -26,7 +25,7 @@ export const UserActions: React.FunctionComponent<> = props => {
 
   }
 
-  const loggedInProps: IContextualMenuProps = {
+  const loggedInProps = {
     items: [
       {
         key: 'settings',
@@ -49,7 +48,7 @@ export const UserActions: React.FunctionComponent<> = props => {
 
     ],
   };
-  const loggedOutProps: IContextualMenuProps = {
+  const loggedOutProps = {
     items: [
       {
         key: 'login',
@@ -67,7 +66,7 @@ export const UserActions: React.FunctionComponent<> = props => {
     ],
   };
 
-  const userIcon: IIconProps = {iconName: 'Contact'};
+  const userIcon = {iconName: 'Contact'};
 
 
   return (

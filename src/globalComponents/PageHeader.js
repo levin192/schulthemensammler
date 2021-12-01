@@ -4,11 +4,21 @@ import { UserActions } from "./actions/UserActions";
 class PageHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.userSchoolClasses = this.props.userDoc.schoolClasses
+    this.state = {
+      userSchoolClasses: [],
+    };
   }
-componentDidMount() {
-  console.log(this.userSchoolClasses);
-}
+
+  componentDidMount() {
+    if (this.props.userDoc) {
+      console.log(this.props.userDoc.schoolClasses);
+      this.setState((state) => {
+        state.userSchoolClasses = this.props.userDoc.schoolClasses;
+
+        return state;
+      });
+    }
+  }
 
   render() {
     return (
@@ -26,7 +36,10 @@ componentDidMount() {
                   />
                 </a>
               </div>
-              {this.userSchoolClasses.join()}
+              ()
+              <div className="header-classes">
+
+              </div>
               <div className="header-actions">
                 <UserActions/>
               </div>

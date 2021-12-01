@@ -77,7 +77,7 @@ class App extends React.Component {
     return (
       <Store.Provider value={this.state}>
         <Router>
-          <PageHeader />
+          <PageHeader userDoc={this.state.userDoc}/>
           <main className="content-container main-container">
             <Routes>
               <Route

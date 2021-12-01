@@ -6,11 +6,12 @@ import {
   Pivot,
   PivotItem,
   PrimaryButton,
-  TextField,
+  TextField
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import SchoolDayPicker from "./SchoolDayPicker";
 import { UserAdministration } from "./functions/UserAdministration";
+import {SchoolClassAdministration} from "./functions/SchoolClassAdministration";
 
 class SettingsPage extends React.Component {
   constructor() {
@@ -29,7 +30,7 @@ class SettingsPage extends React.Component {
       allUserDocs: undefined,
       allSchoolClassesNames: undefined,
       isFormChanged: false,
-      messageBarType: null,
+      messageBarType: null
     };
   }
   componentDidMount = () => {
@@ -58,20 +59,24 @@ class SettingsPage extends React.Component {
 
   getAllSchoolClassesNames = async () => {
     const snapshot = await this.fb.firebase
-        .firestore()
-        .collection("SchoolClasses")
-        .get();
-    return snapshot.docs.map((doc) => doc.data().name);
+      .firestore()
+      .collection("SchoolClasses")
+      .get();
+
+    return snapshot.docs.map((doc) => {
+      return { name: doc.data().name, id: doc.id };
+    });
   };
 
   setAllSchoolClassesNames = () => {
-    this.getAllSchoolClassesNames().then((docs) =>
-        this.setState((state) => {
-          state.allSchoolClassesNames = docs;
-          return state;
-        })
-    );
+    this.getAllSchoolClassesNames().then((docs) => {
+      console.log("docs", docs);
 
+      this.setState((state) => {
+        state.allSchoolClassesNames = docs;
+        return state;
+      });
+    });
   };
 
   handleInputChange = (inputEl) => {
@@ -88,6 +93,7 @@ class SettingsPage extends React.Component {
       state.firstname = this.context.userDoc.firstname;
       state.lastname = this.context.userDoc.lastname;
       state.email = this.context.userDoc.email;
+
       return state;
     });
   };
@@ -117,8 +123,7 @@ class SettingsPage extends React.Component {
 
     if (isUsernameAlreadyTaken) {
       this.setState((state) => {
-        state.showMessageBar = true;
-        state.messageBarType = "error";
+        state.showMessageBar = "Error";
         state.messageBarText = "Username bereits vergeben!";
         return state;
       });
@@ -131,7 +136,7 @@ class SettingsPage extends React.Component {
           username,
           firstname,
           lastname,
-          email,
+          email
         })
         .then(
           () => {
@@ -220,12 +225,24 @@ class SettingsPage extends React.Component {
                   itemIcon="CalendarSettings"
                 >
                   <h1>Kalender Einstellungen</h1>
-                  <SchoolDayPicker />
+                  <SchoolDayPicker
+                    allSchoolClassesNames={this.state.allSchoolClassesNames}
+                  />
                 </PivotItem>
               ) : null}
               {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
                   <UserAdministration
+                    fireBase={this.fb}
+                    userList={this.state.allUserDocs}
+                    schoolClassList={this.state.allSchoolClassesNames}
+                    currentUserName={this.context.userDoc.username}
+                  />
+                </PivotItem>
+              ) : null}
+              {this.context.userDoc.isAdmin ? (
+                <PivotItem headerText="Klassen verwalten" itemIcon="Dictionary">
+                  <SchoolClassAdministration
                     fireBase={this.fb}
                     userList={this.state.allUserDocs}
                     schoolClassList={this.state.allSchoolClassesNames}

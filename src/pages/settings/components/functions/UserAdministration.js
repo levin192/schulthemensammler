@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  DetailsList,
-  DetailsListLayoutMode,
-  SelectionMode,
-} from "@fluentui/react/lib/DetailsList";
+import { DetailsList, DetailsListLayoutMode, SelectionMode } from "@fluentui/react/lib/DetailsList";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { Checkbox } from "@fluentui/react/lib/Checkbox";
 import { ComboBox } from "@fluentui/react/lib/ComboBox";
@@ -30,18 +26,20 @@ export const UserAdministration = (props) => {
             };
           });
   const allSchoolClasses = props.schoolClassList
-      .filter((schoolClass) => schoolClass.length > 0) // filter empty
+      .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
       .map((schoolClass) => {
         return {
-          key: schoolClass,
-          text: schoolClass,
+          key: schoolClass.name,
+          text: schoolClass.name,
         };
       });
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
+  const [changesList] = useState([]);
   const columns = [
     {
       key: "userNameCol",
@@ -84,7 +82,6 @@ export const UserAdministration = (props) => {
       isResizable: true,
     },
   ];
-  const changesList = [];
   const onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
     setUserItems(
@@ -107,7 +104,7 @@ export const UserAdministration = (props) => {
         return user.userName ? <span>{user.userName}</span> : emptyEntry();
       case "fullNameCol":
         return user.firstName || user.lastName ? (
-            <span>
+          <span>
             {user.firstName}&nbsp;{user.lastName}
           </span>
         ) : (
@@ -134,7 +131,7 @@ export const UserAdministration = (props) => {
             <div className="combo-wrapper" data-user-ref={user.userName}>
               <ComboBox
                   multiSelect
-                  //autoComplete="on"
+                  autoComplete="on"
                   options={allSchoolClasses}
                   onChange={() => onSchoolClassesChange(user.userName)}
                   defaultSelectedKey={user.schoolClasses}
@@ -147,6 +144,7 @@ export const UserAdministration = (props) => {
     }
   };
   const onAdminChange = (e) => {
+    setHasChanges(true);
     const userName = e.target.id;
     const isAdmin = e.target.checked;
     const unsavedChange = changesList.find((x) => x.userName === userName); // If is in Array already, so we only need to update the isAdmin prop in the object
@@ -155,7 +153,7 @@ export const UserAdministration = (props) => {
     } else {
       changesList.push({
         userName: userName,
-        isAdmin: isAdmin,
+        isAdmin,
       });
     }
   };
@@ -163,22 +161,23 @@ export const UserAdministration = (props) => {
     setCurrentUserComboBox(userRef);
   };
   const onSchoolClassesChangeFinished = () => {
-    if (window.document) {
+    setHasChanges(true);
+    if (window.document.querySelector("[data-user-ref=\"" + currentUserComboBox + "\"]")) {
       const schoolClasses = window.document
           .querySelector("[data-user-ref=\"" + currentUserComboBox + "\"]")
           .querySelector("input")
-          .value
-          .replace(/\s+/g, "")
+          .value.replace(/\s+/g, "")
           .split(",");
-      const unsavedChange = changesList.find((x) => x.userName === currentUserComboBox); // If is in Array already
+      const unsavedChange = changesList.find(
+          (x) => x.userName === currentUserComboBox,
+      ); // If is in Array already
       if (unsavedChange) {
         unsavedChange.schoolClasses = schoolClasses;
       } else {
         changesList.push({
-              userName: currentUserComboBox,
-              schoolClasses: schoolClasses,
-            },
-        );
+          userName: currentUserComboBox,
+          schoolClasses: schoolClasses,
+        });
       }
     }
   };
@@ -186,7 +185,7 @@ export const UserAdministration = (props) => {
     // Timeout so the user has some feedback
     setTimeout(() => {
       setIsSaving(false);
-    }, 2500);
+    }, 1500);
   };
   const onSave = async (e) => {
     e.preventDefault();
@@ -201,8 +200,14 @@ export const UserAdministration = (props) => {
             .where("username", "==", item.userName)
             .get()
             .then((r) => {
-              const x = fb.firebase.firestore().collection("Users").doc(r.docs[0].id);
-              if (item.hasOwnProperty("isAdmin") && item.hasOwnProperty("schoolClasses")) {
+              const x = fb.firebase
+                  .firestore()
+                  .collection("Users")
+                  .doc(r.docs[0].id);
+              if (
+                  item.hasOwnProperty("isAdmin") &&
+                  item.hasOwnProperty("schoolClasses")
+              ) {
                 x.update({
                   isAdmin,
                   schoolClasses: schoolClasses,
@@ -225,10 +230,7 @@ export const UserAdministration = (props) => {
   };
   return (
       <>
-        <TextField
-            label={"Liste filtern:"}
-            onChange={onFilterChanged}
-        />
+        <TextField label={"Liste filtern:"} onChange={onFilterChanged}/>
         <div className="user-admin-list-wrap">
           <div className="user-admin-list-content">
             <DetailsList
@@ -251,7 +253,7 @@ export const UserAdministration = (props) => {
             <Spinner label="Speichern..."/>
           </div>
         </div>
-        <PrimaryButton onClick={onSave} disabled={isSaving}>
+        <PrimaryButton onClick={onSave} disabled={!(hasChanges)}>
           Änderungen speichern
         </PrimaryButton>
       </>

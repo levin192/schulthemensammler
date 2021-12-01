@@ -68,12 +68,14 @@ class SettingsPage extends React.Component {
   };
 
   setAllSchoolClassesNames = () => {
-    this.getAllSchoolClassesNames().then((docs) =>
+    this.getAllSchoolClassesNames().then((docs) => {
+      console.log("docs", docs);
+
       this.setState((state) => {
         state.allSchoolClassesNames = docs;
         return state;
-      })
-    );
+      });
+    });
   };
 
   handleInputChange = (inputEl) => {
@@ -223,8 +225,7 @@ class SettingsPage extends React.Component {
                 >
                   <h1>Kalender Einstellungen</h1>
                   <SchoolDayPicker
-                    allSchoolClasses={this.state.allSchoolClasses}
-                    allSchoolClasses={this.state.allSchoolClassesNames}
+                    allSchoolClassesNames={this.state.allSchoolClassesNames}
                   />
                 </PivotItem>
               ) : null}

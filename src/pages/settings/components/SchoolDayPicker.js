@@ -22,7 +22,8 @@ export default class SchoolDayPicker extends React.Component {
       dropdownDisabled: true,
       showMessageBar: false,
       messageBarType: null,
-      messageBarText: ""
+      messageBarText: "",
+      allSchoolClasses: []
     };
   }
 
@@ -31,16 +32,15 @@ export default class SchoolDayPicker extends React.Component {
   };
 
   setAllSchoolClasses = () => {
-    console.log("testt", this.props.allSchoolClasses);
-
-    const allSchoolClasses = this.props.allSchoolClasses
-      .filter((schoolClass) => schoolClass.length > 0) // filter empty
-      .map((schoolClass) => {
+    const allSchoolClasses = this.props.allSchoolClassesNames.map(
+      (schoolClass) => {
         return {
-          key: schoolClass.id,
-          text: schoolClass.name
+          key: schoolClass.name,
+          text: schoolClass.name,
+          id: schoolClass.id
         };
-      });
+      }
+    );
 
     this.setState((state) => {
       state.allSchoolClasses = allSchoolClasses;
@@ -62,10 +62,10 @@ export default class SchoolDayPicker extends React.Component {
     }
   };
 
-  loadSchoolClass = async (inputEl) => {
-    if (inputEl.target.value === "") return null;
+  onComboboxSelection = async (y, item) => {
+    if (item === "") return null;
 
-    const schoolClassName = inputEl.target.value;
+    const schoolClassName = item.text;
     const schoolClassDataRaw = await this.getSchoolClass(schoolClassName);
 
     if (schoolClassDataRaw === undefined) {
@@ -142,7 +142,7 @@ export default class SchoolDayPicker extends React.Component {
     }
   };
 
-  onComboboxSelection = (x, item) => {
+  handleChangeDropdownChange = (x, item) => {
     this.updateSchoolClassAvailableDays(item.key, item.selected);
   };
 
@@ -150,7 +150,7 @@ export default class SchoolDayPicker extends React.Component {
     this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
-      .doc(schoolClassId)
+      .doc(this.state.schoolClassDocId)
       .update({ ["availableSchoolDays." + dayName]: value })
       .then(() => {
         this.setState((state) => {

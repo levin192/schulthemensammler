@@ -38,6 +38,7 @@ export const UserAdministration = (props) => {
         text: schoolClass
       };
     });
+
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);

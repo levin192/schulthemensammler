@@ -14,7 +14,6 @@ class PageHeader extends React.Component {
       console.log(this.props.userDoc.schoolClasses);
       this.setState((state) => {
         state.userSchoolClasses = this.props.userDoc.schoolClasses;
-
         return state;
       });
     }
@@ -36,9 +35,9 @@ class PageHeader extends React.Component {
                   />
                 </a>
               </div>
-              ()
-              <div className="header-classes">
 
+              <div className="header-classes">
+                {(this.state.userSchoolClasses.length > 0) ? "Deine Klassen: " + this.state.userSchoolClasses.join(", ") : null}
               </div>
               <div className="header-actions">
                 <UserActions/>

@@ -43,6 +43,7 @@ export const UserAdministration = (props) => {
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
   const columns = [
     {
@@ -149,6 +150,7 @@ export const UserAdministration = (props) => {
     }
   };
   const onAdminChange = (e) => {
+    setHasChanges(true)
     const userName = e.target.id;
     const isAdmin = e.target.checked;
     const unsavedChange = changesList.find((x) => x.userName === userName); // If is in Array already, so we only need to update the isAdmin prop in the object
@@ -157,7 +159,7 @@ export const UserAdministration = (props) => {
     } else {
       changesList.push({
         userName: userName,
-        isAdmin: isAdmin
+        isAdmin
       });
     }
   };
@@ -165,7 +167,8 @@ export const UserAdministration = (props) => {
     setCurrentUserComboBox(userRef);
   };
   const onSchoolClassesChangeFinished = () => {
-    if (window.document) {
+    setHasChanges(true)
+    if (window.document.querySelector('[data-user-ref="' + currentUserComboBox + '"]')) {
       const schoolClasses = window.document
         .querySelector('[data-user-ref="' + currentUserComboBox + '"]')
         .querySelector("input")
@@ -188,10 +191,12 @@ export const UserAdministration = (props) => {
     // Timeout so the user has some feedback
     setTimeout(() => {
       setIsSaving(false);
-    }, 2500);
+    }, 1500);
   };
   const onSave = async (e) => {
+    console.log(changesList);
     e.preventDefault();
+    setHasChanges(false)
     if (changesList.length > 0) {
       setIsSaving(true);
       changesList.forEach((item) => {
@@ -256,7 +261,7 @@ export const UserAdministration = (props) => {
           <Spinner label="Speichern..." />
         </div>
       </div>
-      <PrimaryButton onClick={onSave} disabled={isSaving}>
+      <PrimaryButton onClick={onSave} disabled={!(hasChanges)}>
         Änderungen speichern
       </PrimaryButton>
     </>

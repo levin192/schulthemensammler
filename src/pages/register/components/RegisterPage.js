@@ -1,14 +1,14 @@
-import React from 'react';
-import {ReactComponent as SideSVG} from '../../../svg/auth.svg';
-import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
+import React from "react";
+import { ReactComponent as SideSVG } from "../../../svg/auth.svg";
+import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import {
   MessageBar,
   MessageBarType,
   PrimaryButton,
-  TextField,
-} from '@fluentui/react';
-import {Navigate} from 'react-router';
-import {Store} from '../../../helpers/Store'
+  TextField
+} from "@fluentui/react";
+import { Navigate } from "react-router";
+import { Store } from "../../../helpers/Store";
 
 class RegisterPage extends React.Component {
   static contextType = Store;
@@ -17,16 +17,16 @@ class RegisterPage extends React.Component {
     super();
     this.fb = new FirebaseDataProvider();
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       wasSuccessful: true,
-      errorMessage: '',
-      shouldRedirect: false,
+      errorMessage: "",
+      shouldRedirect: false
     };
   }
 
   componentDidMount() {
-    document.title = '📅 | Registrieren 📝'
+    document.title = "📅 | Registrieren 📝";
   }
 
   registerUser = async (event) => {
@@ -35,13 +35,11 @@ class RegisterPage extends React.Component {
     const password = this.state.password;
 
     try {
-      await this.fb.register({email, password});
+      await this.fb.register({ email, password });
 
-      await this.createUserDoc()
+      await this.createUserDoc();
 
       this.setState((state) => {
-
-
         state.shouldRedirect = true;
         return state;
       });
@@ -57,24 +55,28 @@ class RegisterPage extends React.Component {
   };
 
   createUserDoc = () => {
-    const userId = this.fb.firebase.auth().currentUser.uid
+    const userId = this.fb.firebase.auth().currentUser.uid;
 
-    return this.fb.firebase.firestore().collection("Users").doc(userId).set({
-      username: '',
-      isAdmin: false,
-      firstname: '',
-      lastname: '',
-      email: this.state.email,
-
-    }).then(() => {
-      console.log('Successfully created register doc')
-      return null
-    }).catch((err) => {
-      console.error('Got an error while trying to create register doc', err)
-    })
-
-  }
-
+    return this.fb.firebase
+      .firestore()
+      .collection("Users")
+      .doc(userId)
+      .set({
+        username: "",
+        isAdmin: false,
+        firstname: "",
+        lastname: "",
+        email: this.state.email,
+        schoolClasses: []
+      })
+      .then(() => {
+        console.log("Successfully created register doc");
+        return null;
+      })
+      .catch((err) => {
+        console.error("Got an error while trying to create register doc", err);
+      });
+  };
 
   handleInputChange = (inputEl) => {
     this.setState((state) => {
@@ -86,51 +88,51 @@ class RegisterPage extends React.Component {
 
   render() {
     if (this.state.shouldRedirect) {
-      return <Navigate to="/settings"/>;
+      return <Navigate to="/settings" />;
     }
 
     return (
-        <>
-          <div>
+      <>
+        <div>
           <h1>Registrieren</h1>
           <form onSubmit={this.registerUser}>
             <TextField
-                label="E-Mail"
-                id="email"
-                autoComplete="new-email"
-                type="email"
-                required
-                onChange={this.handleInputChange}
+              label="E-Mail"
+              id="email"
+              autoComplete="new-email"
+              type="email"
+              required
+              onChange={this.handleInputChange}
             />
             <TextField
-                id="password"
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                minlength="6"
-                title="Mindestens eine Zahl, Groß- und Kleinbuchstaben und mindestens 6 Zeichen"
-                required
-                autoComplete="new-password"
-                label="Passwort"
-                type="password"
-                canRevealPassword
-                revealPasswordAriaLabel="Passwort anzeigen"
-                onChange={this.handleInputChange}
+              id="password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+              minlength="6"
+              title="Mindestens eine Zahl, Groß- und Kleinbuchstaben und mindestens 6 Zeichen"
+              required
+              autoComplete="new-password"
+              label="Passwort"
+              type="password"
+              canRevealPassword
+              revealPasswordAriaLabel="Passwort anzeigen"
+              onChange={this.handleInputChange}
             />
 
-            <br/>
+            <br />
 
-            <PrimaryButton text="Registrieren" type="submit"/>
+            <PrimaryButton text="Registrieren" type="submit" />
           </form>
 
           {this.state.wasSuccessful ? null : (
-              <MessageBar messageBarType={MessageBarType.error}>
-                {this.state.errorMessage}
-              </MessageBar>
+            <MessageBar messageBarType={MessageBarType.error}>
+              {this.state.errorMessage}
+            </MessageBar>
           )}
-          </div>
-          <div>
-            <SideSVG/>
-          </div>
-        </>
+        </div>
+        <div>
+          <SideSVG />
+        </div>
+      </>
     );
   }
 }

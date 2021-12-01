@@ -1,4 +1,3 @@
-import {TextField} from "@fluentui/react/lib/TextField";
 import * as React from "react";
 import {DetailsList, DetailsListLayoutMode, SelectionMode} from "@fluentui/react/lib/DetailsList";
 import {useState} from "react";
@@ -8,7 +7,7 @@ import {PrimaryButton} from "@fluentui/react/lib/Button";
 
 export const SchoolClassAdministration = (props) => {
     console.log(props)
-    const fb = props.fireBase
+    // const fb = props.fireBase
     const allSchoolClasses = props.schoolClassList
         .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
         .map((schoolClass) => {

@@ -3,7 +3,6 @@ import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import {
   MessageBar,
   MessageBarType,
-  TextField,
   Dropdown,
   DropdownMenuItemType,
   ComboBox

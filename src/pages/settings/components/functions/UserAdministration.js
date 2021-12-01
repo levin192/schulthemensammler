@@ -43,7 +43,7 @@ export const UserAdministration = (props) => {
   const [originalItems] = useState(userItems);
   const [filteredItems] = useState(userItems);
   const [isSaving, setIsSaving] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
+  // const [hasChanges, setHasChanges] = useState(false);
   const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
   const columns = [
     {

@@ -274,7 +274,7 @@ class CalendarPage extends React.Component {
               ) : null}
             </div>
           </div>
-          <div>
+          <div className="visible-mobile">
             <h1>Themen</h1>
             <DetailsList
               selectionMode={SelectionMode.none}

@@ -209,7 +209,7 @@ export default class SchoolDayPicker extends React.Component {
               </MessageBar>
             ) : null}
           </div>
-          <div>
+          <div className="visible-mobile">
             <p>Neue Klasse hinzufügen</p>
             <AddNewSchoolClassName
               getSchoolClass={this.getSchoolClass}

@@ -244,9 +244,7 @@ class SettingsPage extends React.Component {
                 <PivotItem headerText="Klassen verwalten" itemIcon="Dictionary">
                   <SchoolClassAdministration
                     fireBase={this.fb}
-                    userList={this.state.allUserDocs}
                     schoolClassList={this.state.allSchoolClassesNames}
-                    currentUserName={this.context.userDoc.username}
                   />
                 </PivotItem>
               ) : null}

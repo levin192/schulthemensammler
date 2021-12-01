@@ -31,13 +31,13 @@ export const UserAdministration = (props) => {
       });
 
   const allSchoolClasses = props.schoolClassList
-    .filter((schoolClass) => schoolClass.length > 0) // filter empty
-    .map((schoolClass) => {
-      return {
-        key: schoolClass,
-        text: schoolClass
-      };
-    });
+      .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
+      .map((schoolClass) => {
+        return {
+          key: schoolClass.id,
+          text: schoolClass.name,
+        };
+      });
 
   const [userItems, setUserItems] = useState(userList);
   const [originalItems] = useState(userItems);

@@ -6,7 +6,7 @@ import {
   Pivot,
   PivotItem,
   PrimaryButton,
-  TextField,
+  TextField
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import SchoolDayPicker from "./SchoolDayPicker";
@@ -29,7 +29,7 @@ class SettingsPage extends React.Component {
       allUserDocs: undefined,
       allSchoolClassesNames: undefined,
       isFormChanged: false,
-      messageBarType: null,
+      messageBarType: null
     };
   }
   componentDidMount = () => {
@@ -58,20 +58,22 @@ class SettingsPage extends React.Component {
 
   getAllSchoolClassesNames = async () => {
     const snapshot = await this.fb.firebase
-        .firestore()
-        .collection("SchoolClasses")
-        .get();
-    return snapshot.docs.map((doc) => doc.data().name);
+      .firestore()
+      .collection("SchoolClasses")
+      .get();
+
+    return snapshot.docs.map((doc) => {
+      return { name: doc.data().name, id: doc.id };
+    });
   };
 
   setAllSchoolClassesNames = () => {
     this.getAllSchoolClassesNames().then((docs) =>
-        this.setState((state) => {
-          state.allSchoolClassesNames = docs;
-          return state;
-        })
+      this.setState((state) => {
+        state.allSchoolClassesNames = docs;
+        return state;
+      })
     );
-
   };
 
   handleInputChange = (inputEl) => {
@@ -131,7 +133,7 @@ class SettingsPage extends React.Component {
           username,
           firstname,
           lastname,
-          email,
+          email
         })
         .then(
           () => {
@@ -220,7 +222,10 @@ class SettingsPage extends React.Component {
                   itemIcon="CalendarSettings"
                 >
                   <h1>Kalender Einstellungen</h1>
-                  <SchoolDayPicker />
+                  <SchoolDayPicker
+                    allSchoolClasses={this.state.allSchoolClasses}
+                    allSchoolClasses={this.state.allSchoolClassesNames}
+                  />
                 </PivotItem>
               ) : null}
               {this.context.userDoc.isAdmin ? (

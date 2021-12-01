@@ -1,11 +1,18 @@
 import React from "react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { MessageBar, MessageBarType, TextField, Dropdown, DropdownMenuItemType } from "@fluentui/react";
-import {AddNewSchoolClassName} from "./functions/AddNewSchoolClassName"
+import {
+  MessageBar,
+  MessageBarType,
+  TextField,
+  Dropdown,
+  DropdownMenuItemType,
+  ComboBox
+} from "@fluentui/react";
+import { AddNewSchoolClassName } from "./functions/AddNewSchoolClassName";
 
 export default class SchoolDayPicker extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.fb = new FirebaseDataProvider();
     this.state = {
       selectedClass: null,
@@ -15,33 +22,30 @@ export default class SchoolDayPicker extends React.Component {
       dropdownDisabled: true,
       showMessageBar: false,
       messageBarType: null,
-      messageBarText: "",
+      messageBarText: ""
     };
   }
 
   componentDidMount = () => {
-    this.getSchooldays();
+    this.setAllSchoolClasses();
   };
 
-  getSchooldays = (className) => {
-    // const userId = this.fb.firebase.auth().currentUser.uid
-    // this.fb.firebase
-    //   .firestore()
-    //   .collection("klassen")
-    //   .doc("6A") // KlassenID
-    //   .onSnapshot((querySnapshot) => {
-    //     const schooldays = querySnapshot.data();
-    //     this.setState((state) => {
-    //       state.monday = schooldays.montag;
-    //       state.tuesday = schooldays.dienstag;
-    //       state.wednesday = schooldays.mittwoch;
-    //       state.thursday = schooldays.donnerstag;
-    //       state.friday = schooldays.freitag;
-    //       state.saturday = schooldays.samstag;
-    //       state.sunday = schooldays.sonntag;
-    //       return state;
-    //     });
-    //   });
+  setAllSchoolClasses = () => {
+    console.log("testt", this.props.allSchoolClasses);
+
+    const allSchoolClasses = this.props.allSchoolClasses
+      .filter((schoolClass) => schoolClass.length > 0) // filter empty
+      .map((schoolClass) => {
+        return {
+          key: schoolClass.id,
+          text: schoolClass.name
+        };
+      });
+
+    this.setState((state) => {
+      state.allSchoolClasses = allSchoolClasses;
+      return state;
+    });
   };
 
   getSchoolClass = async (className) => {
@@ -90,31 +94,31 @@ export default class SchoolDayPicker extends React.Component {
         {
           key: "dayHeader",
           text: "Tage",
-          itemType: DropdownMenuItemType.Header,
+          itemType: DropdownMenuItemType.Header
         },
         { key: "monday", text: "Montag" },
         {
           key: "tuesday",
-          text: "Dienstag",
+          text: "Dienstag"
         },
         {
           key: "wednesday",
-          text: "Mittwoch",
+          text: "Mittwoch"
         },
         {
           key: "thursday",
-          text: "Donnerstag",
+          text: "Donnerstag"
         },
         {
           key: "friday",
-          text: "Freitag",
+          text: "Freitag"
         },
         { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
         {
           key: "saturday",
-          text: "Samstag",
+          text: "Samstag"
         },
-        { key: "sunday", text: "Sonntag" },
+        { key: "sunday", text: "Sonntag" }
       ];
 
       const availableSchoolDays = [];
@@ -138,15 +142,15 @@ export default class SchoolDayPicker extends React.Component {
     }
   };
 
-  handleChangeDropdownChange = (x, item) => {
+  onComboboxSelection = (x, item) => {
     this.updateSchoolClassAvailableDays(item.key, item.selected);
   };
 
-  updateSchoolClassAvailableDays = (dayName, value) => {
+  updateSchoolClassAvailableDays = (dayName, value, schoolClassId) => {
     this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
-      .doc(this.state.schoolClassDocId)
+      .doc(schoolClassId)
       .update({ ["availableSchoolDays." + dayName]: value })
       .then(() => {
         this.setState((state) => {
@@ -174,6 +178,14 @@ export default class SchoolDayPicker extends React.Component {
         <div className="calendar-settings-container">
           <div>
             <p>Schultage anpassen</p>
+            <ComboBox
+              //autoComplete="on"
+              options={this.state.allSchoolClasses}
+              onChange={this.onComboboxSelection}
+
+              // onMenuDismiss={onSchoolClassesChangeFinished}
+            />
+
             <TextField
               id="class"
               label={
@@ -195,7 +207,7 @@ export default class SchoolDayPicker extends React.Component {
               options={this.state.days}
               // styles={dropdownStyles}
               onChange={this.handleChangeDropdownChange}
-              style={{marginBottom:'15px'}}
+              style={{ marginBottom: "15px" }}
             />
             {this.state.showMessageBar ? (
               <MessageBar
@@ -211,7 +223,10 @@ export default class SchoolDayPicker extends React.Component {
           </div>
           <div>
             <p>Neue Klasse hinzufügen</p>
-            <AddNewSchoolClassName getSchoolClass={this.getSchoolClass} fireBase={this.fb}/>
+            <AddNewSchoolClassName
+              getSchoolClass={this.getSchoolClass}
+              fireBase={this.fb}
+            />
           </div>
         </div>
       </>

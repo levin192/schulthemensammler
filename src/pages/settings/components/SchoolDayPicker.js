@@ -185,22 +185,11 @@ export default class SchoolDayPicker extends React.Component {
 
               // onMenuDismiss={onSchoolClassesChangeFinished}
             />
-
-            <TextField
-              id="class"
-              label={
-                "Klasse: " +
-                (this.state.selectedClass === null
-                  ? "(Keine Klasse Ausgewählt)"
-                  : this.state.selectedClass.name)
-              }
-              placeholder={"Klasse"}
-              onBlur={this.loadSchoolClass}
-              required
-            />
             <Dropdown
               placeholder="Select options"
-              label="Schultage auswählen"
+              label={(this.state.selectedClass === null
+                    ? "Schultage auswählen"
+                    : "Schultage für (" + this.state.selectedClass.name + ") auswählen")}
               multiSelect
               disabled={this.state.dropdownDisabled}
               defaultSelectedKeys={this.state.availableSchoolDays}

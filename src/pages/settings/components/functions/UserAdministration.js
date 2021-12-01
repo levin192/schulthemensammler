@@ -34,7 +34,7 @@ export const UserAdministration = (props) => {
       .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
       .map((schoolClass) => {
         return {
-          key: schoolClass.id,
+          key: schoolClass.name,
           text: schoolClass.name,
         };
       });

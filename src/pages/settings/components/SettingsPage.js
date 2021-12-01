@@ -11,6 +11,7 @@ import {
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import SchoolDayPicker from "./SchoolDayPicker";
 import { UserAdministration } from "./functions/UserAdministration";
+import {SchoolClassAdministration} from "./functions/SchoolClassAdministration";
 
 class SettingsPage extends React.Component {
   constructor() {
@@ -92,6 +93,7 @@ class SettingsPage extends React.Component {
       state.firstname = this.context.userDoc.firstname;
       state.lastname = this.context.userDoc.lastname;
       state.email = this.context.userDoc.email;
+
       return state;
     });
   };
@@ -121,8 +123,7 @@ class SettingsPage extends React.Component {
 
     if (isUsernameAlreadyTaken) {
       this.setState((state) => {
-        state.showMessageBar = true;
-        state.messageBarType = "error";
+        state.showMessageBar = "Error";
         state.messageBarText = "Username bereits vergeben!";
         return state;
       });
@@ -232,6 +233,16 @@ class SettingsPage extends React.Component {
               {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
                   <UserAdministration
+                    fireBase={this.fb}
+                    userList={this.state.allUserDocs}
+                    schoolClassList={this.state.allSchoolClassesNames}
+                    currentUserName={this.context.userDoc.username}
+                  />
+                </PivotItem>
+              ) : null}
+              {this.context.userDoc.isAdmin ? (
+                <PivotItem headerText="Klassen verwalten" itemIcon="Dictionary">
+                  <SchoolClassAdministration
                     fireBase={this.fb}
                     userList={this.state.allUserDocs}
                     schoolClassList={this.state.allSchoolClassesNames}

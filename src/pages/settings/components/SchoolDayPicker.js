@@ -146,7 +146,7 @@ export default class SchoolDayPicker extends React.Component {
     this.updateSchoolClassAvailableDays(item.key, item.selected);
   };
 
-  updateSchoolClassAvailableDays = (dayName, value, schoolClassId) => {
+  updateSchoolClassAvailableDays = (dayName, value) => {
     this.fb.firebase
       .firestore()
       .collection("SchoolClasses")

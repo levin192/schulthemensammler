@@ -150,7 +150,6 @@ export const UserAdministration = (props) => {
     }
   };
   const onAdminChange = (e) => {
-    setHasChanges(true)
     const userName = e.target.id;
     const isAdmin = e.target.checked;
     const unsavedChange = changesList.find((x) => x.userName === userName); // If is in Array already, so we only need to update the isAdmin prop in the object
@@ -167,7 +166,6 @@ export const UserAdministration = (props) => {
     setCurrentUserComboBox(userRef);
   };
   const onSchoolClassesChangeFinished = () => {
-    setHasChanges(true)
     if (window.document.querySelector('[data-user-ref="' + currentUserComboBox + '"]')) {
       const schoolClasses = window.document
         .querySelector('[data-user-ref="' + currentUserComboBox + '"]')
@@ -196,7 +194,6 @@ export const UserAdministration = (props) => {
   const onSave = async (e) => {
     console.log(changesList);
     e.preventDefault();
-    setHasChanges(false)
     if (changesList.length > 0) {
       setIsSaving(true);
       changesList.forEach((item) => {
@@ -261,7 +258,7 @@ export const UserAdministration = (props) => {
           <Spinner label="Speichern..." />
         </div>
       </div>
-      <PrimaryButton onClick={onSave} disabled={!(hasChanges)}>
+      <PrimaryButton onClick={onSave} disabled={isSaving}>
         Änderungen speichern
       </PrimaryButton>
     </>

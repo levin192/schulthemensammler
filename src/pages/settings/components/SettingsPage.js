@@ -250,8 +250,16 @@ class SettingsPage extends React.Component {
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
                 <h1>Statistiken</h1>
-                Nutzer Gesamt:{" "}
-                {this.state.allUserDocs ? this.state.allUserDocs.length : null}
+                <ul>
+                  <li>
+                    Nutzer Gesamt:{" "}
+                    {this.state.allUserDocs ? this.state.allUserDocs.length : null}</li>
+                  <li>
+                    Klassen Gesamt:{" "}
+                    {this.state.allSchoolClassesNames ? this.state.allSchoolClassesNames.length : null}
+                  </li>
+                </ul>
+
               </PivotItem>
             </Pivot>
           </div>

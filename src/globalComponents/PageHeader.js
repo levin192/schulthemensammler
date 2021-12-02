@@ -37,7 +37,7 @@ class PageHeader extends React.Component {
               </div>
 
               <div className="header-classes">
-                {(this.state.userSchoolClasses.length > 0) ? "Deine Klassen: " + this.state.userSchoolClasses.join(", ") : null}
+                {(this.state.userSchoolClasses.length > 0) ? "Deine Klasse/n: " + this.state.userSchoolClasses.join(", ") : null}
               </div>
               <div className="header-actions">
                 <UserActions/>

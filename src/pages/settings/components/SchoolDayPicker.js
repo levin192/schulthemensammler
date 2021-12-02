@@ -90,33 +90,14 @@ export default class SchoolDayPicker extends React.Component {
       const schoolClassData = schoolClassDataRaw.data();
 
       const days = [
-        {
-          key: "dayHeader",
-          text: "Tage",
-          itemType: DropdownMenuItemType.Header
-        },
+        { key: "dayHeader", text: "Tage", itemType: DropdownMenuItemType.Header },
         { key: "monday", text: "Montag" },
-        {
-          key: "tuesday",
-          text: "Dienstag"
-        },
-        {
-          key: "wednesday",
-          text: "Mittwoch"
-        },
-        {
-          key: "thursday",
-          text: "Donnerstag"
-        },
-        {
-          key: "friday",
-          text: "Freitag"
-        },
+        { key: "tuesday", text: "Dienstag" },
+        { key: "wednesday", text: "Mittwoch" },
+        { key: "thursday", text: "Donnerstag" },
+        { key: "friday", text: "Freitag" },
         { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
-        {
-          key: "saturday",
-          text: "Samstag"
-        },
+        { key: "saturday", text: "Samstag" },
         { key: "sunday", text: "Sonntag" }
       ];
 

@@ -9,9 +9,8 @@ import {
   TextField
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import SchoolDayPicker from "./SchoolDayPicker";
 import { UserAdministration } from "./functions/UserAdministration";
-import {SchoolClassAdministration} from "./functions/SchoolClassAdministration";
+import SchoolClassAdministration from "./SchoolClassAdministration";
 
 class SettingsPage extends React.Component {
   constructor() {
@@ -64,7 +63,11 @@ class SettingsPage extends React.Component {
       .get();
 
     return snapshot.docs.map((doc) => {
-      return { name: doc.data().name, id: doc.id };
+      return {
+        name: doc.data().name,
+        id: doc.id,
+        availableSchoolDays: doc.data().availableSchoolDays
+      };
     });
   };
 
@@ -123,7 +126,8 @@ class SettingsPage extends React.Component {
 
     if (isUsernameAlreadyTaken) {
       this.setState((state) => {
-        state.showMessageBar = "Error";
+        state.showMessageBar = true;
+        state.messageBarType = "error";
         state.messageBarText = "Username bereits vergeben!";
         return state;
       });
@@ -225,8 +229,9 @@ class SettingsPage extends React.Component {
                   itemIcon="CalendarSettings"
                 >
                   <h1>Kalender Einstellungen</h1>
-                  <SchoolDayPicker
-                    allSchoolClassesNames={this.state.allSchoolClassesNames}
+                  <SchoolClassAdministration
+                    fireBase={this.fb}
+                    schoolClassList={this.state.allSchoolClassesNames}
                   />
                 </PivotItem>
               ) : null}
@@ -242,10 +247,7 @@ class SettingsPage extends React.Component {
               ) : null}
               {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Klassen verwalten" itemIcon="Dictionary">
-                  <SchoolClassAdministration
-                    fireBase={this.fb}
-                    schoolClassList={this.state.allSchoolClassesNames}
-                  />
+                  <h1>placeholder</h1>
                 </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
@@ -253,13 +255,17 @@ class SettingsPage extends React.Component {
                 <ul>
                   <li>
                     Nutzer Gesamt:{" "}
-                    {this.state.allUserDocs ? this.state.allUserDocs.length : null}</li>
+                    {this.state.allUserDocs
+                      ? this.state.allUserDocs.length
+                      : null}
+                  </li>
                   <li>
                     Klassen Gesamt:{" "}
-                    {this.state.allSchoolClassesNames ? this.state.allSchoolClassesNames.length : null}
+                    {this.state.allSchoolClassesNames
+                      ? this.state.allSchoolClassesNames.length
+                      : null}
                   </li>
                 </ul>
-
               </PivotItem>
             </Pivot>
           </div>

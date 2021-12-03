@@ -17,7 +17,7 @@ body {
     padding-top: 50px;
     padding-bottom: 50px;
   }
-  &.main-container, .calendar-settings-container {
+  &.main-container {
     display: flex;
     flex-direction: column;
     @include breakpoint-up(sm) {
@@ -64,6 +64,18 @@ body {
     }
   }
 }
-
+.calendar-settings-container {
+  display: flex;
+  & > div {
+    flex: 1 1 auto;
+    padding-left: 15px;
+    &:first-child {
+      border-right: 1px solid ghostwhite;
+      padding-right: 15px;
+      padding-left: 0;
+      flex: 1 1 55%;
+    }
+  }
+}
 .main-container {
 }

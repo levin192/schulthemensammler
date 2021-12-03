@@ -1,6 +1,5 @@
 import * as React from "react";
 import {DetailsList, DetailsListLayoutMode, SelectionMode} from "@fluentui/react/lib/DetailsList";
-// eslint-disable-next-line
 import {useEffect, useState} from "react";
 import {PrimaryButton} from "@fluentui/react/lib/Button";
 import {AddNewSchoolClassName} from "./AddNewSchoolClassName";
@@ -8,8 +7,8 @@ import {Dropdown, DropdownMenuItemType} from "@fluentui/react";
 import {Checkbox} from "@fluentui/react/lib/Checkbox";
 // import SchoolDayPicker from "../SchoolDayPicker";
 
-class SchoolClassAdministration extends React.Component {
-    construc
+export const SchoolClassAdministration = (props) => {
+    console.log(props)
     const fb = props.fireBase
 
     const allSchoolClasses = props.schoolClassList
@@ -20,7 +19,7 @@ class SchoolClassAdministration extends React.Component {
                 text: schoolClass.name,
             };
         });
-    // eslint-disable-next-line
+
     const handleChangeDropdownChange = (x, item) => {
         this.updateSchoolClassAvailableDays(item.key, item.selected);
     };
@@ -38,10 +37,10 @@ class SchoolClassAdministration extends React.Component {
             return undefined;
         }
     };
-    // eslint-disable-next-line
+
     const [days, setDays] = useState([])
     const [availableSchoolDays, setAvailableSchoolDays] = useState([]);
-    // eslint-disable-next-line
+
     const onComboboxSelection = async (y, item) => {
         if (item === "") return null;
 

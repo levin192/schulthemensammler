@@ -42,8 +42,6 @@ class SchoolClassAdministration extends React.Component {
 
   setAllSchoolClasses = () => {
     const allSchoolClasses = this.props.schoolClassList.map((schoolClass) => {
-      console.log("ewaaa", schoolClass);
-
       return {
         key: schoolClass.name,
         text: schoolClass.name,
@@ -51,23 +49,25 @@ class SchoolClassAdministration extends React.Component {
         availableSchoolDays: schoolClass.availableSchoolDays
       };
     });
-
-    console.log("allSchoolClasses", allSchoolClasses);
     this.setState((state) => {
       state.allSchoolClasses = allSchoolClasses;
+      state.originalItems = allSchoolClasses;
+      state.filteredItems = allSchoolClasses;
       return state;
     });
   };
 
   onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
+    console.log('All ', this.state.allSchoolClasses);
+    console.log(searchText);
+    console.log('Orig ', this.state.originalItems);
+    console.log('filter ', this.state.filteredItems);
     this.setState((state) => {
       state.allSchoolClasses = searchText
         ? this.state.filteredItems.filter(
             (item) =>
-              item.userName.toLowerCase().indexOf(searchText) > -1 ||
-              item.firstName.toLowerCase().indexOf(searchText) > -1 ||
-              item.lastName.toLowerCase().indexOf(searchText) > -1
+              item.text.toLowerCase().indexOf(searchText) > -1
           )
         : this.state.originalItems;
 
@@ -111,10 +111,7 @@ class SchoolClassAdministration extends React.Component {
         schoolClass.id
       );
     };
-
-    console.log("schoolClass", schoolClass);
-
-    const availableSchoolDaysConverter = () => {
+        const availableSchoolDaysConverter = () => {
       const result = [];
 
       for (const [key, value] of Object.entries(
@@ -142,7 +139,7 @@ class SchoolClassAdministration extends React.Component {
 
     switch (column.key) {
       case "classNameCol":
-        return schoolClass.text;
+        return (<h4>{schoolClass.text}</h4>);
 
       case "availableSchoolDaysCol":
         return (
@@ -165,18 +162,25 @@ class SchoolClassAdministration extends React.Component {
   render() {
     return (
       <>
-        <AddNewSchoolClass fireBase={this.props.fireBase} />
-        <TextField label={"Liste filtern:"} onChange={this.onFilterChanged} />
-
-        <DetailsList
-          items={this.state.allSchoolClasses}
-          compact={false}
-          columns={this.columns}
-          selectionMode={SelectionMode.none}
-          onRenderItemColumn={this.renderItemColumn}
-          layoutMode={DetailsListLayoutMode.justified}
-          isHeaderVisible={true}
-        />
+        <div className="calendar-settings-container">
+          <div>
+            <h3>Schultage verwalten</h3>
+            <TextField label={"Klassen filtern:"} onChange={this.onFilterChanged} />
+            <DetailsList
+                items={this.state.allSchoolClasses}
+                compact={false}
+                columns={this.columns}
+                selectionMode={SelectionMode.none}
+                onRenderItemColumn={this.renderItemColumn}
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+            />
+          </div>
+          <div>
+            <h3>Neue Klasse hinzufügen</h3>
+            <AddNewSchoolClass fireBase={this.props.fireBase} />
+          </div>
+        </div>
       </>
     );
   }

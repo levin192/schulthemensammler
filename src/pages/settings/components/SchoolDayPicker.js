@@ -7,7 +7,7 @@ import {
   DropdownMenuItemType,
   ComboBox
 } from "@fluentui/react";
-import { AddNewSchoolClassName } from "./functions/AddNewSchoolClassName";
+import { AddNewSchoolClass } from "./functions/AddNewSchoolClass";
 
 export default class SchoolDayPicker extends React.Component {
   constructor(props) {
@@ -90,7 +90,11 @@ export default class SchoolDayPicker extends React.Component {
       const schoolClassData = schoolClassDataRaw.data();
 
       const days = [
-        { key: "dayHeader", text: "Tage", itemType: DropdownMenuItemType.Header },
+        {
+          key: "dayHeader",
+          text: "Tage",
+          itemType: DropdownMenuItemType.Header
+        },
         { key: "monday", text: "Montag" },
         { key: "tuesday", text: "Dienstag" },
         { key: "wednesday", text: "Mittwoch" },
@@ -167,9 +171,13 @@ export default class SchoolDayPicker extends React.Component {
             />
             <Dropdown
               placeholder="Select options"
-              label={(this.state.selectedClass === null
-                    ? "Schultage auswählen"
-                    : "Schultage für (" + this.state.selectedClass.name + ") auswählen")}
+              label={
+                this.state.selectedClass === null
+                  ? "Schultage auswählen"
+                  : "Schultage für (" +
+                    this.state.selectedClass.name +
+                    ") auswählen"
+              }
               multiSelect
               disabled={this.state.dropdownDisabled}
               defaultSelectedKeys={this.state.availableSchoolDays}
@@ -192,7 +200,7 @@ export default class SchoolDayPicker extends React.Component {
           </div>
           <div className="visible-mobile">
             <p>Neue Klasse hinzufügen</p>
-            <AddNewSchoolClassName
+            <AddNewSchoolClass
               getSchoolClass={this.getSchoolClass}
               fireBase={this.fb}
             />

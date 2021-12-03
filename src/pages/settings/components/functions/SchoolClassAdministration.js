@@ -8,8 +8,8 @@ import {Dropdown, DropdownMenuItemType} from "@fluentui/react";
 import {Checkbox} from "@fluentui/react/lib/Checkbox";
 // import SchoolDayPicker from "../SchoolDayPicker";
 
-export const SchoolClassAdministration = (props) => {
-    console.log(props)
+class SchoolClassAdministration extends React.Component {
+    construc
     const fb = props.fireBase
 
     const allSchoolClasses = props.schoolClassList

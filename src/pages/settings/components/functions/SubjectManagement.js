@@ -3,20 +3,26 @@ import {
   Callout,
   mergeStyleSets,
   FontWeights,
-  DetailsList,
-  DetailsListLayoutMode, SelectionMode, MarqueeSelection, DirectionalHint, TextField,
+  DirectionalHint,
+  TextField,
+  TooltipHost,
+  List,
 } from "@fluentui/react";
 import { useBoolean, useId } from "@fluentui/react-hooks";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import { useState } from "react";
+import { Spinner } from "@fluentui/react/lib/Spinner";
 
 export const SubjectManagement = (props) => {
   const [isCalloutVisible, {toggle: toggleIsCalloutVisible}] = useBoolean(false);
   const [allSubjects, setAllSubjects] = useState([]);
-  const [selection, setSelection] = useState([]);
+  const [newSubject, setNewSubject] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const descriptionId = useId("callout-description");
   const buttonId = useId("callout-button");
   const labelId = useId("callout-label");
-  const descriptionId = useId("callout-description");
+  const toolTipId = useId("tooltip-label");
+  const calloutProps = {gapSpace: 0};
   const fb = props.fireBase;
   const currentClassId = props.schoolClass;
   const getSubjects = () => {
@@ -31,36 +37,57 @@ export const SubjectManagement = (props) => {
             },
         ));
       } else {
-        // doc.data() will be undefined in this case
         console.log("No such document!");
       }
+      setTimeout(() => {
+        setIsSaving(false);
+      }, 1500);
     }).catch((error) => {
       console.log("Error getting document:", error);
     });
-    console.log(allSubjects);
   };
-  const columns = [
-    {
-      key: "subjectCol",
-      name: "Thema",
-      fieldName: "subjectName",
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-    },
-  ];
-  const renderItemColumn = (item) => {
-    return (<span>{item.text}</span>);
+  const iconAdd = {iconName: "Add"};
+  const iconRemove = {iconName: "Delete"};
+  const renderCells = (item) => {
+    return (<>
+      <span>{item.text}</span>
+      <IconButton
+          iconProps={iconRemove}
+          title="Entfernen"
+          onClick={() => updateSubject(currentClassId, item.text, true)}
+      />
+    </>);
   };
-  const saveSubjects = (e) => {
-    console.log(e);
+  const updateSubject = (currentClass, subjectName, removeItem) => {
+   // allSubjects.filter(item => item.text === subjectName) // wip
+    if (true) {
+      setIsSaving(true);
+      const x = fb.firebase
+          .firestore()
+          .collection("SchoolClasses")
+          .doc(currentClass);
+      x.get().then((r) => {
+        let subjects = r.data().subjects;
+        if (removeItem) {
+          subjects = subjects.filter(item => item !== subjectName);
+        } else {
+          subjects.push(subjectName);
+          setNewSubject("");
+        }
+        x.update({
+          subjects,
+        });
+      }).then(getSubjects);
+    } else {
+      //console.log((allSubjects.filter(item => item.text === subjectName).length < 0));
+    }
   };
   return (
       <>
         <DefaultButton
             id={buttonId}
             onClick={toggleIsCalloutVisible}
-            text={isCalloutVisible ? "Schliessen" : "Fächer anzeigen"}
+            text={isCalloutVisible ? "Schließen" : "Fächer anzeigen"}
             className={styles.button}
         />
         {isCalloutVisible && (
@@ -71,36 +98,56 @@ export const SubjectManagement = (props) => {
                 ariaDescribedBy={descriptionId}
                 gapSpace={0}
                 target={`#${buttonId}`}
-                onDismiss={toggleIsCalloutVisible}
+                onDismiss={() => {
+                  toggleIsCalloutVisible();
+                  setNewSubject("");
+                }}
                 setInitialFocus
                 directionalHint={DirectionalHint.rightCenter}
             >
-              <h2>Themen</h2>
-              {(allSubjects.length > 0) && (
-                  <MarqueeSelection selection={setSelection}>
-                    <DetailsList
-                        items={allSubjects}
-                        compact={true}
-                        columns={columns}
-                        selectionMode={SelectionMode.multiple}
-                        onRenderItemColumn={renderItemColumn}
-                        layoutMode={DetailsListLayoutMode.justified}
-                        isHeaderVisible={true}
-                        setKey="set"
-                        // selection={setSelection}
-                        selectionPreservedOnEmptyClick={true}
-                        ariaLabelForSelectionColumn="Toggle selection"
-                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                        checkButtonAriaLabel="select row"
+              <div className="user-admin-list-wrap">
+                <div className="user-admin-list-content">
+                  <h2>Themen</h2>
+                  {(allSubjects.length > 0) && (
+                      <>
+                        <List
+                            items={allSubjects}
+                            onRenderCell={renderCells}
+                        />
+                      </>
+                  )}
+                  <div className="new-subject-wrap">
+                    <TextField
+                        label={"Neues Thema/Fach"}
+                        value={newSubject}
+                        onChange={(e) => setNewSubject(e.target.value)}
                     />
-                  </MarqueeSelection>
-              )}
-              <TextField
-                  label={"Neues Thema/Fach"}
-                  //onChange={this.onFilterChanged}
-              />
-              <PrimaryButton onClick={saveSubjects}>Speichern</PrimaryButton>
-              <span>{selection}</span>
+                    <TooltipHost
+                        content="Hinzufügen"
+                        // This id is used on the tooltip itself, not the host
+                        // (so an element with this id only exists when the tooltip is shown)
+                        id={toolTipId}
+                        calloutProps={calloutProps}
+
+                        // styles={hostStyles}
+                    >
+                      <IconButton iconProps={iconAdd} title="Emoji" ariaLabel="Emoji"
+                                  onClick={() => updateSubject(currentClassId, newSubject)}/>
+
+
+                    </TooltipHost>
+                  </div>
+                </div>
+                <div
+                    className={
+                      isSaving
+                          ? "user-admin-list-spinner visible"
+                          : "user-admin-list-spinner"
+                    }
+                >
+                  <Spinner label="Speichern..."/>
+                </div>
+              </div>
             </Callout>
         )}
       </>

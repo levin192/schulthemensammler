@@ -224,18 +224,6 @@ class SettingsPage extends React.Component {
                 ) : null}
               </PivotItem>
               {this.context.userDoc.isAdmin ? (
-                <PivotItem
-                  headerText="Kalender Einstellungen"
-                  itemIcon="CalendarSettings"
-                >
-                  <h1>Kalender Einstellungen</h1>
-                  <SchoolClassAdministration
-                    fireBase={this.fb}
-                    schoolClassList={this.state.allSchoolClassesNames}
-                  />
-                </PivotItem>
-              ) : null}
-              {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
                   <UserAdministration
                     fireBase={this.fb}
@@ -246,8 +234,11 @@ class SettingsPage extends React.Component {
                 </PivotItem>
               ) : null}
               {this.context.userDoc.isAdmin ? (
-                <PivotItem headerText="Klassen verwalten" itemIcon="Dictionary">
-                  <h1>placeholder</h1>
+                <PivotItem headerText="Klassen Verwaltung" itemIcon="Dictionary">
+                  <SchoolClassAdministration
+                      fireBase={this.fb}
+                      schoolClassList={this.state.allSchoolClassesNames}
+                  />
                 </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">

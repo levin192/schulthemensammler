@@ -139,7 +139,7 @@ class SchoolClassAdministration extends React.Component {
 
     switch (column.key) {
       case "classNameCol":
-        return schoolClass.text;
+        return (<h4>{schoolClass.text}</h4>);
 
       case "availableSchoolDaysCol":
         return (
@@ -162,18 +162,25 @@ class SchoolClassAdministration extends React.Component {
   render() {
     return (
       <>
-        <AddNewSchoolClass fireBase={this.props.fireBase} />
-        <TextField label={"Liste filtern:"} onChange={this.onFilterChanged} />
-
-        <DetailsList
-          items={this.state.allSchoolClasses}
-          compact={false}
-          columns={this.columns}
-          selectionMode={SelectionMode.none}
-          onRenderItemColumn={this.renderItemColumn}
-          layoutMode={DetailsListLayoutMode.justified}
-          isHeaderVisible={true}
-        />
+        <div className="calendar-settings-container">
+          <div>
+            <h3>Schultage verwalten</h3>
+            <TextField label={"Klassen filtern:"} onChange={this.onFilterChanged} />
+            <DetailsList
+                items={this.state.allSchoolClasses}
+                compact={false}
+                columns={this.columns}
+                selectionMode={SelectionMode.none}
+                onRenderItemColumn={this.renderItemColumn}
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+            />
+          </div>
+          <div>
+            <h3>Neue Klasse hinzufügen</h3>
+            <AddNewSchoolClass fireBase={this.props.fireBase} />
+          </div>
+        </div>
       </>
     );
   }

@@ -230,7 +230,7 @@ export const UserAdministration = (props) => {
   };
   return (
       <>
-        <TextField label={"Liste filtern:"} onChange={onFilterChanged}/>
+        <TextField label={"Nutzer filtern:"} onChange={onFilterChanged}/>
         <div className="user-admin-list-wrap">
           <div className="user-admin-list-content">
             <DetailsList

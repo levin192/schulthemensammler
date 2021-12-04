@@ -149,6 +149,15 @@ class CalendarPage extends React.Component {
   };
 
   loadSchoolClassDocument = async () => {
+    const isUserInASchoolClass = () => {
+      return this.context.userDoc.schoolClasses[0] !== undefined;
+    };
+
+    if (!isUserInASchoolClass()) {
+      console.log("user is not in a schoolclass");
+      return null;
+    }
+
     const response = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
@@ -169,6 +178,7 @@ class CalendarPage extends React.Component {
     });
 
     this.setState((state) => {
+      console.log("settings subjects", array);
       state.schoolClassSubjects = array;
       return state;
     });
@@ -253,6 +263,11 @@ class CalendarPage extends React.Component {
       .where("dayId", "==", dayId)
       .get();
 
+    if (response.docs.length === 0) {
+      console.log("No Posts available!");
+      return null;
+    }
+
     const array = [];
     response.forEach((docs) => {
       array.push({
@@ -280,10 +295,10 @@ class CalendarPage extends React.Component {
             <div id="calendar" className="calendar">
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
               <Dropdown
-                  options={this.state.schoolClassSubjects}
-                  onChange={this.handleChangeDropdownChange}
-                  label="Fach auswählen"
-                  style={{maxWidth: '300px'}}
+                options={this.state.schoolClassSubjects}
+                onChange={this.handleChangeDropdownChange}
+                label="Fach auswählen"
+                style={{ maxWidth: "300px" }}
               />
               <TextField
                 disabled={this.state.selectedSubject === null}

@@ -6,7 +6,7 @@ import {
   Pivot,
   PivotItem,
   PrimaryButton,
-  TextField
+  TextField,
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import { UserAdministration } from "./functions/UserAdministration";
@@ -29,7 +29,7 @@ class SettingsPage extends React.Component {
       allUserDocs: undefined,
       allSchoolClassesNames: undefined,
       isFormChanged: false,
-      messageBarType: null
+      messageBarType: null,
     };
   }
   componentDidMount = () => {
@@ -66,7 +66,7 @@ class SettingsPage extends React.Component {
       return {
         name: doc.data().name,
         id: doc.id,
-        availableSchoolDays: doc.data().availableSchoolDays
+        availableSchoolDays: doc.data().availableSchoolDays,
       };
     });
   };
@@ -140,7 +140,7 @@ class SettingsPage extends React.Component {
           username,
           firstname,
           lastname,
-          email
+          email,
         })
         .then(
           () => {
@@ -234,10 +234,13 @@ class SettingsPage extends React.Component {
                 </PivotItem>
               ) : null}
               {this.context.userDoc.isAdmin ? (
-                <PivotItem headerText="Klassen Verwaltung" itemIcon="Dictionary">
+                <PivotItem
+                  headerText="Klassen Verwaltung"
+                  itemIcon="Dictionary"
+                >
                   <SchoolClassAdministration
-                      fireBase={this.fb}
-                      schoolClassList={this.state.allSchoolClassesNames}
+                    fireBase={this.fb}
+                    schoolClassList={this.state.allSchoolClassesNames}
                   />
                 </PivotItem>
               ) : null}

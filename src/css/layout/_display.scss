@@ -40,6 +40,9 @@ body {
           &:not(.visible-mobile) {
             padding-left: 15px;
             display: none;
+            @include breakpoint-up(sm) {
+              display: block;
+            }
           }
           @include breakpoint-up(sm) {
             display: block;

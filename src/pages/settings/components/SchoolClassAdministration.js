@@ -1,5 +1,6 @@
 import React from "react";
 import { AddNewSchoolClass } from "./functions/AddNewSchoolClass";
+import { SubjectManagement } from "./functions/SubjectManagement";
 import {
   DetailsList,
   DetailsListLayoutMode,
@@ -24,7 +25,14 @@ class SchoolClassAdministration extends React.Component {
         maxWidth: 200,
         isResizable: true
       },
-
+      {
+        key: "manageSubjects",
+        name: "Themen Verwalten",
+        fieldName: "ManageSubjects",
+        minWidth: 140,
+        maxWidth: 140,
+        isResizable: false
+      },
       {
         key: "availableSchoolDaysCol",
         name: "Schultage Verwalten",
@@ -32,7 +40,7 @@ class SchoolClassAdministration extends React.Component {
         minWidth: 150,
         maxWidth: 150,
         isResizable: true
-      }
+      },
     ];
   }
 
@@ -59,10 +67,6 @@ class SchoolClassAdministration extends React.Component {
 
   onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
-    console.log('All ', this.state.allSchoolClasses);
-    console.log(searchText);
-    console.log('Orig ', this.state.originalItems);
-    console.log('filter ', this.state.filteredItems);
     this.setState((state) => {
       state.allSchoolClasses = searchText
         ? this.state.filteredItems.filter(
@@ -140,7 +144,8 @@ class SchoolClassAdministration extends React.Component {
     switch (column.key) {
       case "classNameCol":
         return (<h4>{schoolClass.text}</h4>);
-
+      case "manageSubjects":
+        return (<SubjectManagement fireBase={this.props.fireBase} schoolClass={schoolClass.id} />);
       case "availableSchoolDaysCol":
         return (
           <Dropdown

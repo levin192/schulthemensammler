@@ -77,7 +77,6 @@ class CalendarPage extends React.Component {
     document.title = "📅 | Kalender 📆";
     this.setTodaysDayId();
     await this.loadSchoolClassDocument();
-    this.setDetailsListSubjectGroups();
     this.loadTodaysPosts();
   };
 
@@ -92,20 +91,58 @@ class CalendarPage extends React.Component {
     this.loadPosts(dayId);
   };
 
-  setDetailsListSubjectGroups = () => {
-    const array = [];
-    this.state.schoolClassDocument.data().subjects.forEach((subject) => {
-      array.push({
-        key: subject,
-        name: subject,
-        startIndex: 0,
-        count: 2,
-        level: 0,
-      });
+  sortPostsAndGroups = () => {
+    const sortedPosts = this.state.listConfig.posts.sort((a, b) => {
+      var nameA = a.subject.toUpperCase(); // Groß-/Kleinschreibung ignorieren
+      var nameB = b.subject.toUpperCase(); // Groß-/Kleinschreibung ignorieren
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // Namen müssen gleich sein
+      return 0;
+    });
+
+    const groups = [];
+
+    let startIndex = 0;
+    let currentCounter = 0;
+    let currentSubject = sortedPosts[0].subject;
+
+    sortedPosts.forEach((item, index) => {
+      if (currentSubject !== item.subject) {
+        // NEW SUBJECT!
+        groups.push({
+          key: currentSubject,
+          name: currentSubject,
+          level: 0,
+          count: currentCounter,
+          startIndex: startIndex,
+        });
+
+        startIndex += currentCounter;
+        currentSubject = item.subject;
+        currentCounter = 1;
+      } else {
+        currentCounter++;
+      }
+
+      if (index === sortedPosts.length - 1) {
+        groups.push({
+          key: currentSubject,
+          name: currentSubject,
+          level: 0,
+          count: currentCounter,
+          startIndex: startIndex,
+        });
+      }
     });
 
     this.setState((state) => {
-      state.listConfig.groups = array;
+      state.listConfig.groups = groups;
 
       return state;
     });
@@ -226,12 +263,12 @@ class CalendarPage extends React.Component {
       });
     });
 
-    console.log(array);
-
     this.setState((state) => {
       state.listConfig.posts = array;
       return state;
     });
+
+    this.sortPostsAndGroups();
   };
 
   render() {

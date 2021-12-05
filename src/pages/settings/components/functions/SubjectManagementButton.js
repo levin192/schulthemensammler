@@ -14,8 +14,8 @@ import { useState } from "react";
 import { Spinner } from "@fluentui/react/lib/Spinner";
 
 export const SubjectManagementButton = (props) => {
-  const [isCalloutVisible, {toggle: toggleIsCalloutVisible}] =
-      useBoolean(false);
+  const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] =
+    useBoolean(false);
   const [allSubjects, setAllSubjects] = useState([]);
   const [newSubject, setNewSubject] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -23,144 +23,151 @@ export const SubjectManagementButton = (props) => {
   const buttonId = useId("callout-button");
   const labelId = useId("callout-label");
   const toolTipId = useId("tooltip-label");
-  const calloutProps = {gapSpace: 0};
+  const calloutProps = { gapSpace: 0 };
   const fb = props.fireBase;
   const currentClassId = props.schoolClass;
+
   const getSubjects = () => {
-    const classDoc = fb.firebase
-        .firestore()
-        .collection("SchoolClasses")
-        .doc(currentClassId);
-    classDoc
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setAllSubjects(
-                doc.data().subjects.map((subject, index) => {
-                  return {
-                    key: index,
-                    text: subject,
-                  };
-                }),
-            );
-          } else {
-            console.log("No such document!");
-          }
-          setTimeout(() => {
-            setIsSaving(false);
-          }, 1500);
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
+    fb.firebase
+      .firestore()
+      .collection("SchoolClasses")
+      .doc(currentClassId)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setAllSubjects(
+            doc.data().subjects.map((subject, index) => {
+              return {
+                key: index,
+                text: subject,
+              };
+            })
+          );
+        } else {
+          console.log("No such document!");
+        }
+        setTimeout(() => {
+          setIsSaving(false);
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
   };
-  const iconAdd = {iconName: "Add"};
-  const iconRemove = {iconName: "Delete"};
+
+  const iconAdd = { iconName: "Add" };
+  const iconRemove = { iconName: "Delete" };
+
   const renderCells = (item) => {
     return (
-        <>
-          <span>{item.text}</span>
-          <IconButton
-              iconProps={iconRemove}
-              title="Entfernen"
-              onClick={() => updateSubject(currentClassId, item.text, true)}
-          />
-        </>
+      <>
+        <span>{item.text}</span>
+        <IconButton
+          iconProps={iconRemove}
+          title="Entfernen"
+          onClick={() => updateSubject(currentClassId, item.text, true)}
+        />
+      </>
     );
   };
   const updateSubject = (currentClass, subjectName, removeItem) => {
-    if (!(allSubjects.filter(item => item.text === subjectName) && removeItem) || removeItem) {
-      setIsSaving(true);
-      const x = fb.firebase
-          .firestore()
-          .collection("SchoolClasses")
-          .doc(currentClass);
-      x.get()
-          .then((r) => {
-            let subjects = r.data().subjects;
-            if (removeItem) {
-              subjects = subjects.filter((item) => item !== subjectName);
-            } else {
-              subjects.push(subjectName);
-              setNewSubject("");
-            }
-            x.update({
-              subjects,
-            });
-          })
-          .then(getSubjects);
-    } else {
-     alert("Keine Identischen Namen bitte 💖")
+   //!(allSubjects.filter(item => item.text === subjectName) && removeItem) || removeItem) To filter dupes
+    console.log("updating subject");
+
+    setIsSaving(true);
+
+    const currentSchoolClassRef = fb.firebase
+      .firestore()
+      .collection("SchoolClasses")
+      .doc(currentClass);
+
+    if (!removeItem) {
+      currentSchoolClassRef
+        .update({
+          subjects: fb.firebase.firestore.FieldValue.arrayUnion(subjectName),
+        })
+        .then(getSubjects);
+    }
+
+    if (removeItem) {
+      currentSchoolClassRef
+        .update({
+          subjects: fb.firebase.firestore.FieldValue.arrayRemove(subjectName),
+        })
+        .then(getSubjects);
     }
   };
   return (
-      <>
-        <DefaultButton
-            id={buttonId}
-            onClick={toggleIsCalloutVisible}
-            text={isCalloutVisible ? "Schließen" : "Fächer anzeigen"}
-            className={styles.button}
-        />
-        {isCalloutVisible && (
-            <Callout
-                onLayerMounted={getSubjects}
-                className={styles.callout}
-                ariaLabelledBy={labelId}
-                ariaDescribedBy={descriptionId}
-                gapSpace={0}
-                target={`#${buttonId}`}
-                onDismiss={() => {
-                  toggleIsCalloutVisible();
-                  setNewSubject("");
-                }}
-                setInitialFocus
-                directionalHint={DirectionalHint.rightCenter}
-            >
-              <div className="user-admin-list-wrap">
-                <div className="user-admin-list-content">
-                  <h2>Themen</h2>
-                  {allSubjects.length > 0 && (
-                      <>
-                        <List items={allSubjects} onRenderCell={renderCells}/>
-                      </>
-                  )}
-                  <div className="new-subject-wrap">
-                    <TextField
-                        label={"Neues Thema/Fach"}
-                        value={newSubject}
-                        onChange={(e) => setNewSubject(e.target.value)}
-                    />
-                    <TooltipHost
-                        content="Hinzufügen"
-                        // This id is used on the tooltip itself, not the host
-                        // (so an element with this id only exists when the tooltip is shown)
-                        id={toolTipId}
-                        calloutProps={calloutProps}
+    <>
+      <DefaultButton
+        id={buttonId}
+        onClick={() => {
+          toggleIsCalloutVisible();
+          getSubjects();
+        }}
+        text={isCalloutVisible ? "Schließen" : "Fächer anzeigen"}
+        className={styles.button}
+      />
+      {isCalloutVisible && (
+        <Callout
+          // onLayerMounted={getSubjects}
+          className={styles.callout}
+          ariaLabelledBy={labelId}
+          ariaDescribedBy={descriptionId}
+          gapSpace={0}
+          target={`#${buttonId}`}
+          onDismiss={() => {
+            toggleIsCalloutVisible();
+            setNewSubject("");
+          }}
+          setInitialFocus
+          directionalHint={DirectionalHint.rightCenter}
+        >
+          <div className="user-admin-list-wrap">
+            <div className="user-admin-list-content">
+              <h2>Themen</h2>
+              {allSubjects.length > 0 && (
+                <>
+                  <List items={allSubjects} onRenderCell={renderCells} />
+                </>
+              )}
+              <div className="new-subject-wrap">
+                <TextField
+                  label={"Neues Thema/Fach"}
+                  value={newSubject}
+                  onChange={(e) => setNewSubject(e.target.value)}
+                />
+                <TooltipHost
+                  content="Hinzufügen"
+                  // This id is used on the tooltip itself, not the host
+                  // (so an element with this id only exists when the tooltip is shown)
+                  id={toolTipId}
+                  calloutProps={calloutProps}
 
-                        // styles={hostStyles}
-                    >
-                      <IconButton
-                          iconProps={iconAdd}
-                          title="Emoji"
-                          ariaLabel="Emoji"
-                          onClick={() => updateSubject(currentClassId, newSubject)}
-                      />
-                    </TooltipHost>
-                  </div>
-                </div>
-                <div
-                    className={
-                      isSaving
-                          ? "user-admin-list-spinner visible"
-                          : "user-admin-list-spinner"
-                    }
+                  // styles={hostStyles}
                 >
-                  <Spinner label="Speichern..."/>
-                </div>
+                  <IconButton
+                    iconProps={iconAdd}
+                    title="Emoji"
+                    ariaLabel="Emoji"
+                    onClick={() => updateSubject(currentClassId, newSubject)}
+                  />
+                </TooltipHost>
               </div>
-            </Callout>
-        )}
-      </>
+            </div>
+            <div
+              className={
+                isSaving
+                  ? "user-admin-list-spinner visible"
+                  : "user-admin-list-spinner"
+              }
+            >
+              <Spinner label="Speichern..." />
+            </div>
+          </div>
+        </Callout>
+      )}
+    </>
   );
 };
 const styles = mergeStyleSets({

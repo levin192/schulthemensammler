@@ -7,6 +7,8 @@ import {
   TextField,
   TooltipHost,
   List,
+  MessageBar,
+  MessageBarType
 } from "@fluentui/react";
 import { useBoolean, useId } from "@fluentui/react-hooks";
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
@@ -19,6 +21,7 @@ export const SubjectManagementButton = (props) => {
   const [allSubjects, setAllSubjects] = useState([]);
   const [newSubject, setNewSubject] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const descriptionId = useId("callout-description");
   const buttonId = useId("callout-button");
   const labelId = useId("callout-label");
@@ -71,9 +74,6 @@ export const SubjectManagementButton = (props) => {
     );
   };
   const updateSubject = (currentClass, subjectName, removeItem) => {
-   //!(allSubjects.filter(item => item.text === subjectName) && removeItem) || removeItem) To filter dupes
-    console.log("updating subject");
-
     setIsSaving(true);
 
     const currentSchoolClassRef = fb.firebase
@@ -82,11 +82,19 @@ export const SubjectManagementButton = (props) => {
       .doc(currentClass);
 
     if (!removeItem) {
+      if (!allSubjects.find(item => item.text === subjectName)&&subjectName.length > 0) {
       currentSchoolClassRef
         .update({
           subjects: fb.firebase.firestore.FieldValue.arrayUnion(subjectName),
         })
         .then(getSubjects);
+        setHasError(false) // Remove Messagebar
+        setNewSubject("") // Empty Input on successful addition#
+    } else {
+        setHasError(true)
+        setIsSaving(false)
+      }
+
     }
 
     if (removeItem) {
@@ -97,6 +105,7 @@ export const SubjectManagementButton = (props) => {
         .then(getSubjects);
     }
   };
+
   return (
     <>
       <DefaultButton
@@ -110,7 +119,6 @@ export const SubjectManagementButton = (props) => {
       />
       {isCalloutVisible && (
         <Callout
-          // onLayerMounted={getSubjects}
           className={styles.callout}
           ariaLabelledBy={labelId}
           ariaDescribedBy={descriptionId}
@@ -131,7 +139,7 @@ export const SubjectManagementButton = (props) => {
                   <List items={allSubjects} onRenderCell={renderCells} />
                 </>
               )}
-              <div className="new-subject-wrap">
+              <div className="new-subject-wrap" style={{marginBottom:"15px"}}>
                 <TextField
                   label={"Neues Thema/Fach"}
                   value={newSubject}
@@ -139,21 +147,29 @@ export const SubjectManagementButton = (props) => {
                 />
                 <TooltipHost
                   content="Hinzufügen"
-                  // This id is used on the tooltip itself, not the host
-                  // (so an element with this id only exists when the tooltip is shown)
                   id={toolTipId}
                   calloutProps={calloutProps}
-
-                  // styles={hostStyles}
                 >
                   <IconButton
                     iconProps={iconAdd}
-                    title="Emoji"
-                    ariaLabel="Emoji"
+                    title="Hinzufügen"
+                    ariaLabel="Hinzufügen"
                     onClick={() => updateSubject(currentClassId, newSubject)}
                   />
                 </TooltipHost>
               </div>
+              {(hasError)?(
+                  <MessageBar
+                      messageBarType={MessageBarType.error}
+                      isMultiline={false}
+                      onDismiss={()=>{
+                        setHasError(false)
+                      }}
+                      dismissButtonAriaLabel="Close"
+                  >
+                    Keine doppelten oder leeren Fächer
+                  </MessageBar>
+              ):null}
             </div>
             <div
               className={

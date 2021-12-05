@@ -39,8 +39,8 @@ class SettingsPage extends React.Component {
     this.setAllSchoolClassesNames();
   };
 
-  getAllUserDocs = async () => {
-    const unsubscribeRealtimeListenerForUsers = await this.fb.firebase
+  getAllUserDocs = () => {
+    this.fb.firebase
       .firestore()
       .collection("Users")
       .onSnapshot((querySnapshot) => {

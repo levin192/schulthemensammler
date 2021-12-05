@@ -1,13 +1,13 @@
 import React from "react";
 import { AddNewSchoolClass } from "./functions/AddNewSchoolClass";
-import { SubjectManagement } from "./functions/SubjectManagement";
+import { SubjectManagementButton } from "./functions/SubjectManagementButton";
 import {
   DetailsList,
   DetailsListLayoutMode,
   SelectionMode,
   DropdownMenuItemType,
   Dropdown,
-  TextField
+  TextField,
 } from "@fluentui/react/";
 
 class SchoolClassAdministration extends React.Component {
@@ -23,7 +23,7 @@ class SchoolClassAdministration extends React.Component {
         fieldName: "className",
         minWidth: 100,
         maxWidth: 200,
-        isResizable: true
+        isResizable: true,
       },
       {
         key: "manageSubjects",
@@ -31,7 +31,7 @@ class SchoolClassAdministration extends React.Component {
         fieldName: "ManageSubjects",
         minWidth: 140,
         maxWidth: 140,
-        isResizable: false
+        isResizable: false,
       },
       {
         key: "availableSchoolDaysCol",
@@ -39,7 +39,7 @@ class SchoolClassAdministration extends React.Component {
         fieldName: "SchoolClassSelect",
         minWidth: 150,
         maxWidth: 150,
-        isResizable: true
+        isResizable: true,
       },
     ];
   }
@@ -54,7 +54,7 @@ class SchoolClassAdministration extends React.Component {
         key: schoolClass.name,
         text: schoolClass.name,
         id: schoolClass.id,
-        availableSchoolDays: schoolClass.availableSchoolDays
+        availableSchoolDays: schoolClass.availableSchoolDays,
       };
     });
     this.setState((state) => {
@@ -70,8 +70,7 @@ class SchoolClassAdministration extends React.Component {
     this.setState((state) => {
       state.allSchoolClasses = searchText
         ? this.state.filteredItems.filter(
-            (item) =>
-              item.text.toLowerCase().indexOf(searchText) > -1
+            (item) => item.text.toLowerCase().indexOf(searchText) > -1
           )
         : this.state.originalItems;
 
@@ -115,7 +114,7 @@ class SchoolClassAdministration extends React.Component {
         schoolClass.id
       );
     };
-        const availableSchoolDaysConverter = () => {
+    const availableSchoolDaysConverter = () => {
       const result = [];
 
       for (const [key, value] of Object.entries(
@@ -138,14 +137,19 @@ class SchoolClassAdministration extends React.Component {
       { key: "friday", text: "Freitag" },
       { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
       { key: "saturday", text: "Samstag" },
-      { key: "sunday", text: "Sonntag" }
+      { key: "sunday", text: "Sonntag" },
     ];
 
     switch (column.key) {
       case "classNameCol":
-        return (<h4>{schoolClass.text}</h4>);
+        return <h4>{schoolClass.text}</h4>;
       case "manageSubjects":
-        return (<SubjectManagement fireBase={this.props.fireBase} schoolClass={schoolClass.id} />);
+        return (
+          <SubjectManagementButton
+            fireBase={this.props.fireBase}
+            schoolClass={schoolClass.id}
+          />
+        );
       case "availableSchoolDaysCol":
         return (
           <Dropdown
@@ -170,15 +174,18 @@ class SchoolClassAdministration extends React.Component {
         <div className="calendar-settings-container">
           <div>
             <h3>Schultage verwalten</h3>
-            <TextField label={"Klassen filtern:"} onChange={this.onFilterChanged} />
+            <TextField
+              label={"Klassen filtern:"}
+              onChange={this.onFilterChanged}
+            />
             <DetailsList
-                items={this.state.allSchoolClasses}
-                compact={false}
-                columns={this.columns}
-                selectionMode={SelectionMode.none}
-                onRenderItemColumn={this.renderItemColumn}
-                layoutMode={DetailsListLayoutMode.justified}
-                isHeaderVisible={true}
+              items={this.state.allSchoolClasses}
+              compact={false}
+              columns={this.columns}
+              selectionMode={SelectionMode.none}
+              onRenderItemColumn={this.renderItemColumn}
+              layoutMode={DetailsListLayoutMode.justified}
+              isHeaderVisible={true}
             />
           </div>
           <div>

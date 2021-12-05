@@ -5,7 +5,7 @@ import {
   MessageBarType,
   Dropdown,
   DropdownMenuItemType,
-  ComboBox
+  ComboBox,
 } from "@fluentui/react";
 import { AddNewSchoolClass } from "./functions/AddNewSchoolClass";
 
@@ -22,7 +22,7 @@ export default class SchoolDayPicker extends React.Component {
       showMessageBar: false,
       messageBarType: null,
       messageBarText: "",
-      allSchoolClasses: []
+      allSchoolClasses: [],
     };
   }
 
@@ -36,7 +36,7 @@ export default class SchoolDayPicker extends React.Component {
         return {
           key: schoolClass.name,
           text: schoolClass.name,
-          id: schoolClass.id
+          id: schoolClass.id,
         };
       }
     );
@@ -93,7 +93,7 @@ export default class SchoolDayPicker extends React.Component {
         {
           key: "dayHeader",
           text: "Tage",
-          itemType: DropdownMenuItemType.Header
+          itemType: DropdownMenuItemType.Header,
         },
         { key: "monday", text: "Montag" },
         { key: "tuesday", text: "Dienstag" },
@@ -102,7 +102,7 @@ export default class SchoolDayPicker extends React.Component {
         { key: "friday", text: "Freitag" },
         { key: "-", text: "-", itemType: DropdownMenuItemType.Divider },
         { key: "saturday", text: "Samstag" },
-        { key: "sunday", text: "Sonntag" }
+        { key: "sunday", text: "Sonntag" },
       ];
 
       const availableSchoolDays = [];

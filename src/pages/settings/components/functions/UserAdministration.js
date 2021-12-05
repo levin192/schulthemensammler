@@ -9,12 +9,127 @@ import { Checkbox } from "@fluentui/react/lib/Checkbox";
 import { ComboBox } from "@fluentui/react/lib/ComboBox";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Spinner } from "@fluentui/react/lib/Spinner";
-import { useState } from "react";
 
-export const UserAdministration = (props) => {
-  const fb = props.fireBase;
-  const userList = () =>
-    props.userList
+class UserAdministration extends React.Component {
+  constructor(props) {
+    super(props);
+    this.fb = props.fireBase;
+    this.state = {
+      userItems: this.createUserList(props.userList),
+      filteredItems: this.createUserList(props.userList),
+      isSaving: false,
+      hasChanges: false,
+      currentUserComboBox: undefined,
+      changesList: [],
+    };
+
+    this.allSchoolClasses = props.schoolClassList
+      .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
+      .map((schoolClass) => {
+        return {
+          key: schoolClass.name,
+          text: schoolClass.name,
+        };
+      });
+
+    this.columns = [
+      {
+        key: "userNameCol",
+        name: "Username",
+        fieldName: "userName",
+        minWidth: 100,
+        maxWidth: 200,
+        isResizable: true,
+      },
+      {
+        key: "fullNameCol",
+        name: "Vor-/Nachname",
+        fieldName: "fullName",
+        minWidth: 100,
+        maxWidth: 300,
+        isResizable: true,
+      },
+      {
+        key: "emailCol",
+        name: "E-Mail",
+        fieldName: "value",
+        minWidth: 100,
+        maxWidth: 200,
+        isResizable: true,
+      },
+      {
+        key: "adminCol",
+        name: "Admin",
+        fieldName: "admin",
+        minWidth: 50,
+        maxWidth: 50,
+        isResizable: true,
+      },
+      {
+        key: "schoolClassCol",
+        name: "Klasse/n",
+        fieldName: "SchoolClassSelect",
+        minWidth: 150,
+        maxWidth: 150,
+        isResizable: true,
+      },
+    ];
+  }
+
+  // const fb = props.fireBase;
+
+  // const [userItems, setUserItems] = useState(createUserList(props.userList));
+  // // const [originalItems] = useState(userItems);
+  // const [filteredItems] = useState(userItems);
+  // const [isSaving, setIsSaving] = useState(false);
+  // const [hasChanges, setHasChanges] = useState(false);
+  // const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
+  // const [changesList] = useState([]);
+  // const columns = [
+  //   {
+  //     key: "userNameCol",
+  //     name: "Username",
+  //     fieldName: "userName",
+  //     minWidth: 100,
+  //     maxWidth: 200,
+  //     isResizable: true,
+  //   },
+  //   {
+  //     key: "fullNameCol",
+  //     name: "Vor-/Nachname",
+  //     fieldName: "fullName",
+  //     minWidth: 100,
+  //     maxWidth: 300,
+  //     isResizable: true,
+  //   },
+  //   {
+  //     key: "emailCol",
+  //     name: "E-Mail",
+  //     fieldName: "value",
+  //     minWidth: 100,
+  //     maxWidth: 200,
+  //     isResizable: true,
+  //   },
+  //   {
+  //     key: "adminCol",
+  //     name: "Admin",
+  //     fieldName: "admin",
+  //     minWidth: 50,
+  //     maxWidth: 50,
+  //     isResizable: true,
+  //   },
+  //   {
+  //     key: "schoolClassCol",
+  //     name: "Klasse/n",
+  //     fieldName: "SchoolClassSelect",
+  //     minWidth: 150,
+  //     maxWidth: 150,
+  //     isResizable: true,
+  //   },
+  // ];
+
+  createUserList = (userList) => {
+    return userList
       .filter((userObj) => userObj.username) // filter out users who have not set username
       .map((userObj, index) => {
         // For readability and add key
@@ -28,106 +143,58 @@ export const UserAdministration = (props) => {
           schoolClasses: userObj.schoolClasses,
         };
       });
-  const allSchoolClasses = props.schoolClassList
-    .filter((schoolClass) => schoolClass.name.length > 0) // filter empty
-    .map((schoolClass) => {
-      return {
-        key: schoolClass.name,
-        text: schoolClass.name,
-      };
-    });
-  const [userItems, setUserItems] = useState(userList);
-  const [originalItems] = useState(userItems);
-  const [filteredItems] = useState(userItems);
-  const [isSaving, setIsSaving] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
-  const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
-  const [changesList] = useState([]);
-  const columns = [
-    {
-      key: "userNameCol",
-      name: "Username",
-      fieldName: "userName",
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-    },
-    {
-      key: "fullNameCol",
-      name: "Vor-/Nachname",
-      fieldName: "fullName",
-      minWidth: 100,
-      maxWidth: 300,
-      isResizable: true,
-    },
-    {
-      key: "emailCol",
-      name: "E-Mail",
-      fieldName: "value",
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-    },
-    {
-      key: "adminCol",
-      name: "Admin",
-      fieldName: "admin",
-      minWidth: 50,
-      maxWidth: 50,
-      isResizable: true,
-    },
-    {
-      key: "schoolClassCol",
-      name: "Klasse/n",
-      fieldName: "SchoolClassSelect",
-      minWidth: 150,
-      maxWidth: 150,
-      isResizable: true,
-    },
-  ];
-  const onFilterChanged = (element) => {
+  };
+
+  onFilterChanged = (element) => {
+    const originalItems = this.createUserList(this.props.userList);
+    const filteredItems = [...this.state.userItems];
+
     const searchText = element.target.value.toLowerCase();
-    setUserItems(
-      searchText
-        ? filteredItems.filter(
+    this.setState((state) => {
+      state.userItems = searchText
+        ? this.state.filteredItems.filter(
             (i) =>
               i.userName.toLowerCase().indexOf(searchText) > -1 ||
               i.firstName.toLowerCase().indexOf(searchText) > -1 ||
               i.lastName.toLowerCase().indexOf(searchText) > -1
           )
-        : originalItems
-    );
+        : originalItems;
+
+      return state;
+    });
   };
-  const emptyEntry = () => {
+
+  emptyEntry = () => {
     return <span style={{ color: "lightgray" }}>nicht gesetzt</span>;
   };
-  const renderItemColumn = (user, index, column) => {
+
+  renderItemColumn = (user, index, column) => {
     switch (column.key) {
       case "userNameCol":
-        return user.userName ? <span>{user.userName}</span> : emptyEntry();
+        return user.userName ? <span>{user.userName}</span> : this.emptyEntry();
       case "fullNameCol":
         return user.firstName || user.lastName ? (
           <span>
             {user.firstName}&nbsp;{user.lastName}
           </span>
         ) : (
-          emptyEntry()
+          this.emptyEntry()
         );
       case "emailCol":
         return user.email ? (
           <a href={"mailto:" + user.email}>{user.email}</a>
         ) : (
-          emptyEntry()
+          this.emptyEntry()
         );
       case "adminCol":
         return user.admin ? (
           <Checkbox
             id={user.userName}
             defaultChecked
-            onChange={onAdminChange}
+            onChange={this.onAdminChange}
           />
         ) : (
-          <Checkbox id={user.userName} onChange={onAdminChange} />
+          <Checkbox id={user.userName} onChange={this.onAdminChange} />
         );
       case "schoolClassCol":
         return (
@@ -135,10 +202,10 @@ export const UserAdministration = (props) => {
             <ComboBox
               multiSelect
               autoComplete="on"
-              options={allSchoolClasses}
-              onChange={() => onSchoolClassesChange(user.userName)}
+              options={this.state.allSchoolClasses}
+              onChange={() => this.onSchoolClassesChange(user.userName)}
               defaultSelectedKey={user.schoolClasses}
-              onMenuDismiss={onSchoolClassesChangeFinished}
+              onMenuDismiss={this.onSchoolClassesChangeFinished}
             />
           </div>
         );
@@ -146,123 +213,144 @@ export const UserAdministration = (props) => {
         return null;
     }
   };
-  const onAdminChange = (e) => {
-    setHasChanges(true);
+
+  onAdminChange = (e) => {
+    this.setHasChanges(true);
     const userName = e.target.id;
     const isAdmin = e.target.checked;
-    const unsavedChange = changesList.find((x) => x.userName === userName); // If is in Array already, so we only need to update the isAdmin prop in the object
+    const unsavedChange = this.state.changesList.find(
+      (x) => x.userName === userName
+    ); // If is in Array already, so we only need to update the isAdmin prop in the object
     if (unsavedChange) {
       unsavedChange.isAdmin = isAdmin;
     } else {
-      changesList.push({
+      this.state.changesList.push({
         userName: userName,
         isAdmin,
       });
     }
   };
-  const onSchoolClassesChange = (userRef) => {
-    setCurrentUserComboBox(userRef);
+
+  onSchoolClassesChange = (userRef) => {
+    this.setCurrentUserComboBox(userRef);
   };
-  const onSchoolClassesChangeFinished = () => {
-    setHasChanges(true);
+
+  onSchoolClassesChangeFinished = () => {
+    this.setHasChanges(true);
     if (
       window.document.querySelector(
-        '[data-user-ref="' + currentUserComboBox + '"]'
+        '[data-user-ref="' + this.state.currentUserComboBox + '"]'
       )
     ) {
       const schoolClasses = window.document
-        .querySelector('[data-user-ref="' + currentUserComboBox + '"]')
+        .querySelector(
+          '[data-user-ref="' + this.state.currentUserComboBox + '"]'
+        )
         .querySelector("input")
         .value.replace(/\s+/g, "")
         .split(",");
-      const unsavedChange = changesList.find(
-        (x) => x.userName === currentUserComboBox
+      const unsavedChange = this.state.changesList.find(
+        (x) => x.userName === this.state.currentUserComboBox
       ); // If is in Array already
       if (unsavedChange) {
         unsavedChange.schoolClasses = schoolClasses;
       } else {
-        changesList.push({
-          userName: currentUserComboBox,
+        this.state.changesList.push({
+          userName: this.state.currentUserComboBox,
           schoolClasses: schoolClasses,
         });
       }
     }
   };
-  const hideSavingSpinner = () => {
+
+  hideSavingSpinner = () => {
     // Timeout so the user has some feedback
     setTimeout(() => {
-      setIsSaving(false);
+      this.setState({ isSaving: false });
     }, 1500);
   };
-  const onSave = async (e) => {
+
+  onSave = async (e) => {
     e.preventDefault();
-    if (changesList.length > 0) {
-      setIsSaving(true);
-      changesList.forEach((item) => {
+    if (this.state.changesList.length > 0) {
+      this.setState({ isSaving: true });
+
+      this.state.changesList.forEach((item) => {
         const isAdmin = item.isAdmin;
         const schoolClasses = item.schoolClasses;
-        fb.firebase
+        this.fb.firebase
           .firestore()
           .collection("Users")
           .where("username", "==", item.userName)
           .get()
           .then((r) => {
-            const x = fb.firebase
+            const response = this.fb.firebase
               .firestore()
               .collection("Users")
               .doc(r.docs[0].id);
+
             if (
               item.hasOwnProperty("isAdmin") &&
               item.hasOwnProperty("schoolClasses")
             ) {
-              x.update({
-                isAdmin,
-                schoolClasses: schoolClasses,
-              }).then(hideSavingSpinner);
+              response
+                .update({
+                  isAdmin,
+                  schoolClasses: schoolClasses,
+                })
+                .then(this.hideSavingSpinner);
             } else {
               if (item.hasOwnProperty("isAdmin")) {
-                x.update({
-                  isAdmin,
-                }).then(hideSavingSpinner);
+                response
+                  .update({
+                    isAdmin,
+                  })
+                  .then(this.hideSavingSpinner);
               }
               if (item.hasOwnProperty("schoolClasses")) {
-                x.update({
-                  schoolClasses: schoolClasses,
-                }).then(hideSavingSpinner);
+                response
+                  .update({
+                    schoolClasses: schoolClasses,
+                  })
+                  .then(this.hideSavingSpinner);
               }
             }
           });
       });
     }
   };
-  return (
-    <>
-      <TextField label={"Nutzer filtern:"} onChange={onFilterChanged} />
-      <div className="user-admin-list-wrap">
-        <div className="user-admin-list-content">
-          <DetailsList
-            items={userItems}
-            compact={false}
-            columns={columns}
-            selectionMode={SelectionMode.none}
-            onRenderItemColumn={renderItemColumn}
-            layoutMode={DetailsListLayoutMode.justified}
-            isHeaderVisible={true}
-          />
+  render() {
+    return (
+      <>
+        <TextField label={"Nutzer filtern:"} onChange={this.onFilterChanged} />
+        <div className="user-admin-list-wrap">
+          <div className="user-admin-list-content">
+            <DetailsList
+              items={this.state.userItems}
+              compact={false}
+              columns={this.columns}
+              selectionMode={SelectionMode.none}
+              onRenderItemColumn={this.renderItemColumn}
+              layoutMode={DetailsListLayoutMode.justified}
+              isHeaderVisible={true}
+            />
+          </div>
+          <div
+            className={
+              this.state.isSaving
+                ? "user-admin-list-spinner visible"
+                : "user-admin-list-spinner"
+            }
+          >
+            <Spinner label="Speichern..." />
+          </div>
         </div>
-        <div
-          className={
-            isSaving
-              ? "user-admin-list-spinner visible"
-              : "user-admin-list-spinner"
-          }
-        >
-          <Spinner label="Speichern..." />
-        </div>
-      </div>
-      <PrimaryButton onClick={onSave} disabled={!hasChanges}>
-        Änderungen speichern
-      </PrimaryButton>
-    </>
-  );
-};
+        <PrimaryButton onClick={this.onSave} disabled={!this.state.hasChanges}>
+          Änderungen speichern
+        </PrimaryButton>
+      </>
+    );
+  }
+}
+
+export default UserAdministration;

@@ -64,12 +64,18 @@ export const SubjectManagementButton = (props) => {
   const renderCells = (item) => {
     return (
       <>
-        <span>{item.text}</span>
-        <IconButton
-          iconProps={iconRemove}
-          title="Entfernen"
-          onClick={() => updateSubject(currentClassId, item.text, true)}
-        />
+        <div className="subject-cell">
+          <div className="subject-cell-text">
+            {item.text}
+          </div>
+          <div className="subject-cell-icon">
+            <IconButton
+              iconProps={iconRemove}
+              title="Entfernen"
+              onClick={() => updateSubject(currentClassId, item.text, true)}
+            />
+          </div>
+        </div>
       </>
     );
   };
@@ -133,7 +139,7 @@ export const SubjectManagementButton = (props) => {
         >
           <div className="user-admin-list-wrap">
             <div className="user-admin-list-content">
-              <h2>Themen</h2>
+              <h2 className={styles.title}>Fächer {props.schoolClassName}</h2>
               {allSubjects.length > 0 && (
                 <>
                   <List items={allSubjects} onRenderCell={renderCells} />
@@ -192,12 +198,13 @@ const styles = mergeStyleSets({
     margin: "0 !important",
   },
   callout: {
-    width: 375,
+    width: 245,
     maxWidth: "90%",
     padding: "20px 24px",
   },
   title: {
     marginBottom: 12,
+    marginTop: 0,
     fontWeight: FontWeights.semilight,
   },
 });

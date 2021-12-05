@@ -148,6 +148,7 @@ class SchoolClassAdministration extends React.Component {
           <SubjectManagementButton
             fireBase={this.props.fireBase}
             schoolClass={schoolClass.id}
+            schoolClassName={schoolClass.text}
           />
         );
       case "availableSchoolDaysCol":
@@ -191,6 +192,9 @@ class SchoolClassAdministration extends React.Component {
           <div>
             <h3>Neue Klasse hinzufügen</h3>
             <AddNewSchoolClass fireBase={this.props.fireBase} />
+            <hr/>
+            <h3>Klasse löschen</h3>
+            <span><small><i>Needed? 30m max</i></small></span>
           </div>
         </div>
       </>

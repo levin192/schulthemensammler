@@ -37,4 +37,19 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
+  margin-top: 15px;
+}
+
+.subject-cell {
+  display: flex;
+  align-items: center;
+  max-width: 200px;
+  width: auto;
+  border-bottom: 1px solid lightgrey;
+  &-icon {
+    margin-left: auto;
+  }
+  &:hover {
+    background-color: whitesmoke;
+  }
 }

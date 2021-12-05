@@ -73,8 +73,6 @@ export const SubjectManagementButton = (props) => {
   const updateSubject = (currentClass, subjectName, removeItem) => {
     console.log("updating subject");
 
-    // allSubjects.filter(item => item.text === subjectName) // wip
-
     setIsSaving(true);
 
     const currentSchoolClassRef = fb.firebase

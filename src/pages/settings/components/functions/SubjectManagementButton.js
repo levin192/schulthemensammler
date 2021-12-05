@@ -71,6 +71,7 @@ export const SubjectManagementButton = (props) => {
     );
   };
   const updateSubject = (currentClass, subjectName, removeItem) => {
+   //!(allSubjects.filter(item => item.text === subjectName) && removeItem) || removeItem) To filter dupes
     console.log("updating subject");
 
     setIsSaving(true);

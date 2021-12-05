@@ -7,9 +7,19 @@
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
+    @include breakpoint-down(sm) {
+      flex-wrap: wrap;
+    }
   }
   &-classes {
     margin-left: auto;
+    @include breakpoint-down(sm) {
+      order: 3;
+      width: 100%;
+      text-align: right;
+      margin-left: 0;
+      font-size: .8rem;
+    }
   }
   &-title {
     a {

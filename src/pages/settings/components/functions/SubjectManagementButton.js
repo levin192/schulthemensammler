@@ -26,12 +26,12 @@ export const SubjectManagementButton = (props) => {
   const calloutProps = { gapSpace: 0 };
   const fb = props.fireBase;
   const currentClassId = props.schoolClass;
+
   const getSubjects = () => {
-    const classDoc = fb.firebase
+    fb.firebase
       .firestore()
       .collection("SchoolClasses")
-      .doc(currentClassId);
-    classDoc
+      .doc(currentClassId)
       .get()
       .then((doc) => {
         if (doc.exists) {
@@ -54,8 +54,10 @@ export const SubjectManagementButton = (props) => {
         console.log("Error getting document:", error);
       });
   };
+
   const iconAdd = { iconName: "Add" };
   const iconRemove = { iconName: "Delete" };
+
   const renderCells = (item) => {
     return (
       <>
@@ -69,42 +71,47 @@ export const SubjectManagementButton = (props) => {
     );
   };
   const updateSubject = (currentClass, subjectName, removeItem) => {
+    console.log("updating subject");
+
     // allSubjects.filter(item => item.text === subjectName) // wip
-    if (true) {
-      setIsSaving(true);
-      const x = fb.firebase
-        .firestore()
-        .collection("SchoolClasses")
-        .doc(currentClass);
-      x.get()
-        .then((r) => {
-          let subjects = r.data().subjects;
-          if (removeItem) {
-            subjects = subjects.filter((item) => item !== subjectName);
-          } else {
-            subjects.push(subjectName);
-            setNewSubject("");
-          }
-          x.update({
-            subjects,
-          });
+
+    setIsSaving(true);
+
+    const currentSchoolClassRef = fb.firebase
+      .firestore()
+      .collection("SchoolClasses")
+      .doc(currentClass);
+
+    if (!removeItem) {
+      currentSchoolClassRef
+        .update({
+          subjects: fb.firebase.firestore.FieldValue.arrayUnion(subjectName),
         })
         .then(getSubjects);
-    } else {
-      //console.log((allSubjects.filter(item => item.text === subjectName).length < 0));
+    }
+
+    if (removeItem) {
+      currentSchoolClassRef
+        .update({
+          subjects: fb.firebase.firestore.FieldValue.arrayRemove(subjectName),
+        })
+        .then(getSubjects);
     }
   };
   return (
     <>
       <DefaultButton
         id={buttonId}
-        onClick={toggleIsCalloutVisible}
+        onClick={() => {
+          toggleIsCalloutVisible();
+          getSubjects();
+        }}
         text={isCalloutVisible ? "Schließen" : "Fächer anzeigen"}
         className={styles.button}
       />
       {isCalloutVisible && (
         <Callout
-          onLayerMounted={getSubjects}
+          // onLayerMounted={getSubjects}
           className={styles.callout}
           ariaLabelledBy={labelId}
           ariaDescribedBy={descriptionId}

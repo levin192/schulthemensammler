@@ -46,7 +46,6 @@ class App extends React.Component {
   checkUserAuth = () => {
     this.fb.firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
         this.setState((state) => {
           state.loggedIn = true;
           state.userName = user.email;
@@ -77,7 +76,7 @@ class App extends React.Component {
     return (
       <Store.Provider value={this.state}>
         <Router>
-          <PageHeader userDoc={this.state.userDoc}/>
+          <PageHeader userDoc={this.state.userDoc} />
           <main className="content-container main-container">
             <Routes>
               <Route

@@ -1,10 +1,15 @@
 import {
+  DefaultButton,
   DetailsList,
+  Dialog,
+  DialogContent,
+  DialogFooter,
   Dropdown,
   MessageBar,
   MessageBarType,
   PrimaryButton,
   TextField,
+  Toggle,
 } from "@fluentui/react";
 import React from "react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
@@ -21,6 +26,13 @@ class CalendarPage extends React.Component {
       selectedSubject: null,
       currentSelectedDayId: null,
       schoolClassDocument: null,
+      unsubscribeRealtimeListenerForPosts: null,
+      postPopupSettings: {
+        isHidden: true,
+        postTextFieldDisbaled: true,
+        postText: "",
+        docId: null,
+      },
       createNewPostConfig: {
         showMessageBar: false,
         messageBarType: "",
@@ -43,7 +55,7 @@ class CalendarPage extends React.Component {
             key: "post",
             name: "Eintrag",
             fieldName: "post",
-            minWidth: 100,
+            minWidth: 50,
             maxWidth: 200,
           },
           {
@@ -51,7 +63,7 @@ class CalendarPage extends React.Component {
             name: "Erstellt von",
             fieldName: "createdBy",
             minWidth: 100,
-            maxWidth: 200,
+            maxWidth: 150,
           },
           {
             key: "createdAt",
@@ -64,6 +76,28 @@ class CalendarPage extends React.Component {
       },
     };
   }
+
+  editPost = () => {
+    const docId = this.state.postPopupSettings.docId;
+    const text = this.state.postPopupSettings.postText;
+
+    this.fb.firebase
+      .firestore()
+      .collection("SchoolClasses")
+      .doc(this.state.schoolClassDocument.id)
+      .collection("Posts")
+      .doc(docId)
+      .update({
+        text: text,
+        createdBy: this.context.userDoc.username,
+      })
+      .then((data) => {
+        console.log("success", data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
 
   handleInputChange = (inputEl) => {
     this.setState((state) => {
@@ -88,7 +122,19 @@ class CalendarPage extends React.Component {
       return state;
     });
 
+    //delete old items
+    this.deleteListItemsAndGroups();
+
     this.loadPosts(dayId);
+  };
+
+  deleteListItemsAndGroups = () => {
+    this.setState((state) => {
+      state.listConfig.posts = [];
+      state.listConfig.groups = [];
+
+      return state;
+    });
   };
 
   sortPostsAndGroups = () => {
@@ -178,7 +224,6 @@ class CalendarPage extends React.Component {
     });
 
     this.setState((state) => {
-      console.log("settings subjects", array);
       state.schoolClassSubjects = array;
       return state;
     });
@@ -217,6 +262,7 @@ class CalendarPage extends React.Component {
         subject: selectedSubject,
         text: postText,
         createdBy: this.context.userDoc.username,
+        createdAt: +new Date(),
       })
       .then(() => {
         this.setState((state) => {
@@ -254,36 +300,66 @@ class CalendarPage extends React.Component {
     return dayId;
   };
 
+  showPostPopup = (text, docId) => {
+    this.setState((state) => {
+      state.postPopupSettings.isHidden = false;
+      state.postPopupSettings.docId = docId;
+      state.postPopupSettings.postText = text;
+
+      return state;
+    });
+  };
+
   loadPosts = async (dayId) => {
-    const response = await this.fb.firebase
+    // first unsubscribe to the old listiner. Its reference is saved in the state
+    if (this.state.unsubscribeRealtimeListenerForPosts !== null)
+      this.state.unsubscribeRealtimeListenerForPosts();
+
+    const unsubscribeRealtimeListenerForPosts = this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
       .doc(this.state.schoolClassDocument.id)
       .collection("Posts")
       .where("dayId", "==", dayId)
-      .get();
+      .onSnapshot((querySnapshot) => {
+        if (querySnapshot.docs.length === 0) {
+          console.log("No Posts available!");
+          return null;
+        }
 
-    if (response.docs.length === 0) {
-      console.log("No Posts available!");
-      return null;
-    }
+        const array = [];
 
-    const array = [];
-    response.forEach((docs) => {
-      array.push({
-        subject: docs.data().subject,
-        post: docs.data().text,
-        createdBy: docs.data().createdBy,
-        createdAt: "placeholder",
+        querySnapshot.forEach((doc) => {
+          const documentTimestamp = new Date(doc.data().createdAt);
+
+          array.push({
+            subject: doc.data().subject,
+            post: (
+              <div onClick={() => this.showPostPopup(doc.data().text, doc.id)}>
+                {doc.data().text}
+              </div>
+            ),
+            createdBy: doc.data().createdBy,
+            createdAt: `${documentTimestamp.getDate()}.${
+              documentTimestamp.getMonth() + 1
+            }.${documentTimestamp.getFullYear()}`,
+          });
+        });
+
+        this.setState((state) => {
+          state.listConfig.posts = array;
+          return state;
+        });
+
+        this.sortPostsAndGroups();
       });
-    });
 
     this.setState((state) => {
-      state.listConfig.posts = array;
+      state.unsubscribeRealtimeListenerForPosts =
+        unsubscribeRealtimeListenerForPosts;
+
       return state;
     });
-
-    this.sortPostsAndGroups();
   };
 
   render() {
@@ -292,7 +368,62 @@ class CalendarPage extends React.Component {
         <>
           <div>
             <h1>Kalender</h1>
+
             <div id="calendar" className="calendar">
+              <Dialog hidden={this.state.postPopupSettings.isHidden}>
+                <DialogContent>
+                  <TextField
+                    onChange={(x, newText) => {
+                      this.setState((state) => {
+                        state.postPopupSettings.postText = newText;
+
+                        return state;
+                      });
+                    }}
+                    defaultValue={this.state.postPopupSettings.postText}
+                    multiline
+                    disabled={
+                      this.state.postPopupSettings.postTextFieldDisbaled
+                    }
+                  ></TextField>
+
+                  <Toggle
+                    onChange={(x, isOn) => {
+                      this.setState((state) => {
+                        state.postPopupSettings.postTextFieldDisbaled = !isOn;
+
+                        return state;
+                      });
+                    }}
+                    label="Bearbeitung aktivieren"
+                    onText="An"
+                    offText="Aus"
+                  />
+                </DialogContent>
+                <DialogFooter>
+                  <PrimaryButton
+                    disabled={
+                      this.state.postPopupSettings.postTextFieldDisbaled
+                    }
+                    onClick={this.editPost}
+                    text="Save changes"
+                  />
+                  <DefaultButton
+                    onClick={() => {
+                      this.setState((state) => {
+                        // clear all popup states
+                        state.postPopupSettings.isHidden = true;
+                        state.postPopupSettings.postTextFieldDisbaled = true;
+                        state.postPopupSettings.postText = true;
+                        state.postPopupSettings.docId = true;
+
+                        return state;
+                      });
+                    }}
+                    text="Cancel"
+                  />
+                </DialogFooter>
+              </Dialog>
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
               <Dropdown
                 options={this.state.schoolClassSubjects}

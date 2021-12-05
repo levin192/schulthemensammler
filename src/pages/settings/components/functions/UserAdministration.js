@@ -9,6 +9,7 @@ import { Checkbox } from "@fluentui/react/lib/Checkbox";
 import { ComboBox } from "@fluentui/react/lib/ComboBox";
 import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Spinner } from "@fluentui/react/lib/Spinner";
+// import { registerOnThemeChangeCallback } from "@fluentui/style-utilities";
 
 class UserAdministration extends React.Component {
   constructor(props) {
@@ -16,11 +17,12 @@ class UserAdministration extends React.Component {
     this.fb = props.fireBase;
     this.state = {
       userItems: this.createUserList(props.userList),
-      filteredItems: this.createUserList(props.userList),
+
       isSaving: false,
       hasChanges: false,
       currentUserComboBox: undefined,
       changesList: [],
+      isFilterActive: false,
     };
 
     this.allSchoolClasses = props.schoolClassList
@@ -31,6 +33,8 @@ class UserAdministration extends React.Component {
           text: schoolClass.name,
         };
       });
+
+    console.log("this.allSchoolClasses", this.allSchoolClasses);
 
     this.columns = [
       {
@@ -76,58 +80,6 @@ class UserAdministration extends React.Component {
     ];
   }
 
-  // const fb = props.fireBase;
-
-  // const [userItems, setUserItems] = useState(createUserList(props.userList));
-  // // const [originalItems] = useState(userItems);
-  // const [filteredItems] = useState(userItems);
-  // const [isSaving, setIsSaving] = useState(false);
-  // const [hasChanges, setHasChanges] = useState(false);
-  // const [currentUserComboBox, setCurrentUserComboBox] = useState(undefined);
-  // const [changesList] = useState([]);
-  // const columns = [
-  //   {
-  //     key: "userNameCol",
-  //     name: "Username",
-  //     fieldName: "userName",
-  //     minWidth: 100,
-  //     maxWidth: 200,
-  //     isResizable: true,
-  //   },
-  //   {
-  //     key: "fullNameCol",
-  //     name: "Vor-/Nachname",
-  //     fieldName: "fullName",
-  //     minWidth: 100,
-  //     maxWidth: 300,
-  //     isResizable: true,
-  //   },
-  //   {
-  //     key: "emailCol",
-  //     name: "E-Mail",
-  //     fieldName: "value",
-  //     minWidth: 100,
-  //     maxWidth: 200,
-  //     isResizable: true,
-  //   },
-  //   {
-  //     key: "adminCol",
-  //     name: "Admin",
-  //     fieldName: "admin",
-  //     minWidth: 50,
-  //     maxWidth: 50,
-  //     isResizable: true,
-  //   },
-  //   {
-  //     key: "schoolClassCol",
-  //     name: "Klasse/n",
-  //     fieldName: "SchoolClassSelect",
-  //     minWidth: 150,
-  //     maxWidth: 150,
-  //     isResizable: true,
-  //   },
-  // ];
-
   createUserList = (userList) => {
     return userList
       .filter((userObj) => userObj.username) // filter out users who have not set username
@@ -147,16 +99,16 @@ class UserAdministration extends React.Component {
 
   onFilterChanged = (element) => {
     const originalItems = this.createUserList(this.props.userList);
-    const filteredItems = [...this.state.userItems];
 
     const searchText = element.target.value.toLowerCase();
     this.setState((state) => {
+      state.isFilterActive = searchText === "" ? false : true;
       state.userItems = searchText
-        ? this.state.filteredItems.filter(
-            (i) =>
-              i.userName.toLowerCase().indexOf(searchText) > -1 ||
-              i.firstName.toLowerCase().indexOf(searchText) > -1 ||
-              i.lastName.toLowerCase().indexOf(searchText) > -1
+        ? originalItems.filter(
+            (userItem) =>
+              userItem.userName.toLowerCase().indexOf(searchText) > -1 ||
+              userItem.firstName.toLowerCase().indexOf(searchText) > -1 ||
+              userItem.lastName.toLowerCase().indexOf(searchText) > -1
           )
         : originalItems;
 
@@ -202,7 +154,7 @@ class UserAdministration extends React.Component {
             <ComboBox
               multiSelect
               autoComplete="on"
-              options={this.state.allSchoolClasses}
+              options={this.allSchoolClasses}
               onChange={() => this.onSchoolClassesChange(user.userName)}
               defaultSelectedKey={user.schoolClasses}
               onMenuDismiss={this.onSchoolClassesChangeFinished}
@@ -215,11 +167,12 @@ class UserAdministration extends React.Component {
   };
 
   onAdminChange = (e) => {
-    this.setHasChanges(true);
+    this.setState({ hasChanges: true });
+
     const userName = e.target.id;
     const isAdmin = e.target.checked;
     const unsavedChange = this.state.changesList.find(
-      (x) => x.userName === userName
+      (item) => item.userName === userName
     ); // If is in Array already, so we only need to update the isAdmin prop in the object
     if (unsavedChange) {
       unsavedChange.isAdmin = isAdmin;
@@ -232,11 +185,12 @@ class UserAdministration extends React.Component {
   };
 
   onSchoolClassesChange = (userRef) => {
-    this.setCurrentUserComboBox(userRef);
+    this.setState({ currentUserComboBox: userRef });
   };
 
   onSchoolClassesChangeFinished = () => {
-    this.setHasChanges(true);
+    this.setState({ hasChanges: true });
+
     if (
       window.document.querySelector(
         '[data-user-ref="' + this.state.currentUserComboBox + '"]'
@@ -326,7 +280,11 @@ class UserAdministration extends React.Component {
         <div className="user-admin-list-wrap">
           <div className="user-admin-list-content">
             <DetailsList
-              items={this.state.userItems}
+              items={
+                this.state.isFilterActive
+                  ? this.state.userItems
+                  : this.createUserList(this.props.userList)
+              }
               compact={false}
               columns={this.columns}
               selectionMode={SelectionMode.none}

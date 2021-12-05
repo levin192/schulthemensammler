@@ -27,6 +27,11 @@ class CalendarPage extends React.Component {
       currentSelectedDayId: null,
       schoolClassDocument: null,
       unsubscribeRealtimeListenerForPosts: null,
+      detailsListMessageBar: {
+        showMessageBar: false,
+        messageBarType: "",
+        messageBarText: "",
+      },
       postPopupSettings: {
         isHidden: true,
         postTextFieldDisbaled: true,
@@ -38,7 +43,6 @@ class CalendarPage extends React.Component {
         messageBarType: "",
         messageBarText: "",
       },
-
       listConfig: {
         groups: [],
         posts: [],
@@ -92,6 +96,19 @@ class CalendarPage extends React.Component {
         createdBy: this.context.userDoc.username,
       })
       .then((data) => {
+        this.setState((state) => {
+          state.postPopupSettings.isHidden = true;
+          state.postPopupSettings.postTextFieldDisbaled = true;
+          state.postPopupSettings.postText = true;
+          state.postPopupSettings.docId = true;
+
+          state.detailsListMessageBar.showMessageBar = true;
+          state.detailsListMessageBar.messageBarType = "success";
+          state.detailsListMessageBar.messageBarText =
+            "Eintrag erfolgreich bearbeitet.";
+
+          return state;
+        });
         console.log("success", data);
       })
       .catch((err) => {
@@ -424,6 +441,7 @@ class CalendarPage extends React.Component {
                   />
                 </DialogFooter>
               </Dialog>
+
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
               <Dropdown
                 options={this.state.schoolClassSubjects}
@@ -459,6 +477,17 @@ class CalendarPage extends React.Component {
           </div>
           <div className="visible-mobile">
             <h1>Themen</h1>
+            {this.state.detailsListMessageBar.showMessageBar ? (
+              <MessageBar
+                messageBarType={
+                  this.state.detailsListMessageBar.messageBarType === "error"
+                    ? MessageBarType.error
+                    : MessageBarType.success
+                }
+              >
+                {this.state.detailsListMessageBar.messageBarText}
+              </MessageBar>
+            ) : null}
             <DetailsList
               selectionMode={SelectionMode.none}
               ariaLabel="Einträge"

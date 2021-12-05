@@ -15,13 +15,19 @@
 }
 
 .calendar {
-  height: auto;
-  width: 100%;
-  transform: scale(1);
-  transition: transform ease-in-out .6s;
-  //border: black 1px solid;
-  &.ani {
-    transform: scale(5);
+  .ms-DatePicker {
+    border: solid 1px lightgrey;
+    //margin-left: -12px;
+    margin-bottom: 12px;
+    > div {
+      padding-left:  0;
+    }
+    td[class*='dayCell-'] {
+     &:first-child{
+       //background-color: #039BE5;
+       //padding-left: 0;
+     }
+    }
   }
 }
 
@@ -37,7 +43,6 @@ svg {
   max-width: 100%;
   height: auto;
 }
-
 
 .ms-TextField-fieldGroup {
   max-width: 300px;

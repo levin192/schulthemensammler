@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { UserAdministration } from "./functions/UserAdministration";
+import UserAdministration from "./functions/UserAdministration";
 import SchoolClassAdministration from "./SchoolClassAdministration";
 
 class SettingsPage extends React.Component {
@@ -35,25 +35,22 @@ class SettingsPage extends React.Component {
   componentDidMount = () => {
     document.title = "📅 | Einstellungen ✏️";
     this.setLocaleUserDocStates();
-    this.setAllUserDocs();
+    this.getAllUserDocs();
     this.setAllSchoolClassesNames();
   };
 
   getAllUserDocs = async () => {
-    const snapshot = await this.fb.firebase
+    const unsubscribeRealtimeListenerForUsers = await this.fb.firebase
       .firestore()
       .collection("Users")
-      .get();
-    return snapshot.docs.map((doc) => doc.data());
-  };
+      .onSnapshot((querySnapshot) => {
+        const docs = querySnapshot.docs.map((doc) => doc.data());
 
-  setAllUserDocs = () => {
-    this.getAllUserDocs().then((docs) =>
-      this.setState((state) => {
-        state.allUserDocs = docs;
-        return state;
-      })
-    );
+        this.setState((state) => {
+          state.allUserDocs = docs;
+          return state;
+        });
+      });
   };
 
   getAllSchoolClassesNames = async () => {

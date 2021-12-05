@@ -66,14 +66,14 @@ class CalendarPage extends React.Component {
             key: "createdBy",
             name: "Erstellt von",
             fieldName: "createdBy",
-            minWidth: 100,
+            minWidth: 50,
             maxWidth: 150,
           },
           {
             key: "createdAt",
             name: "Erstellt am",
             fieldName: "createdAt",
-            minWidth: 100,
+            minWidth: 50,
             maxWidth: 200,
           },
         ],
@@ -444,9 +444,10 @@ class CalendarPage extends React.Component {
 
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
               <Dropdown
+                placeholder="Fach auswählen"
                 options={this.state.schoolClassSubjects}
                 onChange={this.handleChangeDropdownChange}
-                label="Fach auswählen"
+                label="Fach"
                 style={{ maxWidth: "300px" }}
               />
               <TextField

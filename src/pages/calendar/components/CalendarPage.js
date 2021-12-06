@@ -88,7 +88,7 @@ class CalendarPage extends React.Component {
       classesDropdown: {
         options: [],
         selectedKey: 0,
-      }
+      },
     };
   }
 
@@ -235,7 +235,13 @@ class CalendarPage extends React.Component {
     const response = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
-      .where("name", "==", this.context.userDoc.schoolClasses[this.state.classesDropdown.selectedKey])
+      .where(
+        "name",
+        "==",
+        this.context.userDoc.schoolClasses[
+          this.state.classesDropdown.selectedKey
+        ]
+      )
       .get();
 
     this.setState((state) => {
@@ -322,9 +328,7 @@ class CalendarPage extends React.Component {
 
   getDayId = (date) => {
     let dayId;
-    dayId = `${date.getDate()}${
-        date.getMonth() + 1
-    }${date.getFullYear()}`;
+    dayId = `${date.getDate()}${date.getMonth() + 1}${date.getFullYear()}`;
 
     return dayId;
   };
@@ -369,10 +373,10 @@ class CalendarPage extends React.Component {
               </div>
             ),
             editPost: (
-                <IconButton
-                  iconProps={{iconName: "Edit"}}
-                  onClick={() => this.showPostPopup(doc.data().text, doc.id)}
-                />
+              <IconButton
+                iconProps={{ iconName: "Edit" }}
+                onClick={() => this.showPostPopup(doc.data().text, doc.id)}
+              />
             ),
             createdBy: doc.data().createdBy,
             createdAt: `${documentTimestamp.getDate()}.${
@@ -399,22 +403,24 @@ class CalendarPage extends React.Component {
 
   setClassesDropdownProps = () => {
     this.setState((state) => {
-      state.classesDropdown.options = this.context.userDoc.schoolClasses.map((value, index) => {
-        return {
-          key: index,
-          text: value,
-        };
-      });
+      state.classesDropdown.options = this.context.userDoc.schoolClasses.map(
+        (value, index) => {
+          return {
+            key: index,
+            text: value,
+          };
+        }
+      );
       return state;
     });
   };
   handleClassesDropdownChange = async (x, i) => {
     this.setState((state) => {
-      state.classesDropdown.selectedKey = i.key
+      state.classesDropdown.selectedKey = i.key;
       return state;
     });
-  // await this.loadSchoolClassDocument(). Need to refresh it all. @BORAN 🥴🥴
-  }
+    // await this.loadSchoolClassDocument(). Need to refresh it all. @BORAN 🥴🥴
+  };
   render() {
     if (this.context.loggedIn) {
       return (
@@ -430,50 +436,50 @@ class CalendarPage extends React.Component {
             />
             <div id="calendar" className="calendar">
               <Dialog
-                  dialogContentProps={
-                    this.state.postPopupSettings.dialogContentProps
-                  }
-                  hidden={this.state.postPopupSettings.isHidden}
+                dialogContentProps={
+                  this.state.postPopupSettings.dialogContentProps
+                }
+                hidden={this.state.postPopupSettings.isHidden}
               >
                 <TextField
-                    onChange={(x, newText) => {
-                      this.setState((state) => {
-                        state.postPopupSettings.postText = newText;
+                  onChange={(x, newText) => {
+                    this.setState((state) => {
+                      state.postPopupSettings.postText = newText;
 
-                        return state;
-                      });
-                    }}
-                    defaultValue={this.state.postPopupSettings.postText}
-                    multiline
-                    disabled={this.state.postPopupSettings.postTextFieldDisabled}
+                      return state;
+                    });
+                  }}
+                  defaultValue={this.state.postPopupSettings.postText}
+                  multiline
+                  disabled={this.state.postPopupSettings.postTextFieldDisabled}
                 />
 
                 <Toggle
-                    onChange={(x, isOn) => {
-                      this.setState((state) => {
-                        state.postPopupSettings.postTextFieldDisabled = !isOn;
+                  onChange={(x, isOn) => {
+                    this.setState((state) => {
+                      state.postPopupSettings.postTextFieldDisabled = !isOn;
 
-                        return state;
-                      });
-                    }}
-                    label="Bearbeitung aktivieren"
-                    onText="An"
-                    offText="Aus"
+                      return state;
+                    });
+                  }}
+                  label="Bearbeitung aktivieren"
+                  onText="An"
+                  offText="Aus"
                 />
 
                 <ActionButton
-                    iconProps={{ iconName: "Copy" }}
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                          this.state.postPopupSettings.postText
-                      );
+                  iconProps={{ iconName: "Copy" }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      this.state.postPopupSettings.postText
+                    );
 
-                      this.setState((state) => {
-                        state.postPopupSettings.copiedTextMessage = "Kopiert!";
+                    this.setState((state) => {
+                      state.postPopupSettings.copiedTextMessage = "Kopiert!";
 
-                        return state;
-                      });
-                    }}
+                      return state;
+                    });
+                  }}
                 >
                   {this.state.postPopupSettings.copiedTextMessage}
                 </ActionButton>

@@ -2,6 +2,7 @@ import {
   DefaultButton,
   DetailsList,
   Dialog,
+  DialogContent,
   DialogFooter,
   Dropdown,
   MessageBar,
@@ -85,6 +86,11 @@ class CalendarPage extends React.Component {
           },
         ],
       },
+      classesDropdownOptions: [],
+      classesDropdown: {
+        options: [],
+        selectedKey: 0,
+      }
     };
   }
 
@@ -136,6 +142,7 @@ class CalendarPage extends React.Component {
     this.setTodaysDayId();
     await this.loadSchoolClassDocument();
     this.loadTodaysPosts();
+    this.setClassesDropdownProps();
   };
 
   onCalenderClick = (date) => {
@@ -230,7 +237,7 @@ class CalendarPage extends React.Component {
     const response = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
-      .where("name", "==", this.context.userDoc.schoolClasses[0])
+      .where("name", "==", this.context.userDoc.schoolClasses[this.state.classesDropdown.selectedKey])
       .get();
 
     this.setState((state) => {
@@ -386,13 +393,37 @@ class CalendarPage extends React.Component {
     });
   };
 
+  setClassesDropdownProps = () => {
+    this.setState((state) => {
+      state.classesDropdown.options = this.context.userDoc.schoolClasses.map((value, index) => {
+        return {
+          key: index,
+          text: value,
+        };
+      });
+      return state;
+    });
+  };
+  handleClassesDropdownChange = async (x, i) => {
+    this.setState((state) => {
+      state.classesDropdown.selectedKey = i.key
+      return state;
+    });
+  // await this.loadSchoolClassDocument(). Need to refresh it all. @BORAN 🥴🥴
+  }
   render() {
     if (this.context.loggedIn) {
       return (
         <>
           <div>
             <h1>Kalender</h1>
-
+            <Dropdown
+              label="Klasse wählen"
+              options={this.state.classesDropdown.options}
+              selectedKey={this.state.classesDropdown.selectedKey}
+              onChange={this.handleClassesDropdownChange}
+              style={{ maxWidth: "300px" }}
+            />
             <div id="calendar" className="calendar">
               <Dialog hidden={this.state.postPopupSettings.isHidden}>
                 <DialogContent>

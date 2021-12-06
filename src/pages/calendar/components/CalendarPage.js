@@ -3,7 +3,6 @@ import {
   ActionButton,
   DetailsList,
   Dialog,
-  DialogContent,
   DialogFooter,
   Dropdown,
   IconButton,

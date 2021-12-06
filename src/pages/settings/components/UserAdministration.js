@@ -230,8 +230,10 @@ class UserAdministration extends React.Component {
       this.state.changesList.forEach((item) => {
         const isAdmin = item.isAdmin;
         const schoolClasses = item.schoolClasses;
-        if (schoolClasses.length === 1 && schoolClasses[0] === "") { // If empty array turn into actual empty. Probs better ways possible (let and reassign)?
-         schoolClasses.pop()
+        if (schoolClasses) {
+          if (schoolClasses.length === 1 && schoolClasses[0] === '') { // If empty array turn into actual empty. Probs better ways possible (let and reassign)?
+            schoolClasses.pop();
+          }
         }
         this.fb.firebase
           .firestore()
@@ -277,36 +279,38 @@ class UserAdministration extends React.Component {
   render() {
     return (
       <>
-        <TextField label={"Nutzer filtern:"} onChange={this.onFilterChanged} />
-        <div className="user-admin-list-wrap">
-          <div className="user-admin-list-content">
-            <DetailsList
-              items={
-                this.state.isFilterActive
-                  ? this.state.userItems
-                  : this.createUserList(this.props.userList)
+        <div key={this.props.userList}>
+          <TextField label={"Nutzer filtern:"} onChange={this.onFilterChanged} />
+          <div className="user-admin-list-wrap">
+            <div className="user-admin-list-content">
+              <DetailsList
+                items={
+                  this.state.isFilterActive
+                    ? this.state.userItems
+                    : this.createUserList(this.props.userList)
+                }
+                compact={false}
+                columns={this.columns}
+                selectionMode={SelectionMode.none}
+                onRenderItemColumn={this.renderItemColumn}
+                layoutMode={DetailsListLayoutMode.justified}
+                isHeaderVisible={true}
+              />
+            </div>
+            <div
+              className={
+                this.state.isSaving
+                  ? "user-admin-list-spinner visible"
+                  : "user-admin-list-spinner"
               }
-              compact={false}
-              columns={this.columns}
-              selectionMode={SelectionMode.none}
-              onRenderItemColumn={this.renderItemColumn}
-              layoutMode={DetailsListLayoutMode.justified}
-              isHeaderVisible={true}
-            />
+            >
+              <Spinner label="Speichern..." />
+            </div>
           </div>
-          <div
-            className={
-              this.state.isSaving
-                ? "user-admin-list-spinner visible"
-                : "user-admin-list-spinner"
-            }
-          >
-            <Spinner label="Speichern..." />
-          </div>
+          <PrimaryButton onClick={this.onSave} disabled={!this.state.hasChanges}>
+            Änderungen speichern
+          </PrimaryButton>
         </div>
-        <PrimaryButton onClick={this.onSave} disabled={!this.state.hasChanges}>
-          Änderungen speichern
-        </PrimaryButton>
       </>
     );
   }

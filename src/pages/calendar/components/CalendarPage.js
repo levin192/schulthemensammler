@@ -28,6 +28,7 @@ class CalendarPage extends React.Component {
       currentSelectedDayId: null,
       schoolClassDocument: null,
       unsubscribeRealtimeListenerForPosts: null,
+      currentSchoolClasses: [],
       detailsListMessageBar: {
         showMessageBar: false,
         messageBarType: "",
@@ -88,7 +89,10 @@ class CalendarPage extends React.Component {
       classesDropdown: {
         options: [],
         selectedKey: 0,
+        placeholder: "Klasse wählen",
       },
+
+      currentSchoolClassListiner: null,
     };
   }
 
@@ -120,10 +124,10 @@ class CalendarPage extends React.Component {
 
           return state;
         });
-        console.log("success", data);
+        console.log("successfully edited post", data);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.log("error while editing post", err);
       });
   };
 
@@ -138,9 +142,7 @@ class CalendarPage extends React.Component {
   componentDidMount = async () => {
     document.title = "📅 | Kalender 📆";
     this.setTodaysDayId();
-    await this.loadSchoolClassDocument();
-    this.loadTodaysPosts();
-    this.setClassesDropdownProps();
+    await this.loadSchoolClassDocumentAndPosts();
   };
 
   onCalenderClick = (date) => {
@@ -151,7 +153,6 @@ class CalendarPage extends React.Component {
       return state;
     });
 
-    //delete old items
     this.deleteListItemsAndGroups();
 
     this.loadPosts(dayId);
@@ -223,16 +224,51 @@ class CalendarPage extends React.Component {
     });
   };
 
-  loadSchoolClassDocument = async () => {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      this.context.userDoc.schoolClasses.length !==
+      this.state.currentSchoolClasses.length
+    ) {
+      this.setState(
+        (state) => {
+          state.currentSchoolClasses = this.context.userDoc.schoolClasses;
+          return state;
+        },
+        async () => {
+          await this.loadSchoolClassDocumentAndPosts();
+        }
+      );
+    }
+  };
+
+  loadSchoolClassDocumentAndPosts = async () => {
     const isUserInASchoolClass = () => {
       return this.context.userDoc.schoolClasses[0] !== undefined;
     };
 
-    if (!isUserInASchoolClass()) {
-      console.log("user is not in a schoolclass");
-      return null;
+    if (this.state.currentSchoolClassListiner !== null) {
+      this.state.currentSchoolClassListiner();
     }
-    const response = await this.fb.firebase
+
+    if (!isUserInASchoolClass()) {
+      this.setState((state) => {
+        state.classesDropdown.placeholder = "Keine Klasse zugeordnet";
+        state.currentSchoolClasses = [];
+        state.listConfig.posts = [];
+        state.listConfig.groups = [];
+
+        return state;
+      });
+
+      return null;
+    } else {
+      this.setState((state) => {
+        state.currentSchoolClasses = this.context.userDoc.schoolClasses;
+        return state;
+      });
+    }
+
+    const unsubscribeListener = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
       .where(
@@ -242,25 +278,27 @@ class CalendarPage extends React.Component {
           this.state.classesDropdown.selectedKey
         ]
       )
-      .get();
+      .onSnapshot(async (querySnapshot) => {
+        await this.setState((state) => {
+          state.schoolClassDocument = querySnapshot.docs[0];
+          return state;
+        }, this.loadTodaysPosts);
 
-    this.setState((state) => {
-      state.schoolClassDocument = response.docs[0];
-      return state;
-    });
+        const array = [];
+        this.state.schoolClassDocument.data().subjects.forEach((subject) => {
+          array.push({
+            key: subject,
+            text: subject,
+          });
+        });
 
-    const array = [];
-    this.state.schoolClassDocument.data().subjects.forEach((subject) => {
-      array.push({
-        key: subject,
-        text: subject,
+        this.setState((state) => {
+          state.schoolClassSubjects = array;
+          return state;
+        });
       });
-    });
 
-    this.setState((state) => {
-      state.schoolClassSubjects = array;
-      return state;
-    });
+    await this.setState({ currentSchoolClassListiner: unsubscribeListener });
 
     return null;
   };
@@ -344,6 +382,15 @@ class CalendarPage extends React.Component {
   };
 
   loadPosts = async (dayId) => {
+    if (this.state.schoolClassDocument === null) {
+      this.setState((state) => {
+        state.listConfig.posts = [];
+
+        return state;
+      });
+      return null;
+    }
+
     // first unsubscribe to the old listiner. Its reference is saved in the state
     if (this.state.unsubscribeRealtimeListenerForPosts !== null)
       this.state.unsubscribeRealtimeListenerForPosts();
@@ -357,6 +404,13 @@ class CalendarPage extends React.Component {
       .onSnapshot((querySnapshot) => {
         if (querySnapshot.docs.length === 0) {
           console.log("No Posts available!");
+          // liste leeren. Sonst würden die alten posts drinne bleiben
+          this.setState((state) => {
+            state.listConfig.posts = [];
+
+            return state;
+          });
+
           return null;
         }
 
@@ -401,26 +455,35 @@ class CalendarPage extends React.Component {
     });
   };
 
-  setClassesDropdownProps = () => {
-    this.setState((state) => {
-      state.classesDropdown.options = this.context.userDoc.schoolClasses.map(
-        (value, index) => {
-          return {
-            key: index,
-            text: value,
-          };
-        }
-      );
-      return state;
+  getSchoolClassListForDropdown = () => {
+    if (this.context.userDoc.schoolClasses.length === 0) {
+      // this.setState((state) => {
+      //   state.classesDropdown.selectedKey = 0;
+      //   return state;
+      // });
+    }
+
+    return this.context.userDoc.schoolClasses.map((value, index) => {
+      return {
+        key: index,
+        text: value,
+      };
     });
   };
+
   handleClassesDropdownChange = async (x, i) => {
-    this.setState((state) => {
-      state.classesDropdown.selectedKey = i.key;
-      return state;
-    });
-    // await this.loadSchoolClassDocument(). Need to refresh it all. @BORAN 🥴🥴
+    this.setState(
+      (state) => {
+        state.classesDropdown.selectedKey = i.key;
+        return state;
+      },
+      async () => {
+        await this.loadSchoolClassDocumentAndPosts();
+        await this.loadPosts(this.state.currentSelectedDayId);
+      }
+    );
   };
+
   render() {
     if (this.context.loggedIn) {
       return (
@@ -428,8 +491,9 @@ class CalendarPage extends React.Component {
           <div>
             <h1>Kalender</h1>
             <Dropdown
-              label="Klasse wählen"
-              options={this.state.classesDropdown.options}
+              placeholder={this.state.classesDropdown.placeholder}
+              label="Klasse"
+              options={this.getSchoolClassListForDropdown()}
               selectedKey={this.state.classesDropdown.selectedKey}
               onChange={this.handleClassesDropdownChange}
               style={{ maxWidth: "300px" }}
@@ -511,7 +575,7 @@ class CalendarPage extends React.Component {
 
               <CalendarComponent onCalenderClick={this.onCalenderClick} />
               <Dropdown
-                placeholder="Fach auswählen"
+                placeholder="Fach wählen"
                 options={this.state.schoolClassSubjects}
                 onChange={this.handleChangeDropdownChange}
                 label="Fach"

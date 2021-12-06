@@ -1,5 +1,6 @@
 import React from "react";
 import { AddNewSchoolClass } from "./functions/AddNewSchoolClass";
+import { DeleteSchoolClass } from "./functions/DeleteSchoolClass";
 import { SubjectManagementButton } from "./functions/SubjectManagementButton";
 import {
   DetailsList,
@@ -194,7 +195,9 @@ class SchoolClassAdministration extends React.Component {
             <AddNewSchoolClass fireBase={this.props.fireBase} />
             <hr/>
             <h3>Klasse löschen</h3>
-            <span><small><i>Needed? 30m max</i></small></span>
+            <DeleteSchoolClass
+                allSchoolClasses={this.state.allSchoolClasses}
+                fireBase={this.props.fireBase} />
           </div>
         </div>
       </>

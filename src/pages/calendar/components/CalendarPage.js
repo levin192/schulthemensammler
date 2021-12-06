@@ -220,7 +220,6 @@ class CalendarPage extends React.Component {
       console.log("user is not in a schoolclass");
       return null;
     }
-
     const response = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
@@ -310,8 +309,9 @@ class CalendarPage extends React.Component {
   };
 
   getDayId = (date) => {
-    const dayId = `${date.getDate()}${
-      date.getMonth() + 1
+    let dayId;
+    dayId = `${date.getDate()}${
+        date.getMonth() + 1
     }${date.getFullYear()}`;
 
     return dayId;

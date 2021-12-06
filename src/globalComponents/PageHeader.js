@@ -19,11 +19,11 @@ class PageHeader extends React.Component {
               </a>
             </div>
             <div className="header-classes">
-              {this.props.userDoc?
+              {this.props.userDoc? this.props.userDoc.schoolClasses ?
                 this.props.userDoc.schoolClasses.length > 0
                 ? "Deine Klasse/n: " +
-                  this.props.userDoc.schoolClasses.join(", ")
-                : null : null
+                  this.props.userDoc.schoolClasses.join(", ") + this.props.userDoc.schoolClasses.length
+                : "Du bist noch keiner Klasse zugeordnet" : null :null
               }
             </div>
             <div className="header-actions">

@@ -33,7 +33,7 @@ class CalendarPage extends React.Component {
       },
       postPopupSettings: {
         isHidden: true,
-        postTextFieldDisbaled: true,
+        postTextFieldDisabled: true,
         postText: "",
         docId: null,
       },
@@ -105,7 +105,7 @@ class CalendarPage extends React.Component {
       .then((data) => {
         this.setState((state) => {
           state.postPopupSettings.isHidden = true;
-          state.postPopupSettings.postTextFieldDisbaled = true;
+          state.postPopupSettings.postTextFieldDisabled = true;
           state.postPopupSettings.postText = true;
           state.postPopupSettings.docId = true;
 
@@ -227,7 +227,6 @@ class CalendarPage extends React.Component {
       console.log("user is not in a schoolclass");
       return null;
     }
-
     const response = await this.fb.firebase
       .firestore()
       .collection("SchoolClasses")
@@ -317,8 +316,9 @@ class CalendarPage extends React.Component {
   };
 
   getDayId = (date) => {
-    const dayId = `${date.getDate()}${
-      date.getMonth() + 1
+    let dayId;
+    dayId = `${date.getDate()}${
+        date.getMonth() + 1
     }${date.getFullYear()}`;
 
     return dayId;
@@ -400,21 +400,20 @@ class CalendarPage extends React.Component {
                     onChange={(x, newText) => {
                       this.setState((state) => {
                         state.postPopupSettings.postText = newText;
-
                         return state;
                       });
                     }}
                     defaultValue={this.state.postPopupSettings.postText}
                     multiline
                     disabled={
-                      this.state.postPopupSettings.postTextFieldDisbaled
+                      this.state.postPopupSettings.postTextFieldDisabled
                     }
-                  ></TextField>
+                />
 
                   <Toggle
                     onChange={(x, isOn) => {
                       this.setState((state) => {
-                        state.postPopupSettings.postTextFieldDisbaled = !isOn;
+                        state.postPopupSettings.postTextFieldDisabled = !isOn;
 
                         return state;
                       });
@@ -427,7 +426,7 @@ class CalendarPage extends React.Component {
                 <DialogFooter>
                   <PrimaryButton
                     disabled={
-                      this.state.postPopupSettings.postTextFieldDisbaled
+                      this.state.postPopupSettings.postTextFieldDisabled
                     }
                     onClick={this.editPost}
                     text="Save changes"
@@ -437,7 +436,7 @@ class CalendarPage extends React.Component {
                       this.setState((state) => {
                         // clear all popup states
                         state.postPopupSettings.isHidden = true;
-                        state.postPopupSettings.postTextFieldDisbaled = true;
+                        state.postPopupSettings.postTextFieldDisabled = true;
                         state.postPopupSettings.postText = true;
                         state.postPopupSettings.docId = true;
 

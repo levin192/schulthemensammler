@@ -8,8 +8,7 @@ const GetTextField = (props) => {
       ("0" + dateObj.getMonth()).slice(-2) +
       dateObj.getFullYear();
 
-    const rawDate = dateObj;
-    props.onCalenderClick(rawDate, dateId);
+    props.onCalenderClick(dateObj, dateId);
   };
 
   return (

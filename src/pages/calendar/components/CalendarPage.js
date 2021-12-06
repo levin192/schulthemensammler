@@ -445,13 +445,13 @@ class CalendarPage extends React.Component {
                     }}
                     defaultValue={this.state.postPopupSettings.postText}
                     multiline
-                    disabled={this.state.postPopupSettings.postTextFieldDisbaled}
+                    disabled={this.state.postPopupSettings.postTextFieldDisabled}
                 />
 
                 <Toggle
                     onChange={(x, isOn) => {
                       this.setState((state) => {
-                        state.postPopupSettings.postTextFieldDisbaled = !isOn;
+                        state.postPopupSettings.postTextFieldDisabled = !isOn;
 
                         return state;
                       });

@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import UserAdministration from "./UserAdministration";
+import UserAdministration from "./functions/UserAdministration";
 import SchoolClassAdministration from "./SchoolClassAdministration";
 
 class SettingsPage extends React.Component {

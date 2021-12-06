@@ -22,7 +22,7 @@ class PageHeader extends React.Component {
               {this.props.userDoc? this.props.userDoc.schoolClasses ?
                 this.props.userDoc.schoolClasses.length > 0
                 ? "Deine Klasse/n: " +
-                  this.props.userDoc.schoolClasses.join(", ") + this.props.userDoc.schoolClasses.length
+                  this.props.userDoc.schoolClasses.join(", ")
                 : "Du bist noch keiner Klasse zugeordnet" : null :null
               }
             </div>

@@ -66,7 +66,7 @@ class CalendarPage extends React.Component {
             name: "Bearbeiten",
             fieldName: "editPost",
             minWidth: 30,
-            maxWidth: 80,
+            maxWidth: 75,
           },
           {
             key: "createdBy",

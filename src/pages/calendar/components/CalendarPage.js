@@ -1,11 +1,9 @@
 import {
-  ActionButton,
   DefaultButton,
   DetailsList,
   Dialog,
   DialogFooter,
   Dropdown,
-  IconButton,
   MessageBar,
   MessageBarType,
   PrimaryButton,
@@ -38,12 +36,6 @@ class CalendarPage extends React.Component {
         postTextFieldDisbaled: true,
         postText: "",
         docId: null,
-        copiedTextMessage: "Kopieren",
-        dialogContentProps: {
-          title: "Eintrag bearbeiten",
-          // closeButtonAriaLabel: "Close",
-          // subText: "Do you want to send this message without a subject?",
-        },
       },
       createNewPostConfig: {
         showMessageBar: false,
@@ -55,12 +47,21 @@ class CalendarPage extends React.Component {
         posts: [],
         columns: [
           {
+            key: "subject",
+            name: "Fach",
+            fieldName: "subject",
+            minWidth: 50,
+            maxWidth: 100,
+            isResizable: true,
+          },
+          {
             key: "post",
             name: "Eintrag",
             fieldName: "post",
             minWidth: 50,
             maxWidth: 200,
           },
+         
           {
             key: "editPost",
             name: "Bearbeiten",
@@ -362,12 +363,6 @@ class CalendarPage extends React.Component {
                 {doc.data().text}
               </div>
             ),
-            editPost: (
-              <IconButton
-                iconProps={{ iconName: "Edit" }}
-                onClick={() => this.showPostPopup(doc.data().text, doc.id)}
-              ></IconButton>
-            ),
             createdBy: doc.data().createdBy,
             createdAt: `${documentTimestamp.getDate()}.${
               documentTimestamp.getMonth() + 1
@@ -399,55 +394,36 @@ class CalendarPage extends React.Component {
             <h1>Kalender</h1>
 
             <div id="calendar" className="calendar">
-              <Dialog
-                dialogContentProps={
-                  this.state.postPopupSettings.dialogContentProps
-                }
-                hidden={this.state.postPopupSettings.isHidden}
-              >
-                <TextField
-                  onChange={(x, newText) => {
-                    this.setState((state) => {
-                      state.postPopupSettings.postText = newText;
+              <Dialog hidden={this.state.postPopupSettings.isHidden}>
+                <DialogContent>
+                  <TextField
+                    onChange={(x, newText) => {
+                      this.setState((state) => {
+                        state.postPopupSettings.postText = newText;
 
-                      return state;
-                    });
-                  }}
-                  defaultValue={this.state.postPopupSettings.postText}
-                  multiline
-                  disabled={this.state.postPopupSettings.postTextFieldDisbaled}
-                ></TextField>
+                        return state;
+                      });
+                    }}
+                    defaultValue={this.state.postPopupSettings.postText}
+                    multiline
+                    disabled={
+                      this.state.postPopupSettings.postTextFieldDisbaled
+                    }
+                  ></TextField>
 
-                <Toggle
-                  onChange={(x, isOn) => {
-                    this.setState((state) => {
-                      state.postPopupSettings.postTextFieldDisbaled = !isOn;
+                  <Toggle
+                    onChange={(x, isOn) => {
+                      this.setState((state) => {
+                        state.postPopupSettings.postTextFieldDisbaled = !isOn;
 
-                      return state;
-                    });
-                  }}
-                  label="Bearbeitung aktivieren"
-                  onText="An"
-                  offText="Aus"
-                />
-
-                <ActionButton
-                  iconProps={{ iconName: "Copy" }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      this.state.postPopupSettings.postText
-                    );
-
-                    this.setState((state) => {
-                      state.postPopupSettings.copiedTextMessage = "Kopiert!";
-
-                      return state;
-                    });
-                  }}
-                >
-                  {this.state.postPopupSettings.copiedTextMessage}
-                </ActionButton>
-
+                        return state;
+                      });
+                    }}
+                    label="Bearbeitung aktivieren"
+                    onText="An"
+                    offText="Aus"
+                  />
+                </DialogContent>
                 <DialogFooter>
                   <PrimaryButton
                     disabled={
@@ -464,7 +440,6 @@ class CalendarPage extends React.Component {
                         state.postPopupSettings.postTextFieldDisbaled = true;
                         state.postPopupSettings.postText = true;
                         state.postPopupSettings.docId = true;
-                        state.postPopupSettings.copiedTextMessage = "Kopieren";
 
                         return state;
                       });

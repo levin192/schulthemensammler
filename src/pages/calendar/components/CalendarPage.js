@@ -2,7 +2,6 @@ import {
   DefaultButton,
   DetailsList,
   Dialog,
-  DialogContent,
   DialogFooter,
   Dropdown,
   MessageBar,
@@ -61,6 +60,14 @@ class CalendarPage extends React.Component {
             fieldName: "post",
             minWidth: 50,
             maxWidth: 200,
+          },
+         
+          {
+            key: "editPost",
+            name: "Bearbeiten",
+            fieldName: "editPost",
+            minWidth: 30,
+            maxWidth: 75,
           },
           {
             key: "createdBy",

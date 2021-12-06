@@ -34,8 +34,6 @@ class UserAdministration extends React.Component {
         };
       });
 
-    console.log("this.allSchoolClasses", this.allSchoolClasses);
-
     this.columns = [
       {
         key: "userNameCol",
@@ -232,6 +230,9 @@ class UserAdministration extends React.Component {
       this.state.changesList.forEach((item) => {
         const isAdmin = item.isAdmin;
         const schoolClasses = item.schoolClasses;
+        if (schoolClasses.length === 1 && schoolClasses[0] === "") { // If empty array turn into actual empty. Probs better ways possible (let and reassign)?
+         schoolClasses.pop()
+        }
         this.fb.firebase
           .firestore()
           .collection("Users")

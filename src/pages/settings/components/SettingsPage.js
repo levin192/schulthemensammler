@@ -8,6 +8,7 @@ import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import UserAdministration from "./UserAdministration";
 import SchoolClassAdministration from "./SchoolClassAdministration";
 import UserSettingsAdministration from "./UserSettingsAdministration";
+import {SanitizeSchoolClasses} from "./functions/SanitizeSchoolClasses";
 
 class SettingsPage extends React.Component {
   constructor() {
@@ -24,6 +25,10 @@ class SettingsPage extends React.Component {
     document.title = "📅 | Einstellungen ✏️";
     this.getAllUserDocs();
     this.setAllSchoolClassesNames();
+    this.getAllSchoolClassesNames()
+      .then(() => {
+        SanitizeSchoolClasses(this.fb, this.context.userDoc, this.state.allSchoolClassesNames)
+      })
   };
 
   getAllUserDocs = () => {
@@ -56,8 +61,6 @@ class SettingsPage extends React.Component {
   };
   setAllSchoolClassesNames = () => {
     this.getAllSchoolClassesNames().then((docs) => {
-      console.log("docs", docs);
-
       this.setState((state) => {
         state.allSchoolClassesNames = docs;
         return state;

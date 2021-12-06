@@ -102,7 +102,7 @@ class UserAdministration extends React.Component {
 
     const searchText = element.target.value.toLowerCase();
     this.setState((state) => {
-      state.isFilterActive = searchText === "" ? false : true;
+      state.isFilterActive = searchText !== "";
       state.userItems = searchText
         ? originalItems.filter(
             (userItem) =>

@@ -18,12 +18,13 @@ class PageHeader extends React.Component {
                 </span>
               </a>
             </div>
-
             <div className="header-classes">
-              {this.props.userDoc.schoolClasses.length > 0
+              {this.props.userDoc?
+                this.props.userDoc.schoolClasses.length > 0
                 ? "Deine Klasse/n: " +
                   this.props.userDoc.schoolClasses.join(", ")
-                : null}
+                : null : null
+              }
             </div>
             <div className="header-actions">
               <UserActions />

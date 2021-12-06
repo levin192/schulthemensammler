@@ -15,12 +15,11 @@ const GetTextField = (props) => {
     <>
       <p>Schultag auswählen</p>
       <Calendar
+        showWeekNumbers
         firstDayOfWeek={DayOfWeek.Monday}
         highlightSelectedMonth
         showGoToToday={true}
-        // calendarDayProps={calendarDayProps}
         onSelectDate={onSelectDate}
-        // Calendar uses English strings by default. For localized apps, you must override this prop.
         strings={defaultCalendarStrings}
       />
     </>

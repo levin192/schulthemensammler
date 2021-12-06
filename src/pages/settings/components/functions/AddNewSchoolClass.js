@@ -29,8 +29,6 @@ export const AddNewSchoolClass = (props) => {
   };
 
   const getSchoolClass = async (className) => {
-    console.log(fb);
-
     const response = await fb.firebase
       .firestore()
       .collection("SchoolClasses")

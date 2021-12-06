@@ -30,6 +30,7 @@ class SettingsPage extends React.Component {
       allSchoolClassesNames: undefined,
       isFormChanged: false,
       messageBarType: null,
+      updatedKey: 1,
     };
   }
   componentDidMount = () => {
@@ -45,9 +46,10 @@ class SettingsPage extends React.Component {
       .collection("Users")
       .onSnapshot((querySnapshot) => {
         const docs = querySnapshot.docs.map((doc) => doc.data());
-
+        const newKey = Math.floor(Math.random() * 100)
         this.setState((state) => {
           state.allUserDocs = docs;
+          state.updatedKey = newKey
           return state;
         });
       });
@@ -223,6 +225,7 @@ class SettingsPage extends React.Component {
               {this.context.userDoc.isAdmin ? (
                 <PivotItem headerText="Nutzer Verwaltung" itemIcon="People">
                   <UserAdministration
+                    key={this.state.updatedKey}
                     fireBase={this.fb}
                     userList={this.state.allUserDocs}
                     schoolClassList={this.state.allSchoolClassesNames}

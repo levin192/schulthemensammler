@@ -96,7 +96,7 @@ class CalendarPage extends React.Component {
         placeholder: "Klasse wählen",
       },
 
-      currentSchoolClassListiner: null,
+      currentSchoolClassListener: null,
     };
   }
 
@@ -240,6 +240,7 @@ class CalendarPage extends React.Component {
         },
         async () => {
           await this.loadSchoolClassDocumentAndPosts();
+          await this.isSchoolDay()
         }
       );
     }
@@ -250,8 +251,8 @@ class CalendarPage extends React.Component {
       return this.context.userDoc.schoolClasses[0] !== undefined;
     };
 
-    if (this.state.currentSchoolClassListiner !== null) {
-      this.state.currentSchoolClassListiner();
+    if (this.state.currentSchoolClassListener !== null) {
+      this.state.currentSchoolClassListener();
     }
 
     if (!isUserInASchoolClass()) {
@@ -302,7 +303,7 @@ class CalendarPage extends React.Component {
         });
       });
 
-    await this.setState({ currentSchoolClassListiner: unsubscribeListener });
+    await this.setState({ currentSchoolClassListener: unsubscribeListener });
 
     return null;
   };
@@ -488,6 +489,13 @@ class CalendarPage extends React.Component {
     );
   };
 
+  isSchoolDay = () => {
+    const availableDays = this.state.schoolClassDocument !== null
+        ? this.state.schoolClassDocument.data().availableSchoolDays
+        : null;
+    console.log(availableDays)
+  }
+
   render() {
     if (this.context.loggedIn) {
       return (
@@ -585,38 +593,45 @@ class CalendarPage extends React.Component {
                 }
                 onCalenderClick={this.onCalenderClick}
               />
-              <Dropdown
-                placeholder="Fach wählen"
-                options={this.state.schoolClassSubjects}
-                onChange={this.handleChangeDropdownChange}
-                label="Fach"
-                style={{ maxWidth: "300px" }}
-              />
-              <TextField
-                disabled={this.state.selectedSubject === null}
-                id={"postText"}
-                label="Neuer Eintrag"
-                onChange={this.handleInputChange}
-                multiline
-                autoAdjustHeight
-              />
+              <div className="subject-editing">
+                <div onClick={(e) => {
+                  this.isSchoolDay()
+                }}>
+                  Flachpfeife
+                </div>
+                <Dropdown
+                  placeholder="Fach wählen"
+                  options={this.state.schoolClassSubjects}
+                  onChange={this.handleChangeDropdownChange}
+                  label="Fach"
+                  style={{ maxWidth: "300px" }}
+                />
+                <TextField
+                  disabled={this.state.selectedSubject === null}
+                  id={"postText"}
+                  label="Neuer Eintrag"
+                  onChange={this.handleInputChange}
+                  multiline
+                  autoAdjustHeight
+                />
 
-              <PrimaryButton
-                disabled={this.state.selectedSubject === null}
-                text="Neuen Eintrag hinzufügen"
-                onClick={this.addNewPost}
-              />
-              {this.state.createNewPostConfig.showMessageBar ? (
-                <MessageBar
-                  messageBarType={
-                    this.state.messageBarType === "error"
-                      ? MessageBarType.error
-                      : MessageBarType.success
-                  }
-                >
-                  {this.state.createNewPostConfig.messageBarText}
-                </MessageBar>
-              ) : null}
+                <PrimaryButton
+                  disabled={this.state.selectedSubject === null}
+                  text="Neuen Eintrag hinzufügen"
+                  onClick={this.addNewPost}
+                />
+                {this.state.createNewPostConfig.showMessageBar ? (
+                  <MessageBar
+                    messageBarType={
+                      this.state.messageBarType === "error"
+                        ? MessageBarType.error
+                        : MessageBarType.success
+                    }
+                  >
+                    {this.state.createNewPostConfig.messageBarText}
+                  </MessageBar>
+                ) : null}
+              </div>
             </div>
           </div>
           <div className="visible-mobile">

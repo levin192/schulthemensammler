@@ -54,9 +54,7 @@ export const DeleteSchoolClass = (props) => {
       .firestore()
       .collection("SchoolClasses")
       .doc(documentId)
-      .delete().then(()=> {
-        window.location.reload()
-      })
+      .delete()
   }
 
   const dialogContentProps = {

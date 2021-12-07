@@ -8,6 +8,7 @@ import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import UserAdministration from "./UserAdministration";
 import SchoolClassAdministration from "./SchoolClassAdministration";
 import UserSettingsAdministration from "./UserSettingsAdministration";
+
 import {SanitizeSchoolClasses} from "./functions/SanitizeSchoolClasses";
 
 class SettingsPage extends React.Component {
@@ -45,6 +46,7 @@ class SettingsPage extends React.Component {
         });
       });
   };
+
   getAllSchoolClassesNames = async () => {
     const snapshot = await this.fb.firebase
       .firestore()
@@ -98,7 +100,6 @@ class SettingsPage extends React.Component {
                 >
                   <SchoolClassAdministration
                     fireBase={this.fb}
-                    schoolClassList={this.state.allSchoolClassesNames}
                   />
                 </PivotItem>
               ) : null}

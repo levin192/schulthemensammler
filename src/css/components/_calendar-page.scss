@@ -50,7 +50,17 @@
       overflow-x: hidden;
     }
   }
+
   .ms-DetailsRow-fields {
     align-items: center;
+  }
+}
+
+.subject-dialog {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  &-toggle, &-copy {
+    margin-top: 15px;
   }
 }

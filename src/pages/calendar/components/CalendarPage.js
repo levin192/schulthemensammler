@@ -1,6 +1,6 @@
 import {
-  DefaultButton,
   ActionButton,
+  DefaultButton,
   DetailsList,
   Dialog,
   DialogFooter,
@@ -11,12 +11,12 @@ import {
   PrimaryButton,
   TextField,
   Toggle,
-} from "@fluentui/react";
-import React from "react";
-import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
-import { Store } from "../../../helpers/Store";
-import CalendarComponent from "./CalendarComponent";
-import { SelectionMode } from "@fluentui/utilities";
+} from '@fluentui/react';
+import React from 'react';
+import FirebaseDataProvider from '../../../helpers/Firebasedataprovider';
+import {Store} from '../../../helpers/Store';
+import CalendarComponent from './CalendarComponent';
+import {SelectionMode} from '@fluentui/utilities';
 
 class CalendarPage extends React.Component {
   constructor() {
@@ -521,80 +521,6 @@ class CalendarPage extends React.Component {
               style={{ maxWidth: "300px" }}
             />
             <div id="calendar" className="calendar">
-              <Dialog
-                dialogContentProps={
-                  this.state.postPopupSettings.dialogContentProps
-                }
-                hidden={this.state.postPopupSettings.isHidden}
-              >
-                <TextField
-                  onChange={(x, newText) => {
-                    this.setState((state) => {
-                      state.postPopupSettings.postText = newText;
-
-                      return state;
-                    });
-                  }}
-                  defaultValue={this.state.postPopupSettings.postText}
-                  multiline
-                  disabled={this.state.postPopupSettings.postTextFieldDisabled}
-                />
-
-                <Toggle
-                  onChange={(x, isOn) => {
-                    this.setState((state) => {
-                      state.postPopupSettings.postTextFieldDisabled = !isOn;
-
-                      return state;
-                    });
-                  }}
-                  label="Bearbeitung aktivieren"
-                  onText="An"
-                  offText="Aus"
-                />
-
-                <ActionButton
-                  iconProps={{ iconName: "Copy" }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      this.state.postPopupSettings.postText
-                    );
-
-                    this.setState((state) => {
-                      state.postPopupSettings.copiedTextMessage = "Kopiert!";
-
-                      return state;
-                    });
-                  }}
-                >
-                  {this.state.postPopupSettings.copiedTextMessage}
-                </ActionButton>
-
-                <DialogFooter>
-                  <PrimaryButton
-                    disabled={
-                      this.state.postPopupSettings.postTextFieldDisabled
-                    }
-                    onClick={this.editPost}
-                    text="Save changes"
-                  />
-                  <DefaultButton
-                    onClick={() => {
-                      this.setState((state) => {
-                        // clear all popup states
-                        state.postPopupSettings.isHidden = true;
-                        state.postPopupSettings.postTextFieldDisabled = true;
-                        state.postPopupSettings.postText = true;
-                        state.postPopupSettings.docId = true;
-                        state.postPopupSettings.copiedTextMessage = "Kopieren";
-                        return state;
-                      });
-                    }}
-                    text="Cancel"
-                  />
-                </DialogFooter>
-              </Dialog>
-
               <CalendarComponent
                 restrictedDays={
                   this.state.schoolClassDocument !== null
@@ -662,6 +588,86 @@ class CalendarPage extends React.Component {
               //indentWidth={0}
             />
           </div>
+          <Dialog
+              maxWidth={375}
+              dialogContentProps={
+                this.state.postPopupSettings.dialogContentProps
+              }
+              hidden={this.state.postPopupSettings.isHidden}
+          >
+
+            <div className="subject-dialog">
+              <TextField
+                  onChange={(x, newText) => {
+                    this.setState((state) => {
+                      state.postPopupSettings.postText = newText;
+
+                      return state;
+                    });
+                  }}
+                  defaultValue={this.state.postPopupSettings.postText}
+                  multiline
+                  style={{minWidth: 325 + 'px',width:100+"%",minHeight: 115 + "px"}}
+                  disabled={this.state.postPopupSettings.postTextFieldDisabled}
+              />
+              <div className="subject-dialog-toggle">
+                <Toggle
+                    onChange={(x, isOn) => {
+                      this.setState((state) => {
+                        state.postPopupSettings.postTextFieldDisabled = !isOn;
+
+                        return state;
+                      });
+                    }}
+                    label="Bearbeitung aktivieren"
+                    onText="An"
+                    offText="Aus"
+                />
+              </div>
+              <div className="subject-dialog-copy">
+                <ActionButton
+                    style={{margin:"auto 0 0 auto"}}
+                    iconProps={{iconName: 'Copy'}}
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                          this.state.postPopupSettings.postText,
+                      );
+
+                      this.setState((state) => {
+                        state.postPopupSettings.copiedTextMessage = 'Kopiert!';
+                        return state;
+                      });
+                    }}
+                >
+                  {this.state.postPopupSettings.copiedTextMessage}
+                </ActionButton>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <PrimaryButton
+                  disabled={
+                    this.state.postPopupSettings.postTextFieldDisabled
+                  }
+                  onClick={this.editPost}
+                  text="Änderungen speichern"
+              />
+              <DefaultButton
+                  onClick={() => {
+                    this.setState((state) => {
+                      // clear all popup states
+                      state.postPopupSettings.isHidden = true;
+                      state.postPopupSettings.postTextFieldDisabled = true;
+                      state.postPopupSettings.postText = true;
+                      state.postPopupSettings.docId = true;
+                      state.postPopupSettings.copiedTextMessage = 'Kopieren';
+                      return state;
+                    });
+                  }}
+                  text="Verwerfen"
+              />
+            </DialogFooter>
+          </Dialog>
         </>
       );
     } else {

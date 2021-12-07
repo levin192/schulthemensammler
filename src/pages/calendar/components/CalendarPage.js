@@ -282,7 +282,7 @@ class CalendarPage extends React.Component {
         await this.setState((state) => {
           state.schoolClassDocument = querySnapshot.docs[0];
           return state;
-        }, this.loadTodaysPosts);
+        }, this.loadCurrentSelectedDayPosts);
 
         const array = [];
         this.state.schoolClassDocument.data().subjects.forEach((subject) => {
@@ -314,7 +314,7 @@ class CalendarPage extends React.Component {
     });
   };
 
-  loadTodaysPosts = () => {
+  loadCurrentSelectedDayPosts = () => {
     this.loadPosts(this.state.currentSelectedDayId);
   };
 

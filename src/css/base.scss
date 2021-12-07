@@ -6,6 +6,7 @@
 @import 'layout/footer';
 @import 'layout/typography';
 @import 'components/user-administration';
+@import 'components/calendar-page';
 
 * {
   box-sizing: border-box;
@@ -14,22 +15,7 @@
   }
 }
 
-.calendar {
-  .ms-DatePicker {
-    border: solid 1px lightgrey;
-    //margin-left: -12px;
-    margin-bottom: 12px;
-    > div {
-      padding-left:  0;
-    }
-    td[class*='dayCell-'] {
-     &:first-child{
-       //background-color: #039BE5;
-       //padding-left: 0;
-     }
-    }
-  }
-}
+
 
 button {
   &.ms-Button {

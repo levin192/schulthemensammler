@@ -186,8 +186,6 @@ class SchoolClassAdministration extends React.Component {
       <>
         <div className="calendar-settings-container">
           <div>
-            <div onClick={(e)=>{
-              console.log(this.state.allSchoolClassesList);}}>bitch</div>
             <h3>Schultage verwalten</h3>
             <TextField
               label={"Klassen filtern:"}

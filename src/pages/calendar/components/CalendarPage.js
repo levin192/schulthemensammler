@@ -29,6 +29,7 @@ class CalendarPage extends React.Component {
       schoolClassDocument: null,
       unsubscribeRealtimeListenerForPosts: null,
       currentSchoolClasses: [],
+      isTodaySchoolDay: false,
       detailsListMessageBar: {
         showMessageBar: false,
         messageBarType: "",
@@ -96,8 +97,9 @@ class CalendarPage extends React.Component {
         placeholder: "Klasse wählen",
       },
 
-      currentSchoolClassListiner: null,
+      currentSchoolClassListener: null,
     };
+    this.selectedDay = null
   }
 
   editPost = () => {
@@ -151,7 +153,10 @@ class CalendarPage extends React.Component {
 
   onCalenderClick = (date) => {
     const dayId = this.getDayId(date);
-
+    const selectedDay = new Date(date)
+    const selectedDayName = selectedDay.toLocaleDateString("en-US",
+        {weekday: 'long'}).toLowerCase()
+    this.selectedDay = selectedDayName
     this.setState((state) => {
       state.currentSelectedDayId = dayId;
       return state;
@@ -160,6 +165,7 @@ class CalendarPage extends React.Component {
     this.deleteListItemsAndGroups();
 
     this.loadPosts(dayId);
+
   };
 
   deleteListItemsAndGroups = () => {
@@ -250,8 +256,8 @@ class CalendarPage extends React.Component {
       return this.context.userDoc.schoolClasses[0] !== undefined;
     };
 
-    if (this.state.currentSchoolClassListiner !== null) {
-      this.state.currentSchoolClassListiner();
+    if (this.state.currentSchoolClassListener !== null) {
+      this.state.currentSchoolClassListener();
     }
 
     if (!isUserInASchoolClass()) {
@@ -287,7 +293,6 @@ class CalendarPage extends React.Component {
           state.schoolClassDocument = querySnapshot.docs[0];
           return state;
         }, this.loadCurrentSelectedDayPosts);
-
         const array = [];
         this.state.schoolClassDocument.data().subjects.forEach((subject) => {
           array.push({
@@ -302,8 +307,7 @@ class CalendarPage extends React.Component {
         });
       });
 
-    await this.setState({ currentSchoolClassListiner: unsubscribeListener });
-
+    await this.setState({ currentSchoolClassListener: unsubscribeListener });
     return null;
   };
 
@@ -407,7 +411,6 @@ class CalendarPage extends React.Component {
       .where("dayId", "==", dayId)
       .onSnapshot((querySnapshot) => {
         if (querySnapshot.docs.length === 0) {
-          console.log("No Posts available!");
           // liste leeren. Sonst würden die alten posts drinne bleiben
           this.setState((state) => {
             state.listConfig.posts = [];
@@ -457,6 +460,7 @@ class CalendarPage extends React.Component {
 
       return state;
     });
+    await this.isSchoolDay()
   };
 
   getSchoolClassListForDropdown = () => {
@@ -487,6 +491,20 @@ class CalendarPage extends React.Component {
       }
     );
   };
+
+  isSchoolDay = () => {
+    let availableDays = this.state.schoolClassDocument !== null
+        ? this.state.schoolClassDocument.data().availableSchoolDays
+        : null;
+    if (availableDays) {
+        const today = new Date()
+        const todayDayName = (this.selectedDay)?this.selectedDay:today.toLocaleDateString("en-US", {weekday: 'long'}).toLowerCase()
+        this.setState((state) => {
+          state.isTodaySchoolDay = availableDays[todayDayName];
+          return state;
+        });
+    }
+  }
 
   render() {
     if (this.context.loggedIn) {
@@ -585,38 +603,41 @@ class CalendarPage extends React.Component {
                 }
                 onCalenderClick={this.onCalenderClick}
               />
-              <Dropdown
-                placeholder="Fach wählen"
-                options={this.state.schoolClassSubjects}
-                onChange={this.handleChangeDropdownChange}
-                label="Fach"
-                style={{ maxWidth: "300px" }}
-              />
-              <TextField
-                disabled={this.state.selectedSubject === null}
-                id={"postText"}
-                label="Neuer Eintrag"
-                onChange={this.handleInputChange}
-                multiline
-                autoAdjustHeight
-              />
+              <div className={(this.state.isTodaySchoolDay)?"subject-editing-allowed":"subject-editing-disabled"}>
+                <Dropdown
+                  disabled={!this.state.isTodaySchoolDay}
+                  placeholder="Fach wählen"
+                  options={this.state.schoolClassSubjects}
+                  onChange={this.handleChangeDropdownChange}
+                  label="Fach"
+                  style={{ maxWidth: "300px" }}
+                />
+                <TextField
+                  disabled={this.state.selectedSubject === null}
+                  id={"postText"}
+                  label="Neuer Eintrag"
+                  onChange={this.handleInputChange}
+                  multiline
+                  autoAdjustHeight
+                />
 
-              <PrimaryButton
-                disabled={this.state.selectedSubject === null}
-                text="Neuen Eintrag hinzufügen"
-                onClick={this.addNewPost}
-              />
-              {this.state.createNewPostConfig.showMessageBar ? (
-                <MessageBar
-                  messageBarType={
-                    this.state.messageBarType === "error"
-                      ? MessageBarType.error
-                      : MessageBarType.success
-                  }
-                >
-                  {this.state.createNewPostConfig.messageBarText}
-                </MessageBar>
-              ) : null}
+                <PrimaryButton
+                  disabled={this.state.selectedSubject === null}
+                  text="Neuen Eintrag hinzufügen"
+                  onClick={this.addNewPost}
+                />
+                {this.state.createNewPostConfig.showMessageBar ? (
+                  <MessageBar
+                    messageBarType={
+                      this.state.messageBarType === "error"
+                        ? MessageBarType.error
+                        : MessageBarType.success
+                    }
+                  >
+                    {this.state.createNewPostConfig.messageBarText}
+                  </MessageBar>
+                ) : null}
+              </div>
             </div>
           </div>
           <div className="visible-mobile">

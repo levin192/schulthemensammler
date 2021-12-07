@@ -8,6 +8,7 @@ import FirebaseDataProvider from "../../../helpers/Firebasedataprovider";
 import UserAdministration from "./UserAdministration";
 import SchoolClassAdministration from "./SchoolClassAdministration";
 import UserSettingsAdministration from "./UserSettingsAdministration";
+import Statistics from "./Statistics";
 
 import {SanitizeSchoolClasses} from "./functions/SanitizeSchoolClasses";
 
@@ -104,21 +105,9 @@ class SettingsPage extends React.Component {
                 </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
-                <h1>Statistiken</h1>
-                <ul>
-                  <li>
-                    Nutzer Gesamt:{" "}
-                    {this.state.allUserDocs
-                      ? this.state.allUserDocs.length
-                      : null}
-                  </li>
-                  <li>
-                    Klassen Gesamt:{" "}
-                    {this.state.allSchoolClassesNames
-                      ? this.state.allSchoolClassesNames.length
-                      : null}
-                  </li>
-                </ul>
+                <Statistics
+                    fireBase={this.fb}
+                />
               </PivotItem>
             </Pivot>
           </div>

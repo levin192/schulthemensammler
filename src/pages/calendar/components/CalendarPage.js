@@ -573,7 +573,14 @@ class CalendarPage extends React.Component {
                 </DialogFooter>
               </Dialog>
 
-              <CalendarComponent onCalenderClick={this.onCalenderClick} />
+              <CalendarComponent
+                restrictedDays={
+                  this.state.schoolClassDocument !== null
+                    ? this.state.schoolClassDocument.data().availableSchoolDays
+                    : null
+                }
+                onCalenderClick={this.onCalenderClick}
+              />
               <Dropdown
                 placeholder="Fach wählen"
                 options={this.state.schoolClassSubjects}

@@ -105,7 +105,9 @@ class SettingsPage extends React.Component {
                 </PivotItem>
               ) : null}
               <PivotItem headerText="Statistiken" itemIcon="Diagnostic">
-                <Statistics />
+                <Statistics
+                    fireBase={this.fb}
+                />
               </PivotItem>
             </Pivot>
           </div>

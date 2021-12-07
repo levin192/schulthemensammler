@@ -43,3 +43,14 @@
     }
   }
 }
+
+.subject-details-list {
+  .ms-DetailsList {
+    @include breakpoint-up(lg) {
+      overflow-x: hidden;
+    }
+  }
+  .ms-DetailsRow-fields {
+    align-items: center;
+  }
+}

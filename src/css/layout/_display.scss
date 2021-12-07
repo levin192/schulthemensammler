@@ -63,7 +63,7 @@ body {
   }
   @each $breakpoint, $width in $breakpoints {
     @include breakpoint-up($breakpoint) {
-      width: calc(#{$width} / 1.05);
+      width: calc(#{$width} / 1.05 + #{$width}/7);
     }
   }
 }

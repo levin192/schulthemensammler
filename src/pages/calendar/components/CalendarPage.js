@@ -61,16 +61,16 @@ class CalendarPage extends React.Component {
             name: "Eintrag",
             fieldName: "post",
             minWidth: 50,
-            maxWidth: 200,
+            maxWidth: 350,
             isResizable: true,
           },
           {
             key: "editPost",
-            name: "Bearbeiten",
+            name: "",
             fieldName: "editPost",
             minWidth: 30,
-            maxWidth: 70,
-            isResizable: true,
+            maxWidth: 50,
+            isResizable: false,
           },
           {
             key: "createdBy",
@@ -84,7 +84,7 @@ class CalendarPage extends React.Component {
             key: "createdAt",
             name: "Erstellt am",
             fieldName: "createdAt",
-            minWidth: 30,
+            minWidth: 50,
             maxWidth: 100,
             isResizable: true,
           },
@@ -640,7 +640,7 @@ class CalendarPage extends React.Component {
               </div>
             </div>
           </div>
-          <div className="visible-mobile">
+          <div className="visible-mobile subject-details-list">
             <h1>Themen</h1>
             {this.state.detailsListMessageBar.showMessageBar ? (
               <MessageBar
@@ -659,6 +659,7 @@ class CalendarPage extends React.Component {
               items={this.state.listConfig.posts}
               groups={this.state.listConfig.groups}
               columns={this.state.listConfig.columns}
+              //indentWidth={0}
             />
           </div>
         </>

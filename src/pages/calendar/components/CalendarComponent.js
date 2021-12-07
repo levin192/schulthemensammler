@@ -38,12 +38,12 @@ const GetTextField = (props) => {
   const restrictedDays = getRestrictedDays(props.restrictedDays);
 
   const isDateInFuture = (date) => {
-    console.log(
-      "Date i got:",
-      date,
-      "is in future:",
-      +new Date(date) > +new Date()
-    );
+    // console.log(
+    //   "Date i got:",
+    //   date,
+    //   "is in future:",
+    //   +new Date(date) > +new Date()
+    // );
 
     return +new Date(date) > +new Date();
   };

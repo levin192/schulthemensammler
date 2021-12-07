@@ -46,6 +46,7 @@ class SettingsPage extends React.Component {
         });
       });
   };
+
   getAllSchoolClassesNames = async () => {
     const snapshot = await this.fb.firebase
       .firestore()
@@ -99,7 +100,6 @@ class SettingsPage extends React.Component {
                 >
                   <SchoolClassAdministration
                     fireBase={this.fb}
-                    schoolClassList={this.state.allSchoolClassesNames}
                   />
                 </PivotItem>
               ) : null}

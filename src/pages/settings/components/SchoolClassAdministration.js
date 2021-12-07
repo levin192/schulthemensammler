@@ -15,7 +15,7 @@ class SchoolClassAdministration extends React.Component {
   constructor(props) {
     super(props);
     this.fb = this.props.fireBase;
-    this.state = { allSchoolClasses: [], filteredItems: [], originalItems: [] };
+    this.state = { allSchoolClasses: [], filteredItems: [], originalItems: [], allSchoolClassesList: undefined };
 
     this.columns = [
       {
@@ -46,25 +46,36 @@ class SchoolClassAdministration extends React.Component {
   }
 
   componentDidMount = () => {
-    this.setAllSchoolClasses();
+    this.getAllSchoolClasses()
   };
 
-  setAllSchoolClasses = () => {
-    const allSchoolClasses = this.props.schoolClassList.map((schoolClass) => {
-      return {
-        key: schoolClass.name,
-        text: schoolClass.name,
-        id: schoolClass.id,
-        availableSchoolDays: schoolClass.availableSchoolDays,
-      };
+
+ getAllSchoolClasses = () => {
+   this.fb.firebase.firestore()
+    .collection("SchoolClasses")
+    .onSnapshot( async (querySnapshot) => {
+       const docs = querySnapshot.docs.map((doc) => {
+         return  {
+           id: doc.id,
+           data: doc.data()
+         }}
+        );
+        const allSchoolClasses = docs.map((schoolClass) => {
+             return {
+               key: schoolClass.data.name,
+               text: schoolClass.data.name,
+               id: schoolClass.id,
+               availableSchoolDays: schoolClass.data.availableSchoolDays,
+             };
+           });
+        this.setState((state) => {
+          state.allSchoolClasses = allSchoolClasses;
+          state.originalItems = allSchoolClasses;
+          state.filteredItems = allSchoolClasses;
+          return state;
+        });
     });
-    this.setState((state) => {
-      state.allSchoolClasses = allSchoolClasses;
-      state.originalItems = allSchoolClasses;
-      state.filteredItems = allSchoolClasses;
-      return state;
-    });
-  };
+  }
 
   onFilterChanged = (element) => {
     const searchText = element.target.value.toLowerCase();
@@ -175,6 +186,8 @@ class SchoolClassAdministration extends React.Component {
       <>
         <div className="calendar-settings-container">
           <div>
+            <div onClick={(e)=>{
+              console.log(this.state.allSchoolClassesList);}}>bitch</div>
             <h3>Schultage verwalten</h3>
             <TextField
               label={"Klassen filtern:"}

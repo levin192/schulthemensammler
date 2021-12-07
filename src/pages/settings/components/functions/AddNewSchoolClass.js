@@ -55,7 +55,6 @@ export const AddNewSchoolClass = (props) => {
             .then(() => {
               setMessageBarType("success");
               setMessageBarText("Klasse erfolgreich gespeichert!");
-              window.location.reload()
             });
         } else {
           setMessageBarType("error");

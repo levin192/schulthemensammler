@@ -1,0 +1,45 @@
+.subject-editing {
+  &-allowed {
+
+  }
+
+  &-disabled {
+    position: relative;
+
+    &:after {
+      content: "Wähle einen eingetragenen Schultag!";
+      width: 100%;
+      height: 100%;
+      max-width: 300px;
+      position: absolute;
+      background-color: transparentize(white, .5);
+      backdrop-filter: blur(1px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      inset: 0;
+      font-weight: 500;
+      //border-left: #d83b01 4px solid;
+    }
+  }
+}
+
+.calendar {
+  .ms-DatePicker {
+    border: solid 1px lightgrey;
+    //margin-left: -12px;
+    margin-bottom: 12px;
+
+    > div {
+      padding-left: 0;
+    }
+
+    td[class*='dayCell-'] {
+      &:first-child {
+        //background-color: #039BE5;
+        //padding-left: 0;
+      }
+    }
+  }
+}

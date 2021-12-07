@@ -29,6 +29,7 @@ class CalendarPage extends React.Component {
       schoolClassDocument: null,
       unsubscribeRealtimeListenerForPosts: null,
       currentSchoolClasses: [],
+      isTodaySchoolDay: false,
       detailsListMessageBar: {
         showMessageBar: false,
         messageBarType: "",
@@ -98,6 +99,7 @@ class CalendarPage extends React.Component {
 
       currentSchoolClassListener: null,
     };
+    this.selectedDay = null
   }
 
   editPost = () => {
@@ -151,7 +153,10 @@ class CalendarPage extends React.Component {
 
   onCalenderClick = (date) => {
     const dayId = this.getDayId(date);
-
+    const selectedDay = new Date(date)
+    const selectedDayName = selectedDay.toLocaleDateString("en-US",
+        {weekday: 'long'}).toLowerCase()
+    this.selectedDay = selectedDayName
     this.setState((state) => {
       state.currentSelectedDayId = dayId;
       return state;
@@ -160,6 +165,7 @@ class CalendarPage extends React.Component {
     this.deleteListItemsAndGroups();
 
     this.loadPosts(dayId);
+
   };
 
   deleteListItemsAndGroups = () => {
@@ -240,7 +246,6 @@ class CalendarPage extends React.Component {
         },
         async () => {
           await this.loadSchoolClassDocumentAndPosts();
-          await this.isSchoolDay()
         }
       );
     }
@@ -288,7 +293,6 @@ class CalendarPage extends React.Component {
           state.schoolClassDocument = querySnapshot.docs[0];
           return state;
         }, this.loadCurrentSelectedDayPosts);
-
         const array = [];
         this.state.schoolClassDocument.data().subjects.forEach((subject) => {
           array.push({
@@ -304,7 +308,6 @@ class CalendarPage extends React.Component {
       });
 
     await this.setState({ currentSchoolClassListener: unsubscribeListener });
-
     return null;
   };
 
@@ -408,7 +411,6 @@ class CalendarPage extends React.Component {
       .where("dayId", "==", dayId)
       .onSnapshot((querySnapshot) => {
         if (querySnapshot.docs.length === 0) {
-          console.log("No Posts available!");
           // liste leeren. Sonst würden die alten posts drinne bleiben
           this.setState((state) => {
             state.listConfig.posts = [];
@@ -458,6 +460,7 @@ class CalendarPage extends React.Component {
 
       return state;
     });
+    await this.isSchoolDay()
   };
 
   getSchoolClassListForDropdown = () => {
@@ -490,10 +493,17 @@ class CalendarPage extends React.Component {
   };
 
   isSchoolDay = () => {
-    const availableDays = this.state.schoolClassDocument !== null
+    let availableDays = this.state.schoolClassDocument !== null
         ? this.state.schoolClassDocument.data().availableSchoolDays
         : null;
-    console.log(availableDays)
+    if (availableDays) {
+        const today = new Date()
+        const todayDayName = (this.selectedDay)?this.selectedDay:today.toLocaleDateString("en-US", {weekday: 'long'}).toLowerCase()
+        this.setState((state) => {
+          state.isTodaySchoolDay = availableDays[todayDayName];
+          return state;
+        });
+    }
   }
 
   render() {
@@ -593,13 +603,9 @@ class CalendarPage extends React.Component {
                 }
                 onCalenderClick={this.onCalenderClick}
               />
-              <div className="subject-editing">
-                <div onClick={(e) => {
-                  this.isSchoolDay()
-                }}>
-                  Flachpfeife
-                </div>
+              <div className={(this.state.isTodaySchoolDay)?"subject-editing-allowed":"subject-editing-disabled"}>
                 <Dropdown
+                  disabled={!this.state.isTodaySchoolDay}
                   placeholder="Fach wählen"
                   options={this.state.schoolClassSubjects}
                   onChange={this.handleChangeDropdownChange}

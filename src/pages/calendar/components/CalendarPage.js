@@ -598,6 +598,7 @@ class CalendarPage extends React.Component {
               />
 
               <PrimaryButton
+                disabled={this.state.selectedSubject === null}
                 text="Neuen Eintrag hinzufügen"
                 onClick={this.addNewPost}
               />

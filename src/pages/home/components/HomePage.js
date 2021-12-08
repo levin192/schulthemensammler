@@ -10,12 +10,23 @@ class HomePage extends React.Component {
         <>
           <div>
             <h1 className="special">Sammelt eure Schulthemen gemeinsam - egal wo ihr seid!</h1>
-            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-              aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-              gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+            <p>
+              Herzlich Willkommen zu unserem Schulthemensammler!
+              <br/>
+              Mithilfe unseres Schulthemensammlers ist es für euch möglich, die
+              Schulthemen bezogend auf den Schultag für jedes Fach zu
+              hinterlegen um einen einheitlichen strukturierten Überblick zu
+              erhalten. <br/>
+              Falls du noch nicht registriet bist, klicke bitte unten auf den
+              Registrierungsbotten.
+              Falls du erfreulicherweise bereits ein Konto angelegt hast, klicke
+              unten auf den Kalenderbutton, anschließend ist es für dich möglich
+              die Schulthemen zu hinterlegen! <br/><br/>
+
+              Wir hoffen, dass euch der Schulthemensammler im Schulalltag
+              unterstützen wird und euch diesbezüglich das Leben deutlich
+              vereinfachen wird! :-)
+            </p>
             {(!this.context.isRegisteredUser) ? (
                 <>
                   <Link to="/register">

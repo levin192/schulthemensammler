@@ -1,6 +1,11 @@
 import React from "react";
+import {GenerateStatistics} from './actions/GenerateStatistics'
 
 class PageFooter extends React.Component {
+  componentDidMount() {
+    GenerateStatistics()
+  }
+
   render() {
     return (
       <>

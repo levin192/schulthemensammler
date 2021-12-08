@@ -1,10 +1,16 @@
-# Projektmanagment 
+# Schulprojekt LEBK - ITFO3 - 2021
 
-**GÜFÄB HÄTEM**
+## Projektmanagment 
 
-# Programierung 
+- Gufäb Hatam
 
-**Borun Kärück**, **Mercel Hopfe**, Lavin Peslocj**
+## Programierung 
+
+- Boran Körük
+- Marcel Hoppe
+- Levin Paßlick
+
+-------------------------
 
 # Getting Started with Create React App
 

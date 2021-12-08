@@ -55,9 +55,7 @@ const GetTextField = (props) => {
           element.classList.add(classNames.dayOutsideBounds);
         element.children[0].disabled = true;
       } catch (e) {}
-    } else {
-        element.children[0].disabled = false;     
-      }
+    }
   };
 
   return (

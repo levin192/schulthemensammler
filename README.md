@@ -1,4 +1,7 @@
-# Schulprojekt LEBK - ITFO3 - 2021
+# Schulprojekt
+
+LEBK - ITFO3 - 2021
+
 
 ## Projektmanagment 
 
